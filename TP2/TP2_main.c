@@ -42,3 +42,27 @@ problème résolu, ça vaut quoi?
 
 #define  CONSTANTE1  -1     //définition d'une constante qui vaut -1
 
+
+/*=========================================================*/
+/*=========================================================*/
+//Programme principal: fonction qui retourne un entier (int)
+int main(void) {
+
+
+
+
+
+
+
+
+
+	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
+	system("pause");
+
+	// et ÇA, c'est le retour d'un 0 au système d'exploitation.
+	return EXIT_SUCCESS;
+}
+
+/*=========================================================*/
+
+

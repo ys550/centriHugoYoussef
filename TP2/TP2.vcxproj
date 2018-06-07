@@ -116,6 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="centrifugeuse .c" />
+    <ClCompile Include="ligne_centrifugeuse .c" />
+    <ClCompile Include="TP2_main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="centrifugeuse.h" />
+    <ClInclude Include="ligne_centrifugeuse .h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
