@@ -50,11 +50,11 @@ int main(void) {
 
 
 
-	//allo
+	
 
 	printf("hello world");
 
-
+	//hugosdhzfhiu
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");
