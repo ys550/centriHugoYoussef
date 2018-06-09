@@ -34,6 +34,7 @@ problème résolu, ça vaut quoi?
 #include<stdlib.h>
 #include<math.h>
 #include<time.h>
+#include "centrifugeuse.h"
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
@@ -47,14 +48,19 @@ problème résolu, ça vaut quoi?
 /*=========================================================*/
 //Programme principal: fonction qui retourne un entier (int)
 int main(void) {
+	int est_reussi;
+	t_centrifugeuse cent;
+	cent = init_centrifugeuse();
+	//affiche EN_ARRET (1) et prob = 0.001
+	printf("initialise: %d prob: %lf\n", cent.etat, cent.prob_bris);
 
+	est_reussi = set_en_arret(&cent);
+	//affiche EN_ARRET (1) et prob = 0.001 est_reussi = 0
+	printf("initialise: %d prob: %lf Est-reussis?: %d\n", cent.etat, cent.prob_bris, est_reussi);
 
-
-
-
-
-
-
+	est_reussi = set_en_attente(&cent);
+	//affiche EN_ATTENTE (2) et prob = 0.001 est_reussi = 1
+	printf("initialise: %d prob: %lf Est-reussis?: %d\n", cent.etat, cent.prob_bris, est_reussi);
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");

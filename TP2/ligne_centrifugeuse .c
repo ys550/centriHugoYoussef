@@ -29,11 +29,14 @@ problème résolu, ça vaut quoi?
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS 
 
+#include "centrifugeuse.h"
 // Librairies usuelles à inclure 
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<time.h>
+
+
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
