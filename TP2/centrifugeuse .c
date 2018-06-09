@@ -41,6 +41,8 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.etat = EN_ARRET;
 	nouvel_centri.prob_bris = PROB_BRIS_INIT;
 	nouvel_centri.compte_rebours = 20;
+	nouvel_centri.nb_tocs_en_fonction = 0;
+	nouvel_centri.nb_tocs_en_attente = 0;
 
 	return nouvel_centri;
 }
@@ -76,11 +78,81 @@ grande du module (INFINI) et son nombre de bris est incrémenté. Sinon, seule
 la probabilité de bris va croitre (avec une fonction static du module).  
 La fonction retourne l’état de la centrifugeuse.*/
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
+	double test_bris;
+	
+	if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
+		ptr_cnt -> compte_rebours--;
+	}
+	else if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
 
+		test_bris = 1.0 * rand() / RAND_MAX;
+
+		if (test_bris < ptr_cnt->prob_bris) {
+			ptr_cnt->etat = EN_BRIS;
+			ptr_cnt->compte_rebours = INFINI;
+			ptr_cnt->nb_bris++;
+		}
+		else {
+			accroitre_prob(ptr_cnt);
+		}
+	}
+
+	if (ptr_cnt -> compte_rebours == 0) {
+		ptr_cnt -> etat = EN_ARRET;
+		ptr_cnt -> nb_tocs_en_fonction = 0;
+		ptr_cnt -> nb_tocs_en_attente = 0;
+		ptr_cnt -> prob_bris = PROB_BRIS_INIT;
+	}
+	return ptr_cnt->etat;
 }
-int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {}
-void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {}
-double get_prob_bris(const t_centrifugeuse * ptr_cnt) {}
-static  void accroitre_prob(t_centrifugeuse * ptr_cnt) {}
+
+/*qui ne s’applique qu’à une centrifugeuse EN_BRIS dont le compte à rebours est
+égal à INFINI, elle fixe alors le compte à rebours de la centrifugeuse au temps
+reçu en paramètre et retourne 1, sinon elle retourne 0.*/
+int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {
+	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours == INFINI) {
+		ptr_cnt->compte_rebours = temps;
+		return 1;
+	}
+	return 0;
+}
+
+/*va placer à partir de l’adresse reçue et dans l’ordre prescrit les huit 
+compteurs présents dans la variable :  les quatre compteurs d’état suivi du 
+nombre de bris, des deux compteurs de tocs depuis la dernière réparation et
+du compte à rebours.*/
+void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
+	compteurs[0] = ptr_cnt->tab_tocs[EN_BRIS];
+	compteurs[1] = ptr_cnt->tab_tocs[EN_ARRET];
+	compteurs[2] = ptr_cnt->tab_tocs[EN_ATTENTE];
+	compteurs[3] = ptr_cnt->tab_tocs[EN_FONCTION];
+	compteurs[4] = ptr_cnt->nb_bris;
+	compteurs[5] = ptr_cnt->nb_tocs_en_attente;
+	compteurs[6] = ptr_cnt->nb_tocs_en_fonction;
+	compteurs[7] = ptr_cnt->compte_rebours;
+}
+
+//retourne la probabilité de bris actuelle de la centrifugeuse
+double get_prob_bris(const t_centrifugeuse * ptr_cnt) {
+	return ptr_cnt->prob_bris;
+}
+
+/*
+fait croitre la probabilité de bris d’une centrifugeuse EN_ATTENTE ou 
+EN_FONCTION après un toc sans bris.  ATTENTION, dans sa définition 
+l’accroissement calculé va dépendre de trois des compteurs de la 
+centrifugeuse : principalement du nombre de bris déjà subis et des deux 
+compteurs depuis la réparation. Ce procédé reste personnel à votre équipe.
+L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une fraction
+moindre de celle donnée à une EN_FONCTION (cette fraction doit être définie 
+par une constante du module).
+
+HYPOTHESES: 
+	-On suppose que l'etat est seulement EN_ATTENTE ou EN_FONCTION
+	-On suppose que la fonction se fait appele apres un
+		toc sans bris*/
+static  void accroitre_prob(t_centrifugeuse * ptr_cnt) {
+	//ptr_cnt->prob_bris = 
+}
 
 

@@ -62,6 +62,8 @@ int main(void) {
 	//affiche EN_ATTENTE (2) et prob = 0.001 est_reussi = 1
 	printf("initialise: %d prob: %lf Est-reussis?: %d\n", cent.etat, cent.prob_bris, est_reussi);
 
+	//printf("taille uint: %d\n", sizeof(uint));
+
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");
 

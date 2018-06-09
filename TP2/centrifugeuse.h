@@ -8,6 +8,8 @@
 /*valeur initiale de prob de bris. Incremente legerement si centri ne se brise
  pas*/
 #define PROB_BRIS_INIT 0.001
+//une constante très grande pour represente INFINI (valeur max d'un uint)
+#define INFINI 0xFFFFFFFF
 
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
