@@ -41,11 +41,15 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.etat = EN_ARRET;
 	nouvel_centri.prob_bris = PROB_BRIS_INIT;
 	nouvel_centri.compte_rebours = 20;
-	nouvel_centri.nb_tocs_en_fonction = 0;
 	nouvel_centri.nb_tocs_en_attente = 0;
+	nouvel_centri.nb_tocs_en_fonction = 0;
+	nouvel_centri.nb_bris = 0;
+	for (int i = 0; i < 4; i++)
+		nouvel_centri.tab_tocs[i] = 0;
 
 	return nouvel_centri;
 }
+
 int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt -> etat == EN_ATTENTE) {
 		ptr_cnt -> etat = EN_FONCTION;
@@ -53,6 +57,7 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	}	
 	return 0;
 }
+
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt -> etat == EN_ARRET || ptr_cnt -> etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ATTENTE;
@@ -60,6 +65,7 @@ int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	}
 	return 0;
 }
+
 int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt -> etat == EN_ATTENTE || ptr_cnt -> etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ARRET;
@@ -85,6 +91,7 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	}
 	else if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
 
+		//TO-DO:verifier si test prob de bris dans l’intervalle [0, 1]
 		test_bris = 1.0 * rand() / RAND_MAX;
 
 		if (test_bris < ptr_cnt->prob_bris) {
@@ -103,6 +110,7 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		ptr_cnt -> nb_tocs_en_attente = 0;
 		ptr_cnt -> prob_bris = PROB_BRIS_INIT;
 	}
+	//La fonction retourne l’état de la centrifugeuse.
 	return ptr_cnt->etat;
 }
 
@@ -122,10 +130,10 @@ compteurs présents dans la variable :  les quatre compteurs d’état suivi du
 nombre de bris, des deux compteurs de tocs depuis la dernière réparation et
 du compte à rebours.*/
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
-	compteurs[0] = ptr_cnt->tab_tocs[EN_BRIS];
-	compteurs[1] = ptr_cnt->tab_tocs[EN_ARRET];
-	compteurs[2] = ptr_cnt->tab_tocs[EN_ATTENTE];
-	compteurs[3] = ptr_cnt->tab_tocs[EN_FONCTION];
+	compteurs[0] = ptr_cnt->tab_tocs[0];
+	compteurs[1] = ptr_cnt->tab_tocs[1];
+	compteurs[2] = ptr_cnt->tab_tocs[2];
+	compteurs[3] = ptr_cnt->tab_tocs[3];
 	compteurs[4] = ptr_cnt->nb_bris;
 	compteurs[5] = ptr_cnt->nb_tocs_en_attente;
 	compteurs[6] = ptr_cnt->nb_tocs_en_fonction;
@@ -151,8 +159,48 @@ HYPOTHESES:
 	-On suppose que l'etat est seulement EN_ATTENTE ou EN_FONCTION
 	-On suppose que la fonction se fait appele apres un
 		toc sans bris*/
-static  void accroitre_prob(t_centrifugeuse * ptr_cnt) {
+static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
+	/*
+		L’accroissement de prob_bris calculé va dépendre de 3 des compteurs de 
+		la centrifugeuse :
+			-nombre de bris déjà subis:
+				1-ptr_cnt->nb_bris
+			-des deux compteurs depuis la réparation:
+				2-ptr_cnt->nb_tocs_en_attente
+				3-ptr_cnt->nb_tocs_en_fonction
+	*/
+	
 	//ptr_cnt->prob_bris = 
+}
+void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
+	char * etat;
+
+	switch (ptr_cnt->etat) {
+	
+	case EN_ARRET:
+		etat = "EN_ARRET";
+		break;
+	case EN_ATTENTE:
+		etat = "EN_ATTENTE";
+		break;
+	case EN_FONCTION:
+		etat = "EN_FONCTION";
+		break;
+	default:
+		etat = "EN_BRIS";
+	}
+	printf("\nEtat: %s \nNb Bris: %u", etat, ptr_cnt->nb_bris);
+	printf("\nProbabilite de Bris: %lf", ptr_cnt->prob_bris);
+	printf("\nCompte a rebours: %u", ptr_cnt->compte_rebours);
+	printf("\nNb tocs en fonction: %u", ptr_cnt->nb_tocs_en_fonction);
+	printf("\nNb tocs en attente: %u", ptr_cnt->nb_tocs_en_attente);
+	printf("\nCompte d'etat EN_BRIS: %u", ptr_cnt->tab_tocs[EN_BRIS]);
+	printf("\nCompte d'etat EN_ARRET: %u", ptr_cnt->tab_tocs[EN_ARRET]);
+	printf("\nCompte d'etat EN_ATTENTE: %u", ptr_cnt->tab_tocs[EN_ATTENTE]);
+	printf("\nCompte d'etat EN_FONCTION: %u\n", ptr_cnt->tab_tocs[EN_FONCTION]);
+	
+
+	
 }
 
 

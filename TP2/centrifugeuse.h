@@ -10,6 +10,8 @@
 #define PROB_BRIS_INIT 0.001
 //une constante très grande pour represente INFINI (valeur max d'un uint)
 #define INFINI 0xFFFFFFFF
+//entre une valeur pour fraction utilise pour le calcul de accroitre prob bris
+//#define FRACTION 
 
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
@@ -62,4 +64,5 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt);
 int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps);
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs);
 double get_prob_bris(const t_centrifugeuse * ptr_cnt);
-static  void accroitre_prob(t_centrifugeuse * ptr_cnt);
+static void accroitre_prob(t_centrifugeuse * ptr_cnt);
+void print_centrifugeuse(const t_centrifugeuse * ptr_cnt);

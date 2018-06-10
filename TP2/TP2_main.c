@@ -39,30 +39,93 @@ problème résolu, ça vaut quoi?
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
 /*=========================================================*/
-//Si vous en avez, voici un bon endroit pour les introduire. 
-
-#define  CONSTANTE1  -1     //définition d'une constante qui vaut -1
-
+#define DEBUG
 
 /*=========================================================*/
 /*=========================================================*/
 //Programme principal: fonction qui retourne un entier (int)
 int main(void) {
-	int est_reussi;
-	t_centrifugeuse cent;
-	cent = init_centrifugeuse();
-	//affiche EN_ARRET (1) et prob = 0.001
-	printf("initialise: %d prob: %lf\n", cent.etat, cent.prob_bris);
 
-	est_reussi = set_en_arret(&cent);
-	//affiche EN_ARRET (1) et prob = 0.001 est_reussi = 0
-	printf("initialise: %d prob: %lf Est-reussis?: %d\n", cent.etat, cent.prob_bris, est_reussi);
+	//TO-DO: fonction de test avec Debug
+	#ifdef DEBUG
+		int est_reussi;
+		t_centrifugeuse cent;
 
-	est_reussi = set_en_attente(&cent);
-	//affiche EN_ATTENTE (2) et prob = 0.001 est_reussi = 1
-	printf("initialise: %d prob: %lf Est-reussis?: %d\n", cent.etat, cent.prob_bris, est_reussi);
+		//Resultat attendu: valeurs par defaut EN_BRIS (0)
+		print_centrifugeuse(&cent);
 
-	//printf("taille uint: %d\n", sizeof(uint));
+		/*
+		Resultat attendu: Non-Reussi(0) avec valeurs par defaut EN_BRIS (0)
+		*/
+		est_reussi = set_en_attente(&cent);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		print_centrifugeuse(&cent);
+
+		/*
+		Resultat attendu: valeurs initialise
+		Etat: EN_ARRET
+		Nb Bris: 0
+		Probabilite de Bris: 0.001000
+		Compte a rebours: 20
+		Nb tocs en fonction: 0
+		Nb tocs en attente: 0
+		Compte d'etat EN_BRIS: 0
+		Compte d'etat EN_ARRET: 0
+		Compte d'etat EN_ATTENTE: 0
+		Compte d'etat EN_FONCTION: 0
+		*/
+		cent = init_centrifugeuse();
+		print_centrifugeuse(&cent);
+
+		/*
+		Resultat attendu: Non-Reussi (0)
+		Valeurs inchange
+		*/
+		est_reussi = set_en_arret(&cent);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		print_centrifugeuse(&cent);
+
+		/*
+		Resultat attendu: Reussi (1)
+		Reussi (Oui = 1, Non = 0) : 1
+		Etat: EN_ATTENTE
+		Nb Bris: 0
+		Probabilite de Bris: 0.001000
+		Compte a rebours: 20
+		Nb tocs en fonction: 0
+		Nb tocs en attente: 0
+		Compte d'etat EN_BRIS: 0
+		Compte d'etat EN_ARRET: 0
+		Compte d'etat EN_ATTENTE: 0
+		Compte d'etat EN_FONCTION: 0
+		*/
+		est_reussi = set_en_attente(&cent);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		print_centrifugeuse(&cent);
+
+		/*
+		Resultat attendu: Reussi(1)
+		Reussi (Oui = 1, Non = 0) : 1
+		Etat: EN_ARRET
+		Nb Bris: 0
+		Probabilite de Bris: 0.001000
+		Compte a rebours: 20
+		Nb tocs en fonction: 0
+		Nb tocs en attente: 0
+		Compte d'etat EN_BRIS: 0
+		Compte d'etat EN_ARRET: 0
+		Compte d'etat EN_ATTENTE: 0
+		Compte d'etat EN_FONCTION: 0
+		*/
+		est_reussi = set_en_arret(&cent);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		print_centrifugeuse(&cent);
+		
+		
+	#endif
+
+	
+	
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");
