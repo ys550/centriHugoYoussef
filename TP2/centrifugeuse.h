@@ -10,7 +10,7 @@
 #define PROB_BRIS_INIT 0.001
 //une constante très grande pour represente INFINI (valeur max d'un uint)
 #define INFINI 0xFFFFFFFF
-//entre une valeur pour fraction utilise pour le calcul de accroitre prob bris
+//fraction utilise pour le calcul de accroitre prob bris
 #define FRACTION_PROB_BRIS 1 / 8
 
 //tous les  unsigned int  sont identifiées par  uint
