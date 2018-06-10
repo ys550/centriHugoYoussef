@@ -90,8 +90,6 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		ptr_cnt -> compte_rebours--;
 	}
 	else if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
-
-		//TO-DO:verifier si test prob de bris dans l’intervalle [0, 1]
 		test_bris = 1.0 * rand() / RAND_MAX;
 
 		if (test_bris < ptr_cnt->prob_bris) {
@@ -130,10 +128,10 @@ compteurs présents dans la variable :  les quatre compteurs d’état suivi du
 nombre de bris, des deux compteurs de tocs depuis la dernière réparation et
 du compte à rebours.*/
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
-	compteurs[0] = ptr_cnt->tab_tocs[0];
-	compteurs[1] = ptr_cnt->tab_tocs[1];
-	compteurs[2] = ptr_cnt->tab_tocs[2];
-	compteurs[3] = ptr_cnt->tab_tocs[3];
+	compteurs[0] = ptr_cnt->tab_tocs[EN_BRIS];
+	compteurs[1] = ptr_cnt->tab_tocs[EN_ARRET];
+	compteurs[2] = ptr_cnt->tab_tocs[EN_ATTENTE];
+	compteurs[3] = ptr_cnt->tab_tocs[EN_FONCTION];
 	compteurs[4] = ptr_cnt->nb_bris;
 	compteurs[5] = ptr_cnt->nb_tocs_en_attente;
 	compteurs[6] = ptr_cnt->nb_tocs_en_fonction;
@@ -156,7 +154,7 @@ moindre de celle donnée à une EN_FONCTION (cette fraction doit être définie
 par une constante du module).
 
 HYPOTHESES: 
-	-On suppose que l'etat est seulement EN_ATTENTE ou EN_FONCTION
+	-On suppose que l'etat est seulement soit EN_ATTENTE ou EN_FONCTION
 	-On suppose que la fonction se fait appele apres un
 		toc sans bris*/
 static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
@@ -169,8 +167,26 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 				2-ptr_cnt->nb_tocs_en_attente
 				3-ptr_cnt->nb_tocs_en_fonction
 	*/
+	double prob_bris_en_fonction = ptr_cnt->prob_bris;
+	double prob_bris_en_attente = ptr_cnt->prob_bris;
+
+	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
+		ptr_cnt->prob_bris + (double)ptr_cnt->nb_bris * ptr_cnt->prob_bris +
+		(double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris;
+
+	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une fraction
+	moindre de celle donnée à une EN_FONCTION(cette fraction doit être définie
+	par une constante du module).*/
+	//fraction = FRACTION_PROB_BRIS
+	prob_bris_en_attente = FRACTION_PROB_BRIS * prob_bris_en_fonction;
 	
-	//ptr_cnt->prob_bris = 
+	if (ptr_cnt->etat == EN_FONCTION) {
+		ptr_cnt->prob_bris = prob_bris_en_fonction;
+	}
+	else {
+		ptr_cnt->prob_bris = prob_bris_en_attente;
+	}
+	
 }
 void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
 	char * etat;
@@ -198,9 +214,6 @@ void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
 	printf("\nCompte d'etat EN_ARRET: %u", ptr_cnt->tab_tocs[EN_ARRET]);
 	printf("\nCompte d'etat EN_ATTENTE: %u", ptr_cnt->tab_tocs[EN_ATTENTE]);
 	printf("\nCompte d'etat EN_FONCTION: %u\n", ptr_cnt->tab_tocs[EN_FONCTION]);
-	
-
-	
 }
 
 
