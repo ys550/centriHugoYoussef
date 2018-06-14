@@ -4,10 +4,11 @@
 #include "op_bits.h"
 
 typedef struct {
+	//Un tableau de centrifugeuse taille:32bits
 	t_centrifugeuse tab_cnt[NB_BITS];
 
 	/*
-	Tableau de comteur pour chaque etat:
+	Tableau de compteur pour chaque etat:
 	tab_nb_cnt[0] = tab_nb_cnt[EN_BRIS] = compteur pour EN_BRIS 
 	tab_nb_cnt[1] = tab_nb_cnt[EN_ARRET] = compteur pour EN_ARRET
 	tab_nb_cnt[2] = tab_nb_cnt[EN_ATTENTE] = compteur pour EN_ATTENTE 
@@ -16,7 +17,6 @@ typedef struct {
 	uint tab_nb_cnt[4];
 
 	//(&) entre deux quelconques des 4 membres suivant sera toujours 0
-
 	//Les positions
 	uint config_fonction;
 	uint config_bris;

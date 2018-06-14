@@ -37,12 +37,98 @@ problème résolu, ça vaut quoi?
 #include<time.h>
 #include "ligne_centrifugeuse .h"
 
-int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {}
-int ajouter_cnt(t_ligne_centrifugeuse *ptr_lig) {}
-int reduire_cnt(t_ligne_centrifugeuse *ptr_lig) {}
+/*agit sur la ligne reçue en référence, remplit son tableau de centrifugeuses 
+neuves (avec configuration de départ du TP1), va mettre nb centrifugeuses 
+EN_FONCTION et le nombre constant EN_ATTENTE, tous les champs du struct doivent
+être bien ajustés.Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).*/
+int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
+	
+	if (nb <= NB_BITS - 1) {
+
+		//initialiser tout
+		for (int i = 0; i < NB_BITS; i++) {
+			ptr_lig->tab_cnt[i] = init_centrifugeuse();
+		}
+
+		int i = 2;
+		uint cnt_fonct_restant = nb;
+
+		for (int j = 0; cnt_fonct_restant > 0; j++) {
+			if (j == i) {  //pour les 0
+				j++;
+				i += 3;	
+			}
+			
+			set_en_attente(&ptr_lig->tab_cnt[j]);
+			set_en_fonction(&ptr_lig->tab_cnt[j]);
+			ptr_lig->config_fonction = set_bit(ptr_lig->config_fonction, j);
+			--cnt_fonct_restant;
+			
+			if (cnt_fonct_restant == 0) {
+				for (int i = j; i = j+2; i++) {
+					ptr_lig->config_attente = set_bit(ptr_lig->config_attente, i);
+				}
+			}
+				
+		}
+
+		for (int i = 0; i < NB_BITS; i++) {
+			if (GET_BIT(ptr_lig->config_attente, i) != 1 && 
+				GET_BIT(ptr_lig->config_fonction, i) != 1) {
+				ptr_lig->config_arret = set_bit(ptr_lig->config_arret, i);
+			}
+		}
+		return 1;
+	}
+	return 0;
+}
+
+/*ajoute si possible une centrifugeuse  EN_FONCTION dans la ligne.  Retour de 1
+si réussi, 0 sinon (configuration impossible).*/
+int ajouter_cnt(t_ligne_centrifugeuse *ptr_lig) {
+	//if (configuration_valide(ptr_lig->))
+}
+
+/*
+réduit de un le nombre de  centrifugeuses EN_FONCTION dans la ligne.  
+Retour de 1 si réussi, 0 sinon (aucune EN_FONCTION).
+*/
+int reduire_cnt(t_ligne_centrifugeuse *ptr_lig) {
+	/*int i = 0;
+	while (i < NB_BITS) {
+		if (GET_BIT(ptr_lig->config_fonction, i) != 1) {
+			//return 0;
+		}
+		i++;
+	}*/
+	
+	return 0;
+}
 void toc_ligne(t_ligne_centrifugeuse *ptr_lig) {}
 t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse *ptr_lig, uint pos) {}
-uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {}
+
+/*qui retourne le train de bits de la ligne qui donne les positions des 
+centrifugeuses dans cet état. SPEC : Le second paramètre doit être une des 
+quatre constantes d’état sinon le résultat obtenu n’a pas de sens.*/
+uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {
+
+	if (etat <= EN_FONCTION) {
+		switch (etat) {
+			case EN_ARRET:
+				return ptr_lig->config_fonction;
+				break;
+			case EN_ATTENTE:
+				return ptr_lig->config_attente;
+				break;
+			case EN_FONCTION:
+				return ptr_lig->config_fonction;
+				break;
+			default:
+				return ptr_lig->config_bris;
+		}
+	}
+	return 0;
+}
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse *ptr_lig, uint  pos) {}
 static  void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2) {}
 void print_ligne_centrifugeuse(void) {}
