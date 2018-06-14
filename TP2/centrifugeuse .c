@@ -171,8 +171,7 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	double prob_bris_en_attente = ptr_cnt->prob_bris;
 
 	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
-		ptr_cnt->prob_bris + (double)ptr_cnt->nb_bris * ptr_cnt->prob_bris +
-		(double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris;
+		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris;
 
 	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une 
 	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
