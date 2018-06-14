@@ -86,7 +86,7 @@ La fonction retourne l’état de la centrifugeuse.*/
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 	
-	if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
+	/*if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
 		ptr_cnt -> compte_rebours--;
 	}
 	else if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
@@ -100,7 +100,8 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		else {
 			accroitre_prob(ptr_cnt);
 		}
-	}
+	}*/
+	
 
 	if (ptr_cnt -> compte_rebours <= 0) {
 		ptr_cnt -> etat = EN_ARRET;
@@ -171,7 +172,8 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	double prob_bris_en_attente = ptr_cnt->prob_bris;
 
 	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
-		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris;
+		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris
+		+ (double)ptr_cnt->nb_bris* ptr_cnt->prob_bris;
 
 	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une 
 	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit

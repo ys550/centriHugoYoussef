@@ -37,26 +37,6 @@ problème résolu, ça vaut quoi?
 #include<time.h>
 #include "ligne_centrifugeuse .h"
 
-
-/********************CODE EMPRUNTE*************************
-*********************SOURCE: TP1***************************
-***********PAR : H. Saulnier,  F. Henri, E. Thé************
-***********************************************************/
-
-/************************ GET_BIT *************************/
-/*
-donne la valeur du  bit d'ordre spécifié.
-PARAMETRES : nombre , un entier non signé
-ordre , spécifie le bit voulu dans nombre.
-RETOUR : 0 ou 1
-
-SPECIFICATIONS :
-Si ordre n'est pas dans l'intervalle correct
-la fonction retourne 0
-*/
-#define GET_BIT(nombre, ordre)  (((ordre) < NB_BITS) ? (((nombre) & (1 << (ordre))) != 0) : 0)
-/******************FIN DU CODE EMPRUNTE***********************/
-
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {}
 int ajouter_cnt(t_ligne_centrifugeuse *ptr_lig) {}
 int reduire_cnt(t_ligne_centrifugeuse *ptr_lig) {}
@@ -97,30 +77,5 @@ unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs) 
 		}
 	return 0;
 }
-/******************FIN DU CODE EMPRUNTE***********************/
-
-/****************CODE EMPRUNTE**********************
-*****************SOURCE: TP1************************
-********PAR : H. Saulnier,  F. Henri, E. Thé********
-****************************************************/
-const char * bits2string(unsigned int nombre) {
-	// un buffer de taille de 200 char c'est plus que suffisant
-	// buffer[] est une variable locale statique dont la position est permanente
-	static char buffer[200] = { 0 };
-	int i;      // iterateur
-
-				// s'assure de l'indicateur de fin de chaine 
-	buffer[NB_BITS] = 0;
-
-	// boucle d'assignation de chaque bit obtenu 
-	// de get_bit dans la string ( mais en ordre inverse )
-	for (i = 0; i< NB_BITS; i += 1) {
-		buffer[NB_BITS - 1 - i] = GET_BIT(nombre, i) ? '1' : '0';
-	}
-
-	// retour de la string
-	return buffer;
-}
-/******************FIN DU CODE EMPRUNTE***********************/
 
 
