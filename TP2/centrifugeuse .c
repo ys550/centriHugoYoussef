@@ -86,23 +86,33 @@ La fonction retourne l’état de la centrifugeuse.*/
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 	
-	/*if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
+	if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
 		ptr_cnt -> compte_rebours--;
 	}
-	else if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
-		test_bris = 1.0 * rand() / RAND_MAX;
 
-		if (test_bris < ptr_cnt->prob_bris) {
-			ptr_cnt->etat = EN_BRIS;
-			ptr_cnt->compte_rebours = INFINI;
-			ptr_cnt->nb_bris++;
-		}
-		else {
-			accroitre_prob(ptr_cnt);
-		}
-	}*/
+	test_bris = 1.0 * rand() / RAND_MAX;
+
+	if (ptr_cnt->etat == EN_ATTENTE) {
+		ptr_cnt->nb_tocs_en_attente++;
+		ptr_cnt->tab_tocs[EN_ATTENTE] += ptr_cnt->nb_tocs_en_attente;
+	}
+	else if (ptr_cnt->etat == EN_FONCTION) {
+		ptr_cnt->nb_tocs_en_fonction++;
+		ptr_cnt->tab_tocs[EN_FONCTION] += ptr_cnt->nb_tocs_en_fonction;
+	}
+	else if (ptr_cnt->etat == EN_ARRET) {
+		ptr_cnt->tab_tocs[EN_ARRET]++;
+	}
+
+	if (test_bris < ptr_cnt->prob_bris) {
+		ptr_cnt->etat = EN_BRIS;
+		ptr_cnt->compte_rebours = INFINI;
+		ptr_cnt->nb_bris++;
+	}
+	else {
+		accroitre_prob(ptr_cnt);
+	}
 	
-
 	if (ptr_cnt -> compte_rebours <= 0) {
 		ptr_cnt -> etat = EN_ARRET;
 		ptr_cnt -> nb_tocs_en_fonction = 0;
@@ -172,8 +182,8 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	double prob_bris_en_attente = ptr_cnt->prob_bris;
 
 	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
-		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris
-		+ (double)ptr_cnt->nb_bris* ptr_cnt->prob_bris;
+		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * 
+		ptr_cnt->prob_bris + (double)ptr_cnt->nb_bris * ptr_cnt->prob_bris;
 
 	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une 
 	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
@@ -184,7 +194,7 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt->prob_bris = prob_bris_en_fonction;
 	}
-	else {
+	else if (ptr_cnt->etat == EN_ATTENTE) {
 		ptr_cnt->prob_bris = prob_bris_en_attente;
 	}
 	
