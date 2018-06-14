@@ -13,6 +13,7 @@ typedef struct {
 	uint nb_cnt_en_arret;
 
 	//(&) entre deux quelconques des 4 membres suivant sera toujours 0
+
 	uint pos_cnt_fonction;
 	uint pos_cnt_bris;
 	uint pos_cnt_attente;

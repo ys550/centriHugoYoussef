@@ -102,7 +102,7 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		}
 	}
 
-	if (ptr_cnt -> compte_rebours == 0) {
+	if (ptr_cnt -> compte_rebours <= 0) {
 		ptr_cnt -> etat = EN_ARRET;
 		ptr_cnt -> nb_tocs_en_fonction = 0;
 		ptr_cnt -> nb_tocs_en_attente = 0;
@@ -174,9 +174,9 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 		ptr_cnt->prob_bris + (double)ptr_cnt->nb_bris * ptr_cnt->prob_bris +
 		(double)ptr_cnt->nb_tocs_en_attente * ptr_cnt->prob_bris;
 
-	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une fraction
-	moindre de celle donnée à une EN_FONCTION(cette fraction doit être définie
-	par une constante du module).*/
+	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une 
+	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
+	être définie par une constante du module).*/
 	//fraction = FRACTION_PROB_BRIS
 	prob_bris_en_attente = FRACTION_PROB_BRIS * prob_bris_en_fonction;
 	
@@ -192,18 +192,17 @@ void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
 	char * etat;
 
 	switch (ptr_cnt->etat) {
-	
-	case EN_ARRET:
-		etat = "EN_ARRET";
-		break;
-	case EN_ATTENTE:
-		etat = "EN_ATTENTE";
-		break;
-	case EN_FONCTION:
-		etat = "EN_FONCTION";
-		break;
-	default:
-		etat = "EN_BRIS";
+		case EN_ARRET:
+			etat = "EN_ARRET";
+			break;
+		case EN_ATTENTE:
+			etat = "EN_ATTENTE";
+			break;
+		case EN_FONCTION:
+			etat = "EN_FONCTION";
+			break;
+		default:
+			etat = "EN_BRIS";
 	}
 	printf("\nEtat: %s \nNb Bris: %u", etat, ptr_cnt->nb_bris);
 	printf("\nProbabilite de Bris: %lf", ptr_cnt->prob_bris);

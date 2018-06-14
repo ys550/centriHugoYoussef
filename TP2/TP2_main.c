@@ -50,16 +50,17 @@ int main(void) {
 	#ifdef DEBUG
 		int est_reussi;
 		t_centrifugeuse cent;
+		t_centrifugeuse * p_cent = &cent;
 
 		//Resultat attendu: valeurs par defaut EN_BRIS (0)
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 
 		/*
 		Resultat attendu: Non-Reussi(0) avec valeurs par defaut EN_BRIS (0)
 		*/
-		est_reussi = set_en_attente(&cent);
+		est_reussi = set_en_attente(p_cent);
 		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 
 		/*
 		Resultat attendu: valeurs initialise
@@ -75,15 +76,15 @@ int main(void) {
 		Compte d'etat EN_FONCTION: 0
 		*/
 		cent = init_centrifugeuse();
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 
 		/*
 		Resultat attendu: Non-Reussi (0)
 		Valeurs inchange
 		*/
-		est_reussi = set_en_arret(&cent);
+		est_reussi = set_en_arret(p_cent);
 		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 
 		/*
 		Resultat attendu: Reussi (1)
@@ -99,9 +100,9 @@ int main(void) {
 		Compte d'etat EN_ATTENTE: 0
 		Compte d'etat EN_FONCTION: 0
 		*/
-		est_reussi = set_en_attente(&cent);
+		est_reussi = set_en_attente(p_cent);
 		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 
 		/*
 		Resultat attendu: Reussi(1)
@@ -117,9 +118,9 @@ int main(void) {
 		Compte d'etat EN_ATTENTE: 0
 		Compte d'etat EN_FONCTION: 0
 		*/
-		est_reussi = set_en_arret(&cent);
+		est_reussi = set_en_arret(p_cent);
 		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-		print_centrifugeuse(&cent);
+		print_centrifugeuse(p_cent);
 		
 		
 	#endif
