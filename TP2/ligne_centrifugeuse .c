@@ -67,7 +67,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			--cnt_fonct_restant;
 			
 			if (cnt_fonct_restant == 0) {
-				for (int i = j; i = j+2; i++) {
+				for (int i = j; i = j + 2; i++) {
 					ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
 				}
 			}
@@ -131,9 +131,31 @@ uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {
 	}
 	return 0;
 }
-t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse *ptr_lig, uint  pos) {}
+/*retourne une copie de la centrifugeuse à cette position dans le tableau. Elle
+retourne une centrifugeuse dont tous les membres sont 0 si la position est 
+non-valide.*/
+t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse *ptr_lig, uint  pos) {
+	if (pos < NB_BITS) {
+		return ptr_lig->tab_cnt[pos];
+	}
+
+	t_centrifugeuse cnt_membres_0;
+	cnt_membres_0 = init_centrifugeuse();
+	cnt_membres_0.etat = 0;
+	cnt_membres_0.prob_bris = 0;
+	cnt_membres_0.compte_rebours = 0;
+	
+	return cnt_membres_0;
+}
 static  void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2) {}
-void print_ligne_centrifugeuse(void) {}
+
+/*fonction d’affichage des lignes de centrifugeuses*/
+void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig) {
+	printf("\n\n config_fonction == %s ", bits2string(ptr_lig->config_fonction));
+	printf("\n\n config_attente  == %s ", bits2string(ptr_lig->config_attente));
+	printf("\n\n config_arret    == %s ", bits2string(ptr_lig->config_arret));
+	printf("\n\n config_bris     == %s ", bits2string(ptr_lig->config_bris));
+}
 
 /*fonction configuration_valide du TP1*/
 /****************CODE EMPRUNTE**********************
