@@ -28,12 +28,14 @@ problème résolu, ça vaut quoi?
 /*=========================================================*/
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS 
+#define DEBUG
 
 #include "centrifugeuse.h"
 
 // Librairies usuelles à inclure 
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 
 t_centrifugeuse init_centrifugeuse(void) {
 	t_centrifugeuse nouvel_centri;
@@ -51,15 +53,15 @@ t_centrifugeuse init_centrifugeuse(void) {
 }
 
 int set_en_fonction(t_centrifugeuse * ptr_cnt) {
-	if (ptr_cnt -> etat == EN_ATTENTE) {
-		ptr_cnt -> etat = EN_FONCTION;
+	if (ptr_cnt->etat == EN_ATTENTE) {
+		ptr_cnt->etat = EN_FONCTION;
 		return 1;
 	}	
 	return 0;
 }
 
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
-	if (ptr_cnt -> etat == EN_ARRET || ptr_cnt -> etat == EN_FONCTION) {
+	if (ptr_cnt->etat == EN_ARRET || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ATTENTE;
 		return 1;
 	}
@@ -67,8 +69,8 @@ int set_en_attente(t_centrifugeuse * ptr_cnt) {
 }
 
 int set_en_arret(t_centrifugeuse * ptr_cnt) {
-	if (ptr_cnt -> etat == EN_ATTENTE || ptr_cnt -> etat == EN_FONCTION) {
-		ptr_cnt -> etat = EN_ARRET;
+	if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
+		ptr_cnt->etat = EN_ARRET;
 		return 1;
 	}
 	return 0;
@@ -85,20 +87,31 @@ la probabilité de bris va croitre (avec une fonction static du module).
 La fonction retourne l’état de la centrifugeuse.*/
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
-	
-	if (ptr_cnt -> etat == EN_BRIS && ptr_cnt -> compte_rebours != INFINI) {
-		ptr_cnt -> compte_rebours--;
+
+	/*pour eviter la repitition des memes valeurs retourne par rand() a chaque 
+	execution*/
+	//srand(time(NULL));
+	test_bris = 1.0 * rand() / RAND_MAX;
+	#ifdef DEBUG
+		printf("\ntest bris: %lf\n", test_bris);
+	#endif
+	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
+		ptr_cnt->compte_rebours--;
 	}
 
-	test_bris = 1.0 * rand() / RAND_MAX;
-
-	if (ptr_cnt->etat == EN_ATTENTE) {
+	/*ce if doit rester avant le if (test_bris < ptr_cnt->prob_bris)
+	afin que tab_tocs EN_BRIS s'incremente au prochain toc suivant
+	un bris*/
+	if (ptr_cnt->etat == EN_BRIS) {
+		ptr_cnt->tab_tocs[EN_BRIS]++;
+	}
+	else if (ptr_cnt->etat == EN_ATTENTE) {
 		ptr_cnt->nb_tocs_en_attente++;
-		ptr_cnt->tab_tocs[EN_ATTENTE] += ptr_cnt->nb_tocs_en_attente;
+		ptr_cnt->tab_tocs[EN_ATTENTE]++;
 	}
 	else if (ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt->nb_tocs_en_fonction++;
-		ptr_cnt->tab_tocs[EN_FONCTION] += ptr_cnt->nb_tocs_en_fonction;
+		ptr_cnt->tab_tocs[EN_FONCTION]++;
 	}
 	else if (ptr_cnt->etat == EN_ARRET) {
 		ptr_cnt->tab_tocs[EN_ARRET]++;
@@ -113,11 +126,11 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		accroitre_prob(ptr_cnt);
 	}
 	
-	if (ptr_cnt -> compte_rebours <= 0) {
-		ptr_cnt -> etat = EN_ARRET;
-		ptr_cnt -> nb_tocs_en_fonction = 0;
-		ptr_cnt -> nb_tocs_en_attente = 0;
-		ptr_cnt -> prob_bris = PROB_BRIS_INIT;
+	if (ptr_cnt->compte_rebours <= 0) {
+		ptr_cnt->etat = EN_ARRET;
+		ptr_cnt->nb_tocs_en_fonction = 0;
+		ptr_cnt->nb_tocs_en_attente = 0;
+		ptr_cnt->prob_bris = PROB_BRIS_INIT;
 	}
 	//La fonction retourne l’état de la centrifugeuse.
 	return ptr_cnt->etat;
@@ -179,7 +192,7 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 				3-ptr_cnt->nb_tocs_en_fonction
 	*/
 	double prob_bris_en_fonction = ptr_cnt->prob_bris;
-	double prob_bris_en_attente = ptr_cnt->prob_bris;
+	double prob_bris_en_attente;
 
 	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
 		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * 

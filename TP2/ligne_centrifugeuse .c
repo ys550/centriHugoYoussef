@@ -30,12 +30,14 @@ problème résolu, ça vaut quoi?
 #define _CRT_SECURE_NO_WARNINGS 
 
 #include "centrifugeuse.h"
+#include "ligne_centrifugeuse .h"
+#include "op_bits.h"
 // Librairies usuelles à inclure 
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<time.h>
-#include "ligne_centrifugeuse .h"
+
 
 /*agit sur la ligne reçue en référence, remplit son tableau de centrifugeuses 
 neuves (avec configuration de départ du TP1), va mettre nb centrifugeuses 
@@ -61,12 +63,12 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			
 			set_en_attente(&ptr_lig->tab_cnt[j]);
 			set_en_fonction(&ptr_lig->tab_cnt[j]);
-			ptr_lig->config_fonction = set_bit(ptr_lig->config_fonction, j);
+			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
 			--cnt_fonct_restant;
 			
 			if (cnt_fonct_restant == 0) {
 				for (int i = j; i = j+2; i++) {
-					ptr_lig->config_attente = set_bit(ptr_lig->config_attente, i);
+					ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
 				}
 			}
 				
@@ -75,7 +77,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 		for (int i = 0; i < NB_BITS; i++) {
 			if (GET_BIT(ptr_lig->config_attente, i) != 1 && 
 				GET_BIT(ptr_lig->config_fonction, i) != 1) {
-				ptr_lig->config_arret = set_bit(ptr_lig->config_arret, i);
+				ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
 			}
 		}
 		return 1;
@@ -138,7 +140,7 @@ void print_ligne_centrifugeuse(void) {}
 *****************SOURCE: TP1************************
 *************PAR: Youssef Soliman*******************
 ****************************************************/
-unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs) {
+static unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs) {
 	//TO-DO: Modifier fonction configuration_valide
 	int nb_actif = 0;
 	int nb_actif_contigus = 0;
