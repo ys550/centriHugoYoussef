@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "op_bits.h"
 
+#define NBR_K_EN_ATTENTE 2
+
 typedef struct {
 	//Un tableau de centrifugeuse taille:32bits
 	t_centrifugeuse tab_cnt[NB_BITS];
@@ -27,12 +29,12 @@ typedef struct {
 
 //nb trop grand si depasse regle des 2/3
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb);
-int ajouter_cnt(t_ligne_centrifugeuse *ptr_lig);
-int reduire_cnt(t_ligne_centrifugeuse *ptr_lig);
-void toc_ligne(t_ligne_centrifugeuse *ptr_lig);
-t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse *ptr_lig, uint pos);
+int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig);
+int reduire_cnt(t_ligne_centrifugeuse * ptr_lig);
+void toc_ligne(t_ligne_centrifugeuse * ptr_lig);
+t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos);
 uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat);
-t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse *ptr_lig, uint  pos);
+t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos);
 static  void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2);
 void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig);
 static unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs);
