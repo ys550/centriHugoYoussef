@@ -37,6 +37,8 @@ problème résolu, ça vaut quoi?
 #include<stdlib.h>
 #include<time.h>
 
+/*retourne une centrifugeuse neuve à l’état EN_ARRET.  Sa probabilité initiale 
+de bris est donnée par une constante du module.*/
 t_centrifugeuse init_centrifugeuse(void) {
 	t_centrifugeuse nouvel_centri;
 	
@@ -51,7 +53,8 @@ t_centrifugeuse init_centrifugeuse(void) {
 
 	return nouvel_centri;
 }
-
+/*permet de mettre une centrifugeuse EN_ATTENTE  dans l’état   EN_FONCTION.
+Retour de 1 si réussi, 0 sinon (si elle n’est pas en état EN_ATTENTE).*/
 int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE) {
 		ptr_cnt->etat = EN_FONCTION;
@@ -59,7 +62,8 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	}	
 	return 0;
 }
-
+/*permet de mettre une centrifugeuse EN_ARRET ou EN_FONCTION dans l’état  
+EN_ATTENTE.  Retour de 1 si réussi, 0 sinon.*/
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ARRET || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ATTENTE;
@@ -67,7 +71,8 @@ int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	}
 	return 0;
 }
-
+/*permet de mettre une centrifugeuse EN_ATTENTE  ou EN_FONCTION dans l’état 
+EN_ARRET.  Retour de 1 si réussi, 0 sinon.*/
 int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt->etat = EN_ARRET;

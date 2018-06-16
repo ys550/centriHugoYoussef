@@ -38,3 +38,4 @@ t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  p
 static  void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2);
 void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig);
 static unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs);
+static t_centrifugeuse centrifugeuse_membres_0(void);

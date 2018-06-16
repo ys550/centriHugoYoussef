@@ -73,6 +73,15 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
 			--cnt_fonct_restant;
 			
+			//**********************************************************
+			//Partie du code ci dessous A verifier
+			/*IL faut gerer le compteur lorsquil atteint une valeur max
+			Puisque les positions sont dans l'intervalle [0-31] il faut
+			s'assurer que j+1 et j+2 ou j+NBR_K_EN_ATTENTE ne depasse pas
+			la position maximale de 31. Si j est deja a 31 il ne reste plu
+			de place pour inserer 1 ou 2 centrifugeuse en attente*/
+			//**********************************************************
+
 			/*
 			 *si nb < NB_BITS : il a au moins 1 bits de libre pour inserer 1
 			 bit en attente.
@@ -142,6 +151,8 @@ Retour de 1 si réussi, 0 sinon (aucune EN_FONCTION).
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	for (int i = NB_BITS - 1; i >= 0; i--) {
 		if (GET_BIT(ptr_lig->config_fonction, i) == 1) {
+			/*reduit de 1 une cnt EN_FONCTION en changeant sont etat a 
+			EN_ATTENTE*/
 			ptr_lig->config_fonction = CLEAR_BIT(ptr_lig->config_fonction, i);
 			ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
 			set_en_attente(&ptr_lig->tab_cnt[i]);
@@ -154,7 +165,10 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 tableau et réagit correctement à tout changement d’état d’une des 
 centrifugeuses.*/
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig) {
-
+	//A terminer
+	for (int i = 0; i < NB_BITS; i++) {
+		toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
+	}
 }
 /*si la position est valide et si cette centrifugeuse du tableau n’est ni 
 EN_FONCTION ni EN_ATTENTE,  une  centrifugeuse neuve remplace celle à la 
@@ -162,46 +176,51 @@ position donnée dans le tableau. La fonction retourne une copie de la
 centrifugeuse éliminée, sinon une centrifugeuse dont tous les membres sont 0 
 est retournée.*/
 t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos) {
+	if (pos < NB_BITS && ptr_lig->tab_cnt[pos].etat != EN_FONCTION && 
+		ptr_lig->tab_cnt[pos].etat != EN_ATTENTE) {
+		
+		t_centrifugeuse copie_cnt_elimine = ptr_lig->tab_cnt[pos];
 
+		//changer config
+		ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, pos);
+		//insere la nouvelle centri
+		ptr_lig->tab_cnt[pos] = init_centrifugeuse();
+		//la nouvelle centri est en etat arret
+		ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, pos);
+
+		return copie_cnt_elimine;
+	}
+	return centrifugeuse_membres_0();
 }
 
 /*qui retourne le train de bits de la ligne qui donne les positions des 
 centrifugeuses dans cet état. SPEC : Le second paramètre doit être une des 
 quatre constantes d’état sinon le résultat obtenu n’a pas de sens.*/
 uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {
-
-	if (etat <= EN_FONCTION) {
-		switch (etat) {
-			case EN_ARRET:
-				return ptr_lig->config_fonction;
-				break;
-			case EN_ATTENTE:
-				return ptr_lig->config_attente;
-				break;
-			case EN_FONCTION:
-				return ptr_lig->config_fonction;
-				break;
-			default:
-				return ptr_lig->config_bris;
+	switch (etat) {
+		case EN_ARRET:
+			return ptr_lig->config_arret;
+			break;
+		case EN_ATTENTE:
+			return ptr_lig->config_attente;
+			break;
+		case EN_FONCTION:
+			return ptr_lig->config_fonction;
+			break;
+		/* Le second paramètre doit être une desquatre constantes d’état sinon
+		le résultat obtenu n’a pas de sens: Donc, par defaut, retourne le train
+		de la ligne de bris si l'etat en parametre n'est pas valide*/
+		default:
+			return ptr_lig->config_bris;
 		}
-	}
-	return 0;
 }
 /*retourne une copie de la centrifugeuse à cette position dans le tableau. Elle
 retourne une centrifugeuse dont tous les membres sont 0 si la position est 
 non-valide.*/
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos) {
-	if (pos < NB_BITS) {
+	if (pos < NB_BITS)
 		return ptr_lig->tab_cnt[pos];
-	}
-
-	t_centrifugeuse cnt_membres_0;
-	cnt_membres_0 = init_centrifugeuse();
-	cnt_membres_0.etat = 0;
-	cnt_membres_0.prob_bris = 0;
-	cnt_membres_0.compte_rebours = 0;
-	
-	return cnt_membres_0;
+	return centrifugeuse_membres_0();
 }
 /*cette fonction privée du module permute  les centrifugeuses aux positions 
 pos1 et pos2 du tableau et dans les trains de bits correspondants si leurs états
@@ -211,6 +230,20 @@ static void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 
 	if (pos1 < NB_BITS && pos2 < NB_BITS && ptr_lig->tab_cnt[pos1].etat !=
 		ptr_lig->tab_cnt[pos2].etat) {
+		//Pour la permutation des configs (positions)
+		int etat_pos1 = ptr_lig->tab_cnt[pos1].etat;
+		//les 2 etats sont differents
+		int etat_pos2 = ptr_lig->tab_cnt[pos2].etat;
+
+		/*
+		Effectuer la permutation des configurations ici
+		ptr_lig->config_arret
+		ptr_lig->config_attente
+		ptr_lig->config_fonction
+		ptr_lig->config_bris
+		*/
+	
+		//permutation des centrifugeuses
 		//cnt temporaire pour permettre la permutation
 		t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
 		ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
@@ -224,6 +257,15 @@ void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig) {
 	printf("\n\n config_attente  == %s ", bits2string(ptr_lig->config_attente));
 	printf("\n\n config_arret    == %s ", bits2string(ptr_lig->config_arret));
 	printf("\n\n config_bris     == %s ", bits2string(ptr_lig->config_bris));
+}
+static t_centrifugeuse centrifugeuse_membres_0() {
+	t_centrifugeuse cnt_membres_0;
+	cnt_membres_0 = init_centrifugeuse();
+	cnt_membres_0.etat = 0;
+	cnt_membres_0.prob_bris = 0;
+	cnt_membres_0.compte_rebours = 0;
+
+	return cnt_membres_0;
 }
 
 /*fonction configuration_valide du TP1*/
