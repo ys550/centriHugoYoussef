@@ -45,7 +45,7 @@ EN_FONCTION et le nombre constant EN_ATTENTE, tous les champs du struct doivent
 être bien ajustés.Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).*/
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 	
-	if (nb <= NB_BITS - 1) {
+	if (nb <= NB_BITS) {
 
 		//initialiser tout
 		ptr_lig->config_fonction = 0;
@@ -73,54 +73,27 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
 			--cnt_fonct_restant;
 			
-			//**********************************************************
-			//Partie du code ci dessous A verifier
-			/*IL faut gerer le compteur lorsquil atteint une valeur max
-			Puisque les positions sont dans l'intervalle [0-31] il faut
-			s'assurer que j+1 et j+2 ou j+NBR_K_EN_ATTENTE ne depasse pas
-			la position maximale de 31. Si j est deja a 31 il ne reste plu
-			de place pour inserer 1 ou 2 centrifugeuse en attente*/
-			//**********************************************************
+			/*On mets ceux qui restent en attente. Le nombre de centri en 
+			attente depend de la constante NBR_K_EN_ATTENTE*/
+			if (cnt_fonct_restant == 0) {
+				/*calcule combien de bits libre dans la ligne il reste pour 
+				mettre en attente*/
+				int nbr_k_possible = ((NB_BITS - 1) - j);
 
-			/*
-			 *si nb < NB_BITS : il a au moins 1 bits de libre pour inserer 1
-			 bit en attente.
-			 si nb = 31 : il reste 1 de libre. On peut donc seulement inserrer 1
-			 centrifigueuse en attente.
-			 si nb = 30 : il reste 2 de libre. On peut donc inserrer 2
-			 centrifigueuse en attente.
-			 */
-			//lorsqu'il est possible d'ajouter NBR_K_EN_ATTENTE (2) centri en attente
-			if (cnt_fonct_restant == 0 && ( (j + NBR_K_EN_ATTENTE) < (NB_BITS - 
-				NBR_K_EN_ATTENTE))) {
-				for (int i = j + 1; i = (j + NBR_K_EN_ATTENTE); i++) {
-					//on met les derniers libres les plus a droite en attente
-					set_en_attente(&ptr_lig->tab_cnt[i]);
-					ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
+				//Valeur max de nbr_k_possible = NBR_K_EN_ATTENTE
+				if (nbr_k_possible > NBR_K_EN_ATTENTE) {
+					nbr_k_possible = NBR_K_EN_ATTENTE;
 				}
-			}
-			//lorsqu'il est possible d'ajouter NBR_K_EN_ATTENTE - 1 (1) cnt en attente
-			else if (cnt_fonct_restant == 0 && ((j + (NBR_K_EN_ATTENTE - 1)) < (NB_BITS -
-				(NBR_K_EN_ATTENTE - 1)))) {
-				for (int i = j + 1; i = (j + (NBR_K_EN_ATTENTE - 1)); i++) {
-					//on met les derniers libres les plus a droite en attente
-					ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
-					set_en_attente(&ptr_lig->tab_cnt[i]);
-				}
-			}
-				
+
+				if (nbr_k_possible != 0) {
+					for (int i = j + 1; i <= (j + nbr_k_possible); i++) {
+						/*on met les derniers libres les plus a droite en attente*/
+						set_en_attente(&ptr_lig->tab_cnt[i]);
+						ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
+					}
+				}	
+			}	
 		}
-		//set les bits qui restent en arret
-		//Non nececessaire car premiere boucle(Init) mets en arret
-		//code repetitif
-		/*for (int i = 0; i < NB_BITS; i++) {
-			if (GET_BIT(ptr_lig->config_attente, i) != 1 && 
-				GET_BIT(ptr_lig->config_fonction, i) != 1 && 
-				GET_BIT(ptr_lig->config_bris, i) != 1) {
-				ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
-				set_en_arret(&ptr_lig->tab_cnt[i]);
-			}
-		}*/
 		return 1;
 	}
 	return 0;
