@@ -52,7 +52,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 
 	if (nb <= NB_BITS) {
 		//initialiser tout
-		for (int i = 0; i < NB_BITS; i++) {
+		for (int i = 0; i < nb; i++) {
 			ptr_lig->tab_cnt[i] = init_centrifugeuse();
 			//init_centrifugeuse() mets les cnt en etat ARRET
 			ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
@@ -217,27 +217,38 @@ static void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 
 	if (pos1 < NB_BITS && pos2 < NB_BITS && ptr_lig->tab_cnt[pos1].etat !=
 		ptr_lig->tab_cnt[pos2].etat) {
+
 		//Pour la permutation des configs (positions)
-		int etat_pos1 = ptr_lig->tab_cnt[pos1].etat;
-		//les 2 etats sont differents
-		int etat_pos2 = ptr_lig->tab_cnt[pos2].etat;
+		int etat_pos1;
+		int etat_pos2;
+		uint config_1_temp;
+		uint config_2_temp;
+
+		//permutation des configs
+		for (int etat = EN_BRIS; etat <= EN_FONCTION; etat++) {
+			if (GET_BIT(get_en_etat(ptr_lig, etat), pos1) == 1) {
+				config_1_temp = get_en_etat(ptr_lig, etat);
+				etat_pos1 = etat;
+				config_1_temp = CLEAR_BIT(config_1_temp, pos1);
+				config_1_temp = SET_BIT(config_1_temp, pos2);
+			}
+			if (GET_BIT(get_en_etat(ptr_lig, etat), pos2) == 1) {
+				config_2_temp = get_en_etat(ptr_lig, etat);
+				etat_pos2 = etat;
+				config_2_temp = CLEAR_BIT(config_2_temp, pos2);
+				config_2_temp = SET_BIT(config_1_temp, pos1);
+			}
+		}
+		set_config(ptr_lig, etat_pos1, config_1_temp);
+		set_config(ptr_lig, etat_pos2, config_2_temp);
 		
-		//***************A TERMINER*****************
-		/*
-		Effectuer la permutation des configurations ici
-		ptr_lig->config_arret
-		ptr_lig->config_attente
-		ptr_lig->config_fonction
-		ptr_lig->config_bris
-		*/
-		//******************************************
-	
+
 		//permutation des centrifugeuses
 		//cnt temporaire pour permettre la permutation
 		t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
 		ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
 		ptr_lig->tab_cnt[pos2] = temp_cnt;
-	}
+		}
 }
 
 /*fonction d’affichage des lignes de centrifugeuses*/
@@ -255,6 +266,25 @@ static t_centrifugeuse centrifugeuse_membres_0() {
 	cnt_membres_0.compte_rebours = 0;
 
 	return cnt_membres_0;
+}
+static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
+	switch (etat) {
+	case EN_BRIS:
+		ptr_lig->config_bris = config;
+		break;
+
+	case EN_ARRET:
+		ptr_lig->config_arret = config;
+		break;
+
+	case EN_ATTENTE:
+		ptr_lig->config_attente = config;
+		break;
+
+	case EN_FONCTION:
+		ptr_lig->config_fonction = config;
+		break;
+	}
 }
 
 /*fonction configuration_valide du TP1*/

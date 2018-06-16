@@ -180,12 +180,12 @@ int main(void) {
 		init_ligne_centrifugeuse(&ligne, 32);
 		print_ligne_centrifugeuse(&ligne);
 
-		printf("\n*********************************************\n");
+		printf("\n\n");
 
 		init_ligne_centrifugeuse(&ligne, 10);
 		print_ligne_centrifugeuse(&ligne);
 
-		printf("\n*********************************************\n");
+		printf("\n\n");
 
 		init_ligne_centrifugeuse(&ligne, 33);
 		print_ligne_centrifugeuse(&ligne);
