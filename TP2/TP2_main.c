@@ -35,7 +35,7 @@ problème résolu, ça vaut quoi?
 #include<math.h>
 #include<time.h>
 #include "centrifugeuse.h"
-#include "ligne_centrifugeuse .h"
+#include "ligne_centrifugeuse.h"
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */

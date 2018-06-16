@@ -30,7 +30,7 @@ problème résolu, ça vaut quoi?
 #define _CRT_SECURE_NO_WARNINGS 
 
 #include "centrifugeuse.h"
-#include "ligne_centrifugeuse .h"
+#include "ligne_centrifugeuse.h"
 #include "op_bits.h"
 // Librairies usuelles à inclure 
 #include<stdio.h>
