@@ -44,14 +44,14 @@ neuves (avec configuration de départ du TP1), va mettre nb centrifugeuses
 EN_FONCTION et le nombre constant EN_ATTENTE, tous les champs du struct doivent
 être bien ajustés.Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).*/
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
-	
-	if (nb <= NB_BITS) {
 
+	ptr_lig->config_fonction = 0;
+	ptr_lig->config_bris = 0;
+	ptr_lig->config_attente = 0;
+	ptr_lig->config_arret = 0;
+
+	if (nb <= NB_BITS) {
 		//initialiser tout
-		ptr_lig->config_fonction = 0;
-		ptr_lig->config_bris = 0;
-		ptr_lig->config_attente = 0;
-		ptr_lig->config_arret = 0;
 		for (int i = 0; i < NB_BITS; i++) {
 			ptr_lig->tab_cnt[i] = init_centrifugeuse();
 			//init_centrifugeuse() mets les cnt en etat ARRET
@@ -59,7 +59,8 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 		}
 
 		int i = 2;
-		uint cnt_fonct_restant = nb;
+		//regle des 2/3
+		uint cnt_fonct_restant = ceil(2.0 / 3.0 * nb);;
 
 		for (int j = 0; cnt_fonct_restant > 0; j++) {
 			if (j == i) {  //pour les positions
@@ -71,6 +72,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			set_en_attente(&ptr_lig->tab_cnt[j]);
 			set_en_fonction(&ptr_lig->tab_cnt[j]);
 			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
+			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, j);
 			--cnt_fonct_restant;
 			
 			/*On mets ceux qui restent en attente. Le nombre de centri en 
@@ -90,6 +92,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 						/*on met les derniers libres les plus a droite en attente*/
 						set_en_attente(&ptr_lig->tab_cnt[i]);
 						ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
+						ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
 					}
 				}	
 			}	

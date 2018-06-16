@@ -35,6 +35,7 @@ problème résolu, ça vaut quoi?
 #include<math.h>
 #include<time.h>
 #include "centrifugeuse.h"
+#include "ligne_centrifugeuse .h"
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
@@ -126,7 +127,7 @@ int main(void) {
 	/*********************************************************
 	**********************TEST: Tocs**************************
 	*********************************************************/
-	#if (1)
+	#if (0)
 		int nb_toc = 10;
 		int etat;
 		uint compteur[8];
@@ -169,8 +170,25 @@ int main(void) {
 		printf("\nNb tocs en attente: %u", compteur[5]);
 		printf("\nNb tocs en fonction: %u", compteur[6]);
 		printf("\nCompte a rebours: %u", compteur[7]);
-		
-		
+	
+	#endif
+	#if (1)
+		/*********************************************************
+		**********************TEST: ligne**************************
+		*********************************************************/
+		t_ligne_centrifugeuse ligne;
+		init_ligne_centrifugeuse(&ligne, 32);
+		print_ligne_centrifugeuse(&ligne);
+
+		printf("\n*********************************************\n");
+
+		init_ligne_centrifugeuse(&ligne, 10);
+		print_ligne_centrifugeuse(&ligne);
+
+		printf("\n*********************************************\n");
+
+		init_ligne_centrifugeuse(&ligne, 33);
+		print_ligne_centrifugeuse(&ligne);
 
 	#endif
 
