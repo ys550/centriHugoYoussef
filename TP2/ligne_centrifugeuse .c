@@ -111,14 +111,16 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 				
 		}
 		//set les bits qui restent en arret
-		for (int i = 0; i < NB_BITS; i++) {
+		//Non nececessaire car premiere boucle(Init) mets en arret
+		//code repetitif
+		/*for (int i = 0; i < NB_BITS; i++) {
 			if (GET_BIT(ptr_lig->config_attente, i) != 1 && 
 				GET_BIT(ptr_lig->config_fonction, i) != 1 && 
 				GET_BIT(ptr_lig->config_bris, i) != 1) {
 				ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
 				set_en_arret(&ptr_lig->tab_cnt[i]);
 			}
-		}
+		}*/
 		return 1;
 	}
 	return 0;
