@@ -35,7 +35,7 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig);
 t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos);
 uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat);
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos);
-static  void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2);
+void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2);
 void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig);
 static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config);
 static unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs);

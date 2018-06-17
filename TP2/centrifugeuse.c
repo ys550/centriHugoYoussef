@@ -103,6 +103,13 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 
 	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
 		ptr_cnt->compte_rebours--;
+
+		if (ptr_cnt->compte_rebours <= 0) {
+			ptr_cnt->etat = EN_ARRET;
+			ptr_cnt->nb_tocs_en_fonction = 0;
+			ptr_cnt->nb_tocs_en_attente = 0;
+			ptr_cnt->prob_bris = PROB_BRIS_INIT;
+		}
 	}
 
 	if (test_bris < ptr_cnt->prob_bris && ptr_cnt->etat != EN_BRIS) {
@@ -130,13 +137,6 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	}
 	else if (ptr_cnt->etat == EN_ARRET) {
 		ptr_cnt->tab_tocs[EN_ARRET]++;
-	}
-
-	if (ptr_cnt->compte_rebours <= 0) {
-		ptr_cnt->etat = EN_ARRET;
-		ptr_cnt->nb_tocs_en_fonction = 0;
-		ptr_cnt->nb_tocs_en_attente = 0;
-		ptr_cnt->prob_bris = PROB_BRIS_INIT;
 	}
 	
 	//La fonction retourne l’état de la centrifugeuse.
@@ -198,6 +198,10 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 				2-ptr_cnt->nb_tocs_en_attente
 				3-ptr_cnt->nb_tocs_en_fonction
 	*/
+	if (ptr_cnt->prob_bris == 0) {
+		ptr_cnt->prob_bris = PROB_BRIS_INIT;
+	}
+
 	double prob_bris_en_fonction = ptr_cnt->prob_bris;
 	double prob_bris_en_attente;
 

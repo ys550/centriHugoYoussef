@@ -163,11 +163,10 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 tableau et réagit correctement à tout changement d’état d’une des 
 centrifugeuses.*/
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig) {
-	//***************A TERMINER************
+	int etat;
 	for (int i = 0; i < NB_BITS; i++) {
-		toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
+		etat = toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
 	}
-	/**********************************/
 }
 /*si la position est valide et si cette centrifugeuse du tableau n’est ni 
 EN_FONCTION ni EN_ATTENTE,  une  centrifugeuse neuve remplace celle à la 
@@ -235,10 +234,10 @@ t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  p
 	}
 	return centrifugeuse_membres_0();
 }
-/*cette fonction privée du module permute  les centrifugeuses aux positions 
+/*cette fonction du module permute  les centrifugeuses aux positions 
 pos1 et pos2 du tableau et dans les trains de bits correspondants si leurs états
 diffèrent.*/
-static void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
+void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 	uint pos2) {
 
 	if (pos1 < NB_BITS && pos2 < NB_BITS && ptr_lig->tab_cnt[pos1].etat !=

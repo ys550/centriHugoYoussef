@@ -129,10 +129,10 @@ int main(void) {
 	*********************************************************/
 	#if (1)
 		uint temps_reparation = 5;
+		uint compteur[8];
 		int nb_tocs = temps_reparation + 1;
 		int etat;
-		uint compteur[8];
-
+		
 		cent = init_centrifugeuse();
 		print_centrifugeuse(&cent);
 		set_en_attente(&cent);
@@ -165,9 +165,31 @@ int main(void) {
 		printf("\n*****FIN DE REPARATION*****\n");
 		
 		set_en_attente(&cent);
+		etat = toc_centrifugeuse(&cent);
 		print_centrifugeuse(&cent);
 		set_en_fonction(&cent);
+		etat = toc_centrifugeuse(&cent);
 		print_centrifugeuse(&cent);
+
+		do {
+			etat = toc_centrifugeuse(&cent);
+			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
+				"EN_FONCTION = 3");
+			printf("\nETAT Retourne par toc_centri: %d\n", etat);
+			//Test: get_prob_bris
+			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
+			print_centrifugeuse(&cent);
+		} while (etat != EN_BRIS);
+
+		/*do {
+			etat = toc_centrifugeuse(&cent);
+			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
+				"EN_FONCTION = 3");
+			printf("\nETAT Retourne par toc_centri: %d\n", etat);
+			//Test: get_prob_bris
+			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
+			print_centrifugeuse(&cent);
+		} while (etat != EN_BRIS);*/
 
 		printf("\n*************Test get_compteur**************\n");
 		//Test: get_compteur
@@ -182,10 +204,12 @@ int main(void) {
 		printf("\nCompte a rebours: %u\nB", compteur[7]);
 	
 	#endif
+		
+	/*********************************************************
+	**********************TEST: ligne**************************
+	**********************************************************/
 	#if (0)
-		/*********************************************************
-		**********************TEST: ligne**************************
-		*********************************************************/
+		
 		t_ligne_centrifugeuse ligne;
 		init_ligne_centrifugeuse(&ligne, 32);
 		print_ligne_centrifugeuse(&ligne);
@@ -202,12 +226,17 @@ int main(void) {
 
 	#endif
 
+	/*********************************************************
+	*********************TEST: Ligne**************************
+	*********************************************************/
 	#if (0)
-		cent = init_centrifugeuse();
-		set_en_attente(&cent);
-		set_en_fonction(&cent);
-		do {}
+		t_ligne_centrifugeuse ligne;
+		/*mets k=+~2/3 * nb en fonction*/
+		init_ligne_centrifugeuse(&ligne, 20);
+		print_ligne_centrifugeuse(&ligne);
+		toc_ligne(&ligne);
 	#endif
+
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");
