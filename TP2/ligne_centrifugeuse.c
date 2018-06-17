@@ -116,24 +116,40 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 /*ajoute si possible une centrifugeuse  EN_FONCTION dans la ligne.  Retour de 1
 si réussi, 0 sinon (configuration impossible).*/
 int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
+	/*il est seulement possible d'ajouter une centrifugueuse EN_FONCTION si le
+	resultat ne donne pas plus que 2 EN_FONCTION en contigus et si la 
+	centrifuguese dans la position trouve est en attente ou en arret*/
+
+	//pour verifier si configuration valide(pas plus de 2 en fonction contigus)
+	uint copie_config_fonction = ptr_lig->config_fonction;
+
 	for (int i = 0; i < NB_BITS; i++) {
+
 		if (GET_BIT(ptr_lig->config_attente, i) == 1 || 
 			GET_BIT(ptr_lig->config_arret, i) == 1) {
 
-			if (GET_BIT(ptr_lig->config_attente, i) == 1) {
-				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
-				ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
-			}
-			else if (GET_BIT(ptr_lig->config_attente, i) == 1) {
-				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
-				ptr_lig->tab_nb_cnt[EN_ARRET]--;
-			}
-			set_en_attente(&ptr_lig->tab_cnt[i]);
-			set_en_fonction(&ptr_lig->tab_cnt[i]);
-			ptr_lig->tab_nb_cnt[EN_FONCTION]++;
-			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, i);
+			copie_config_fonction = SET_BIT(ptr_lig->config_fonction, i);
+			
+			/*verifie si la config serait valide si on ajoute une 
+			centrifuguese en fonction dans la position (i) courante de 
+			l'iteration de la boucle avant de l'ajouter*/
+			if (configuration_valide(copie_config_fonction)) {
 
-			return 1;
+				if (GET_BIT(ptr_lig->config_attente, i) == 1) {
+					ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
+					ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
+				}
+				else if (GET_BIT(ptr_lig->config_attente, i) == 1) {
+					ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
+					ptr_lig->tab_nb_cnt[EN_ARRET]--;
+				}
+				set_en_attente(&ptr_lig->tab_cnt[i]);
+				set_en_fonction(&ptr_lig->tab_cnt[i]);
+				ptr_lig->tab_nb_cnt[EN_FONCTION]++;
+				ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, i);
+
+				return 1;
+			}	
 		}
 	}
 	return 0;
@@ -320,29 +336,26 @@ static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
 *****************SOURCE: TP1************************
 *************PAR: Youssef Soliman*******************
 ****************************************************/
-static unsigned short configuration_valide(uint valeur, unsigned short nb_bits_actifs) {
-	//TO-DO: Modifier fonction configuration_valide
-	int nb_actif = 0;
+static unsigned short configuration_valide(uint valeur) {
 	int nb_actif_contigus = 0;
 
-	if (nb_bits_actifs < NB_BITS) {
-		for (int i = 0; i <= NB_BITS - 1; i++) {
-			if (GET_BIT(valeur, i)) {
-				nb_actif++;
-				nb_actif_contigus++;
-			}
-			else {
-				nb_actif_contigus = 0;
-			}
+	for (int i = 0; i <= NB_BITS - 1; i++) {
+		if (GET_BIT(valeur, i)) {
+			nb_actif_contigus++;
+		}
+		else {
+			nb_actif_contigus = 0;
+		}
 
-			if (nb_actif_contigus > 2) {
-				return 0;
-			}
-			}
-		if (nb_actif == nb_bits_actifs && nb_actif_contigus <= 2) {
-			return 1;
+		if (nb_actif_contigus > 2) {
+			return 0;
 		}
-		}
+	}
+
+	if (nb_actif_contigus <= 2) {
+		return 1;
+	}
+		
 	return 0;
 }
 
