@@ -50,7 +50,7 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.nb_bris = 0;
 	for (int i = 0; i < 4; i++)
 		nouvel_centri.tab_tocs[i] = 0;
-
+	nouvel_centri.tab_tocs[EN_ARRET]++;
 	return nouvel_centri;
 }
 /*permet de mettre une centrifugeuse EN_ATTENTE  dans l’état   EN_FONCTION.
@@ -100,8 +100,18 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	#ifdef DEBUG
 		printf("\ntest bris: %lf\n", test_bris);
 	#endif
+
 	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
 		ptr_cnt->compte_rebours--;
+	}
+
+	if (test_bris < ptr_cnt->prob_bris && ptr_cnt->etat != EN_BRIS) {
+		ptr_cnt->etat = EN_BRIS;
+		ptr_cnt->compte_rebours = INFINI;
+		ptr_cnt->nb_bris++;
+	}
+	else {
+		accroitre_prob(ptr_cnt);
 	}
 
 	/*ce if doit rester avant le if (test_bris < ptr_cnt->prob_bris)
@@ -122,21 +132,13 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		ptr_cnt->tab_tocs[EN_ARRET]++;
 	}
 
-	if (test_bris < ptr_cnt->prob_bris) {
-		ptr_cnt->etat = EN_BRIS;
-		ptr_cnt->compte_rebours = INFINI;
-		ptr_cnt->nb_bris++;
-	}
-	else {
-		accroitre_prob(ptr_cnt);
-	}
-	
 	if (ptr_cnt->compte_rebours <= 0) {
 		ptr_cnt->etat = EN_ARRET;
 		ptr_cnt->nb_tocs_en_fonction = 0;
 		ptr_cnt->nb_tocs_en_attente = 0;
 		ptr_cnt->prob_bris = PROB_BRIS_INIT;
 	}
+	
 	//La fonction retourne l’état de la centrifugeuse.
 	return ptr_cnt->etat;
 }

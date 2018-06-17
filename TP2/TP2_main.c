@@ -125,18 +125,20 @@ int main(void) {
 	#endif
 		
 	/*********************************************************
-	**********************TEST: Tocs**************************
+	*****************TEST: Toc_centrifugeuse******************
 	*********************************************************/
-	#if (0)
-		int nb_toc = 10;
+	#if (1)
+		uint temps_reparation = 5;
+		int nb_tocs = temps_reparation + 1;
 		int etat;
 		uint compteur[8];
 
 		cent = init_centrifugeuse();
+		print_centrifugeuse(&cent);
 		set_en_attente(&cent);
 		set_en_fonction(&cent);
 
-		while (nb_toc >= 0) {
+		do {
 			etat = toc_centrifugeuse(&cent);
 			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, " 
 				"EN_FONCTION = 3");
@@ -144,12 +146,14 @@ int main(void) {
 			//Test: get_prob_bris
 			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
 			print_centrifugeuse(&cent);
-			nb_toc--;
-		}
-		printf("\n*****FIN PREMIERE BOULCE DE TOC*****\n");
-		set_temps_reparation(&cent, 3);
+		} while (etat != EN_BRIS);
 
-		while (nb_toc <= 4) {
+		printf("\n*****FIN PREMIERE BOULCE DE TOC*****\n Temps Reparation = %u\n", 
+			temps_reparation);
+		set_temps_reparation(&cent, temps_reparation);
+		print_centrifugeuse(&cent);
+
+		do {
 			etat = toc_centrifugeuse(&cent);
 			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
 				"EN_FONCTION = 3");
@@ -157,9 +161,15 @@ int main(void) {
 			//Test: get_prob_bris
 			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
 			print_centrifugeuse(&cent);
-			nb_toc++;
-		}
+		} while (etat == EN_BRIS);
+		printf("\n*****FIN DE REPARATION*****\n");
+		
+		set_en_attente(&cent);
+		print_centrifugeuse(&cent);
+		set_en_fonction(&cent);
+		print_centrifugeuse(&cent);
 
+		printf("\n*************Test get_compteur**************\n");
 		//Test: get_compteur
 		get_compteurs(&cent, compteur);
 		printf("\nCompte d'etat EN_BRIS: %u", compteur[EN_BRIS]);
@@ -169,10 +179,10 @@ int main(void) {
 		printf("\nNb Bris: %u", compteur[4]);
 		printf("\nNb tocs en attente: %u", compteur[5]);
 		printf("\nNb tocs en fonction: %u", compteur[6]);
-		printf("\nCompte a rebours: %u", compteur[7]);
+		printf("\nCompte a rebours: %u\nB", compteur[7]);
 	
 	#endif
-	#if (1)
+	#if (0)
 		/*********************************************************
 		**********************TEST: ligne**************************
 		*********************************************************/
@@ -190,6 +200,13 @@ int main(void) {
 		init_ligne_centrifugeuse(&ligne, 33);
 		print_ligne_centrifugeuse(&ligne);
 
+	#endif
+
+	#if (0)
+		cent = init_centrifugeuse();
+		set_en_attente(&cent);
+		set_en_fonction(&cent);
+		do {}
 	#endif
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	

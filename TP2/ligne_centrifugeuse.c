@@ -49,13 +49,20 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 	ptr_lig->config_bris = 0;
 	ptr_lig->config_attente = 0;
 	ptr_lig->config_arret = 0;
+	ptr_lig->tab_nb_cnt[EN_BRIS] = 0;
+	ptr_lig->tab_nb_cnt[EN_ATTENTE] = 0;
+	ptr_lig->tab_nb_cnt[EN_FONCTION] = 0;
+	ptr_lig->tab_nb_cnt[EN_ARRET] = 0;
+
 
 	if (nb <= NB_BITS) {
 		//initialiser tout
-		for (int i = 0; i < nb; i++) {
+		for (int i = 0; i < NB_BITS; i++) {
 			ptr_lig->tab_cnt[i] = init_centrifugeuse();
 			//init_centrifugeuse() mets les cnt en etat ARRET
 			ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
+			ptr_lig->tab_nb_cnt[EN_ARRET]++;
+
 		}
 
 		int i = 2;
@@ -71,6 +78,8 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			//set en fonction en respectant la regle <= 2 en contigus
 			set_en_attente(&ptr_lig->tab_cnt[j]);
 			set_en_fonction(&ptr_lig->tab_cnt[j]);
+			ptr_lig->tab_nb_cnt[EN_ARRET]--;
+			ptr_lig->tab_nb_cnt[EN_FONCTION]++;
 			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
 			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, j);
 			--cnt_fonct_restant;
@@ -93,6 +102,8 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 						set_en_attente(&ptr_lig->tab_cnt[i]);
 						ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
 						ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
+						ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
+						ptr_lig->tab_nb_cnt[EN_ARRET]--;
 					}
 				}	
 			}	
@@ -109,11 +120,19 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 		if (GET_BIT(ptr_lig->config_attente, i) == 1 || 
 			GET_BIT(ptr_lig->config_arret, i) == 1) {
 
+			if (GET_BIT(ptr_lig->config_attente, i) == 1) {
+				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
+				ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
+			}
+			else if (GET_BIT(ptr_lig->config_attente, i) == 1) {
+				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
+				ptr_lig->tab_nb_cnt[EN_ARRET]--;
+			}
+			set_en_attente(&ptr_lig->tab_cnt[i]);
 			set_en_fonction(&ptr_lig->tab_cnt[i]);
+			ptr_lig->tab_nb_cnt[EN_FONCTION]++;
 			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, i);
-			ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
-			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
-			
+
 			return 1;
 		}
 	}
@@ -131,6 +150,8 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 			/*reduit de 1 une cnt EN_FONCTION en changeant sont etat a 
 			EN_ATTENTE*/
 			set_en_attente(&ptr_lig->tab_cnt[i]);
+			ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
+			ptr_lig->tab_nb_cnt[EN_FONCTION]--;
 			ptr_lig->config_fonction = CLEAR_BIT(ptr_lig->config_fonction, i);
 			ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
 			return 1;
@@ -159,17 +180,22 @@ t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos) {
 		
 		t_centrifugeuse copie_cnt_elimine = ptr_lig->tab_cnt[pos];
 
-		/*Il n'est pas necessaire de changer (clear bit) les config EN_FONCTION
-		et EN_ATTENTE, car car on ne les remplace pas s'il sont dans cet etat
-		il seront donc deja a 0 si on remplace la cnt.
-		*/
+		if (copie_cnt_elimine.etat == EN_BRIS) {
+			ptr_lig->tab_nb_cnt[EN_BRIS]--;
+			//changer config bris au cas que celle remplacer ete brise
+			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, pos);
+		}
+		else if (copie_cnt_elimine.etat == EN_ARRET) {
+			ptr_lig->tab_nb_cnt[EN_ARRET]--;
+			//changer config bris au cas que celle remplacer ete brise
+			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, pos);
+		}
 
-		//changer config bris au cas que celle remplacer ete brise
-		ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, pos);
 		//insere la nouvelle centri init_centri-> etat = en arret
 		ptr_lig->tab_cnt[pos] = init_centrifugeuse();
 		//la nouvelle centri est en etat arret
 		ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, pos);
+		ptr_lig->tab_nb_cnt[EN_ARRET]++;
 
 		return copie_cnt_elimine;
 	}
@@ -242,7 +268,6 @@ static void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 		set_config(ptr_lig, etat_pos1, config_1_temp);
 		set_config(ptr_lig, etat_pos2, config_2_temp);
 		
-
 		//permutation des centrifugeuses
 		//cnt temporaire pour permettre la permutation
 		t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
@@ -257,6 +282,10 @@ void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig) {
 	printf("\n\n config_attente  == %s ", bits2string(ptr_lig->config_attente));
 	printf("\n\n config_arret    == %s ", bits2string(ptr_lig->config_arret));
 	printf("\n\n config_bris     == %s ", bits2string(ptr_lig->config_bris));
+	printf("\nNb de centrifugeuse EN_BRIS: %u", ptr_lig->tab_nb_cnt[EN_BRIS]);
+	printf("\nNb de centrifugeuse EN_ARRET: %u", ptr_lig->tab_nb_cnt[EN_ARRET]);
+	printf("\nNb de centrifugeuse EN_ATTENTE: %u", ptr_lig->tab_nb_cnt[EN_ATTENTE]);
+	printf("\nNb de centrifugeuse EN_FONCTION: %u\n", ptr_lig->tab_nb_cnt[EN_FONCTION]);
 }
 static t_centrifugeuse centrifugeuse_membres_0() {
 	t_centrifugeuse cnt_membres_0;
