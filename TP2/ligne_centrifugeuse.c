@@ -139,7 +139,7 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 					ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
 					ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
 				}
-				else if (GET_BIT(ptr_lig->config_attente, i) == 1) {
+				else if (GET_BIT(ptr_lig->config_arret, i) == 1) {
 					ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
 					ptr_lig->tab_nb_cnt[EN_ARRET]--;
 				}
