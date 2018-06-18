@@ -127,6 +127,9 @@ int main(void) {
 	/*********************************************************
 	*****************TEST: Toc_centrifugeuse******************
 	*********************************************************/
+
+	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise la repare puis la
+	mets en fonctionnement une autre fois jusqu'elle se brise une deuxime fois*/
 	#if (1)
 		uint temps_reparation = 5;
 		uint compteur[8];
@@ -180,16 +183,6 @@ int main(void) {
 			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
 			print_centrifugeuse(&cent);
 		} while (etat != EN_BRIS);
-
-		/*do {
-			etat = toc_centrifugeuse(&cent);
-			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
-				"EN_FONCTION = 3");
-			printf("\nETAT Retourne par toc_centri: %d\n", etat);
-			//Test: get_prob_bris
-			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
-			print_centrifugeuse(&cent);
-		} while (etat != EN_BRIS);*/
 
 		printf("\n*************Test get_compteur**************\n");
 		//Test: get_compteur
