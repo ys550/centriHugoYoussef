@@ -1,3 +1,28 @@
+/*===========================================================*/
+/* 	INF145 - ligne_centrifugeuse.h                                          */
+/*===========================================================*/
+
+/*
+
+Module : ligne_centrifugeuse.h
+Par    :
+Date   :20/06/18
+
+-Ce module à pour but de représenter sur 32 bits les états possibles des 
+ centrifugeuse et respectant les contraintes de maintenance et de sécurité qui
+ oblige à ne pas avoir plus de 2 centrifugeuse fonctionelle voisine.
+-Permet de recevoir les informations d'une centrifugeuse issu du module 
+ centrifugeuse, de faire des actions (reduire, ajouter, remplacer,réparer,initialiser
+ permuter) des centrifugeuses.
+ - Ce ficher à pour but de créer les constantes, les structures, les énumérations 
+et les définitions des fonctions nécéssaire pour la representation et leurs actions
+en chaine de bits des centrifugeuses.
+
+
+
+
+*/
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,57 +62,182 @@ typedef struct {
 *********************************************************/
 
 
-/*Agit sur la ligne reçue en référence, remplit son tableau de centrifugeuses
-neuves (avec configuration de départ du TP1), va mettre nb centrifugeuses
-EN_FONCTION et le nombre constant EN_ATTENTE, tous les champs du struct doivent
-être bien ajustés.Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).*/
+/*******************************************************************************/
+/*init_ligne_centrifugeuse
+
+Cette fonction agit sur la ligne reçue en référence, remplit son tableau de 
+centrifugeuses neuves (avec configuration de départ du TP1), va mettre nb 
+centrifugeuses EN_FONCTION et le nombre constant EN_ATTENTE,
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse, le paramètre
+              est de type t_ligne_centrifugeuse.
+			- nb : nombre de centrifugeuse totale 
+
+VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).
+*/
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb);
 
-/*Ajoute si possible une centrifugeuse  EN_FONCTION dans la ligne.  Retour de 1
-si réussi, 0 sinon (configuration impossible).*/
+
+
+/*******************************************************************************/
+/*ajouter_cnt
+
+Cette fonction ajoute si possible une centrifugeuse  EN_FONCTION dans la ligne.
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse, le paramètre
+est de type t_ligne_centrifugeuse.
+
+VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon.
+*/
 int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig);
 
-/*Réduit de un le nombre de  centrifugeuses EN_FONCTION dans la ligne.
-Retour de 1 si réussi, 0 sinon (aucune EN_FONCTION).*/
+
+
+/*******************************************************************************/
+/*reduire_cnt
+
+Cette fonction réduit de un le nombre de  centrifugeuses EN_FONCTION 
+dans la ligne.
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+              le paramètre est de type t_ligne_centrifugeuse.
+
+VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon.
+*/
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig);
 
-/*Déclenche la fonction toc_centrifugeuse() pour chacune des centrifugeuses du
-tableau et réagit correctement à tout changement d’état d’une des
-centrifugeuses.*/
+
+
+/*******************************************************************************/
+/*toc_ligne
+
+Cette fonction déclenche la fonction toc_centrifugeuse() pour
+chacune des centrifugeuses du tableau et réagit correctement 
+à tout changement d’état d’une des centrifugeuses.
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+*/
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig);
 
-/*Si la position est valide et si cette centrifugeuse du tableau n’est ni
+
+
+/*******************************************************************************/
+/*remplacer_cnt
+
+Si la position est valide et si cette centrifugeuse du tableau n’est ni
 EN_FONCTION ni EN_ATTENTE,  une  centrifugeuse neuve remplace celle à la
-position donnée dans le tableau. La fonction retourne une copie de la
-centrifugeuse éliminée, sinon une centrifugeuse dont tous les membres sont 0
-est retournée.*/
+position donnée dans le tableau.
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+			- pos : la position de la centrifigeuse dans la chaine de bits <32 
+
+VALEUR DE RETOUR : retourne une copie de la centrifugeuse éliminée, 
+                   sinon une centrifugeuse dont tous les membres sont 0 est retournée.
+*/
 t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos);
 
-/*Qui retourne le train de bits de la ligne qui donne les positions des
-centrifugeuses dans cet état. SPEC : Le second paramètre doit être une des
-quatre constantes d’état sinon le résultat obtenu n’a pas de sens.*/
+
+
+/*******************************************************************************/
+/*get_en_etat
+
+La fonction retourne le train de bits de la ligne qui donne les positions des
+centrifugeuses dans l'état choisi 
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+- état : Le second paramètre doit être une des quatre constantes
+
+VALEUR DE RETOUR : retourne la chaine de bit défini de l'état
+*/
 uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat);
 
-/*Retourne une copie de la centrifugeuse à cette position dans le tableau. Elle
-retourne une centrifugeuse dont tous les membres sont 0 si la position est
-non-valide.*/
+
+
+/*******************************************************************************/
+/*get_centrifugeuse
+
+La fonction retourne une copie de la centrifugeuse à cette position 
+dans le tableau. 
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+- pos : la position de la centrifigeuse dans la chaine de bits <32
+
+VALEUR DE RETOUR : Elle retourne une centrifugeuse dont tous les membres
+                   sont 0 si la position est non-valide.
+*/
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos);
 
-/*Cette fonction du module permute  les centrifugeuses aux positions
-pos1 et pos2 du tableau et dans les trains de bits correspondants si leurs états
-diffèrent.*/
+
+
+/*******************************************************************************/
+/*permuter_centrifugeuse
+
+La fonction  permute  les centrifugeuses aux positions
+pos1 et pos2 du tableau et dans les trains de bits 
+correspondants si leurs états diffèrent.
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+- pos1 et pos2 : la position de la centrifigeuse dans la chaine de bits <32
+
+VALEUR DE RETOUR : Elle retourne une centrifugeuse dont tous les membres
+sont 0 si la position est non-valide.
+*/
 void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1, uint pos2);
 
-/*Fonction d’affichage des lignes de centrifugeuses*/
+
+/*******************************************************************************/
+/*print_ligne_centrifugeuse
+
+Fonction d’affichage des lignes de centrifugeuses
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+
+VALEUR DE RETOUR : affichage des chaines de bits de tous les états 
+*/
 void print_ligne_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig);
 
-/*Donne la chaine de bits correspondant à létat demander (EN_BRIS, EN_ARRET,
-EN_ATTENTE, EN_FONCTION)*/
+
+
+/*******************************************************************************/
+/*set_config
+
+Donne la chaine de bits correspondant à létat demander (EN_BRIS, EN_ARRET,
+EN_ATTENTE, EN_FONCTION)
+
+PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
+le paramètre est de type t_ligne_centrifugeuse.
+			- L'état voulu (EN_BRIS, EN_ARRET, EN_ATTENTE, EN_FONCTION)
+
+
+VALEUR DE RETOUR : affichage du chaine de l'état voulu 
+*/
 static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config);
 
-/*fonction configuration_valide du TP1*/
+
+/*******************************************************************************/
+/*configuration_valide
+
+fonction configuration_valide du TP1
+
+*/
 static unsigned short configuration_valide(uint valeur);
 
-/*Initialise toute les valeurs (compte_rebours,prob_bris,en bris et
-initialisation des centrifugeuses)*/
+
+/*******************************************************************************/
+/*t_centrifugeuse
+
+La fonction privée du module permute  les centrifugeuses aux positions
+pos1 et pos2 du tableau et dans les trains de bits correspondants si 
+leurs états diffèrent.
+
+*/
 static t_centrifugeuse centrifugeuse_membres_0(void);
+
+
+/*******************************************************************************/

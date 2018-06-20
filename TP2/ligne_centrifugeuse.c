@@ -8,11 +8,16 @@ Module :ligne_centrifugeuse
 Par    :
 Date   :21/05/18
 
-Ce module offre Le second module va implémenter le type structuré 
+-Ce module offre Le second module va implémenter le type structuré 
 t_ligne_centrifugeuse dans son interface (*.H) et va offrir des 
 fonctions visant à maintenir un nombre variable dans le temps de
 centrifugeuses EN_FONCTION dans une ligne de centrifugeuses 
 (comme pour le TP1).
+
+- Ce ficher permet de voir précisement comment les fonctions définie dans
+ligne_centrifugeuse.h ont été programmé.
+Pour comprendre l'utilité de ces fonctions, veuillez vous référer 
+au ficher centrifugeuse.h 
 */
 
 
