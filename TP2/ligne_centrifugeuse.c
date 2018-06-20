@@ -112,7 +112,7 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	resultat ne donne pas plus que 2 EN_FONCTION en contigus et si la 
 	centrifuguese dans la position trouve est en attente ou en arret*/
 
-	//pour verifier si configuration valide(pas plus de 2 en fonction contigus)
+	//pour verifier si configuration valide(pas plus de 2 EN_FONCTION contigus)
 	uint copie_config_fonction = ptr_lig->config_fonction;
 
 	for (int i = 0; i < NB_BITS; i++) {
@@ -187,7 +187,7 @@ t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos) {
 		}
 		else if (copie_cnt_elimine.etat == EN_ARRET) {
 			ptr_lig->tab_nb_cnt[EN_ARRET]--;
-			//changer config bris au cas que celle remplacer ete brise
+			//changer config bris au cas que celle remplacer ete en arret
 			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, pos);
 		}
 
@@ -261,15 +261,22 @@ void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 				config_2_temp = SET_BIT(config_1_temp, pos1);
 			}
 		}
-		set_config(ptr_lig, etat_pos1, config_1_temp);
-		set_config(ptr_lig, etat_pos2, config_2_temp);
-		
-		//permutation des centrifugeuses
-		//cnt temporaire pour permettre la permutation
-		t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
-		ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
-		ptr_lig->tab_cnt[pos2] = temp_cnt;
+		//si les configs temp sont valides
+		if (configuration_valide(config_1_temp) == 1 && 
+			configuration_valide(config_2_temp) == 1) {
+
+			//copie les config temp aux vrais configs
+			set_config(ptr_lig, etat_pos1, config_1_temp);
+			set_config(ptr_lig, etat_pos2, config_2_temp);
+
+			//permutation des centrifugeuses
+			//cnt temporaire pour permettre la permutation
+			t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
+			ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
+			ptr_lig->tab_cnt[pos2] = temp_cnt;
 		}
+		
+	}
 }
 
 
@@ -292,6 +299,8 @@ static t_centrifugeuse centrifugeuse_membres_0() {
 
 	return cnt_membres_0;
 }
+/*Permet d'atribuer la valeur unsigned int en parametre a la configuration choisi
+avec l'etat en deuxieme parametre de la ligne en premier parametre*/
 static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
 	switch (etat) {
 	case EN_BRIS:
