@@ -47,6 +47,7 @@ problème résolu, ça vaut quoi?
 //Programme principal: fonction qui retourne un entier (int)
 int main(void) {
 	int est_reussi;
+	int position;
 	t_centrifugeuse cent;
 
 	/*********************************************************
@@ -97,7 +98,7 @@ int main(void) {
 		Nb tocs en fonction: 0
 		Nb tocs en attente: 0
 		Compte d'etat EN_BRIS: 0
-		Compte d'etat EN_ARRET: 0
+		Compte d'etat EN_ARRET: 1
 		Compte d'etat EN_ATTENTE: 0
 		Compte d'etat EN_FONCTION: 0
 		*/
@@ -124,13 +125,19 @@ int main(void) {
 		print_centrifugeuse(&cent);
 	#endif
 		
+		
+
+
+
+
+
 	/*********************************************************
 	*****************TEST: Toc_centrifugeuse******************
 	*********************************************************/
 
 	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise la repare puis la
 	mets en fonctionnement une autre fois jusqu'elle se brise une deuxime fois*/
-	#if (1)
+	#if (0)
 		uint temps_reparation = 5;
 		uint compteur[8];
 		int nb_tocs = temps_reparation + 1;
@@ -229,6 +236,65 @@ int main(void) {
 		print_ligne_centrifugeuse(&ligne);
 		toc_ligne(&ligne);
 	#endif
+
+		/*********************************************************
+		*********************TEST: Ajout et reduire***************
+		*********************************************************/
+#if (0)
+
+	t_ligne_centrifugeuse ligne;
+	//Mise en place à la configuration initial avec un nb de bit 10
+	est_reussi = init_ligne_centrifugeuse(&ligne, 10);
+	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+	//affiche la configuration initiale
+	printf("\nconfiguration initiale");
+	print_ligne_centrifugeuse(&ligne);
+
+	printf("\n\n");
+
+	//diminution du nb de centrifugeuse active par 1
+	est_reussi=reduire_cnt(&ligne);
+	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+	//configuration initial en elevant une centrifugeuse 
+	printf("\nconfiguration initiale - 1 centrifugeuse active");
+	print_ligne_centrifugeuse(&ligne);
+
+	printf("\n\n");
+	
+	//ajout d'une centrifugeuse pour retourner à la configuration initiale
+	est_reussi = ajouter_cnt(&ligne);
+	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+	//retour à la configuration initiale
+	printf("\nconfiguration initiale");
+	print_ligne_centrifugeuse(&ligne);
+
+#endif
+
+	/*********************************************************
+	*********************TEST: remplacer**********************
+	*********************************************************/
+
+#if (0)
+
+	t_ligne_centrifugeuse ligne;
+	//Mise en place à la configuration initial avec un nb de bit 10
+	est_reussi = init_ligne_centrifugeuse(&ligne, 10);
+	print_ligne_centrifugeuse(&ligne);
+
+	printf("\n\n");
+
+	t_etat position = ligne[10].etat
+	
+#endif
+	
+		/*********************************************************
+		*********************TEST: get en état********************
+		*********************************************************/
+
+
+
+
+
 
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	

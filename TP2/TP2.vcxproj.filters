@@ -15,10 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="centrifugeuse .c">
+    <ClCompile Include="centrifugeuse.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="ligne_centrifugeuse .c">
+    <ClCompile Include="ligne_centrifugeuse.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="op_bits.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="TP2_main.c">
@@ -29,7 +32,10 @@
     <ClInclude Include="centrifugeuse.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="ligne_centrifugeuse .h">
+    <ClInclude Include="ligne_centrifugeuse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="op_bits.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
