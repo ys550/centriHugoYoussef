@@ -28,7 +28,10 @@ en chaine de bits des centrifugeuses.
 #include <stdio.h>
 #include "op_bits.h"
 
+//le nb initiale de cnt en attente
 #define NBR_K_EN_ATTENTE 2
+//pour le test toc ligne
+#define NB_CENT_DEPART 10
 
 typedef struct {
 	//Un tableau de centrifugeuse taille:32bits
@@ -50,15 +53,13 @@ typedef struct {
 	uint config_attente;
 	uint config_arret;
 
+	//un entier qui compte le nombre de bris subis par toutes les centrifugeuses 
+	int  nb_bris_ligne;
+
 } t_ligne_centrifugeuse;
 
-//nb trop grand si depasse regle des 2/3
-
-
-
-
 /*********************************************************
-*********************Définition des fonctions*************
+*********************Déclaration des fonctions*************
 *********************************************************/
 
 
@@ -118,7 +119,7 @@ chacune des centrifugeuses du tableau et réagit correctement
 PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse,
 le paramètre est de type t_ligne_centrifugeuse.
 */
-void toc_ligne(t_ligne_centrifugeuse * ptr_lig);
+void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps);
 
 
 
@@ -238,6 +239,12 @@ leurs états diffèrent.
 
 */
 static t_centrifugeuse centrifugeuse_membres_0(void);
+
+/*******************************************************************************/
+/*get_nb_bris_lig
+fonction qui retourne la valeur de nb_bris_ligne.
+*/
+int  get_nb_bris_lig(const t_ligne_centrifugeuse * ptr_lig);
 
 
 /*******************************************************************************/

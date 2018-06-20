@@ -57,6 +57,7 @@ Ce module est la fonction principale de notre programme:
 /*=========================================================*/
 //Programme principal: fonction qui retourne un entier (int)
 int main(void) {
+	int temps;
 	int est_reussi;
 	int position;
 	t_centrifugeuse cent;
@@ -240,13 +241,50 @@ int main(void) {
 	/*********************************************************
 	*********************TEST: Ligne**************************
 	*********************************************************/
-	#if (1)
+	#if (0)
 		t_ligne_centrifugeuse ligne;
 		/*mets k=+~2/3 * nb en fonction*/
 		init_ligne_centrifugeuse(&ligne, 20);
 		//La somme des centrifugueses de chaque etat affiche doit etre = 32
 		print_ligne_centrifugeuse(&ligne);
 		toc_ligne(&ligne);
+	#endif
+
+		/*********************************************************
+		*******************TEST: Toc Ligne************************
+		*********************************************************/
+	#if (1)
+		t_ligne_centrifugeuse ligne;
+
+		//avec NB_CENT_DEPART = 10 par exemple
+		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
+		print_ligne_centrifugeuse(&ligne);
+		/* ici faites imprimer l'état initial de la ligne (trains de bits et compteurs) */
+		temps = 0;
+		do {
+			temps++;
+			//*** avec ajout du paramètre "temps" pour les affichages d’événements
+			toc_ligne(&ligne, temps);
+
+			//tant que les 10 + 2 ne sont pas toutes brisées
+		} while ((get_nb_bris_lig(&ligne) <  (NB_CENT_DEPART + NBR_K_EN_ATTENTE)));
+	#endif
+		//avec reparation
+	#if (0)
+		t_ligne_centrifugeuse ligne;
+
+		//avec NB_CENT_DEPART = 10 par exemple
+		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
+		print_ligne_centrifugeuse(&ligne, 0);
+		/* ici faites imprimer l'état initial de la ligne (trains de bits et compteurs) */
+		temps = 0;
+		do {
+			temps++;
+			//*** avec ajout du paramètre "temps" pour les affichages d’événements
+			toc_ligne(&ligne, temps);
+
+			//tant que les 10 + 2 ne sont pas toutes brisées
+		} while ((get_nb_bris_lig(&ligne) <  (NB_CENT_DEPART + NBR_K_EN_ATTENTE)));
 	#endif
 
 		/*********************************************************
