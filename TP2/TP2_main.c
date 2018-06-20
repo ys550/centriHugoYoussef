@@ -130,7 +130,7 @@ int main(void) {
 
 	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise la repare puis la
 	mets en fonctionnement une autre fois jusqu'elle se brise une deuxime fois*/
-	#if (1)
+	#if (0)
 		uint temps_reparation = 5;
 		uint compteur[8];
 		int nb_tocs = temps_reparation + 1;
@@ -222,13 +222,15 @@ int main(void) {
 	/*********************************************************
 	*********************TEST: Ligne**************************
 	*********************************************************/
-	#if (0)
+	#if (1)
 		t_ligne_centrifugeuse ligne;
 		/*mets k=+~2/3 * nb en fonction*/
 		init_ligne_centrifugeuse(&ligne, 20);
+		//La somme des centrifugueses de chaque etat affiche doit etre = 32
 		print_ligne_centrifugeuse(&ligne);
 		toc_ligne(&ligne);
 	#endif
+
 
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	

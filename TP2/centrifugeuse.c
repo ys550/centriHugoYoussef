@@ -28,7 +28,7 @@ problème résolu, ça vaut quoi?
 /*=========================================================*/
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS 
-#define DEBUG
+//#define DEBUG
 
 #include "centrifugeuse.h"
 
