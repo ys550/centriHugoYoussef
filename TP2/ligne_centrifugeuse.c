@@ -261,21 +261,27 @@ void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 				config_2_temp = SET_BIT(config_1_temp, pos1);
 			}
 		}
-		//si les configs temp sont valides
-		if (configuration_valide(config_1_temp) == 1 && 
-			configuration_valide(config_2_temp) == 1) {
 
-			//copie les config temp aux vrais configs
-			set_config(ptr_lig, etat_pos1, config_1_temp);
-			set_config(ptr_lig, etat_pos2, config_2_temp);
-
-			//permutation des centrifugeuses
-			//cnt temporaire pour permettre la permutation
-			t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
-			ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
-			ptr_lig->tab_cnt[pos2] = temp_cnt;
+		/*Verifie si les configs temp sont valides: Il sont seulement invalide
+		si c'est une config EN_FONCTION avec plus que 2 EN_FONTION contigus sur
+		la ligne*/
+		if (etat_pos1 == EN_FONCTION &&
+			configuration_valide(config_1_temp) != 1) {
+			return;
 		}
-		
+		else if (etat_pos2 == EN_FONCTION &&
+			configuration_valide(config_2_temp) != 1) {
+			return;
+		}
+		//copie les config temp aux vrais configs
+		set_config(ptr_lig, etat_pos1, config_1_temp);
+		set_config(ptr_lig, etat_pos2, config_2_temp);
+
+		//permutation des centrifugeuses
+		//cnt temporaire pour permettre la permutation
+		t_centrifugeuse temp_cnt = ptr_lig->tab_cnt[pos1];
+		ptr_lig->tab_cnt[pos1] = ptr_lig->tab_cnt[pos2];
+		ptr_lig->tab_cnt[pos2] = temp_cnt;
 	}
 }
 
