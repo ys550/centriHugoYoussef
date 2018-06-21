@@ -253,7 +253,7 @@ int main(void) {
 		/*********************************************************
 		*******************TEST: Toc Ligne************************
 		*********************************************************/
-	#if (1)
+	#if (0)
 		t_ligne_centrifugeuse ligne;
 
 		//avec NB_CENT_DEPART = 10 par exemple
@@ -290,58 +290,68 @@ int main(void) {
 		/*********************************************************
 		*********************TEST: Ajout et reduire***************
 		*********************************************************/
-#if (0)
+	#if (0)
 
-	t_ligne_centrifugeuse ligne;
-	//Mise en place à la configuration initial avec un nb de bit 10
-	est_reussi = init_ligne_centrifugeuse(&ligne, 10);
-	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-	//affiche la configuration initiale
-	printf("\nconfiguration initiale");
-	print_ligne_centrifugeuse(&ligne);
-
-	printf("\n\n");
-
-	//diminution du nb de centrifugeuse active par 1
-	est_reussi=reduire_cnt(&ligne);
-	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-	//configuration initial en elevant une centrifugeuse 
-	printf("\nconfiguration initiale - 1 centrifugeuse active");
-	print_ligne_centrifugeuse(&ligne);
-
-	printf("\n\n");
+		t_ligne_centrifugeuse ligne;
+		//Mise en place à la configuration initial avec un nb de bit 10
+		est_reussi = init_ligne_centrifugeuse(&ligne, 10);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		//affiche la configuration initiale
+		printf("\nconfiguration initiale");
+		print_ligne_centrifugeuse(&ligne);
 	
-	//ajout d'une centrifugeuse pour retourner à la configuration initiale
-	est_reussi = ajouter_cnt(&ligne);
-	printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-	//retour à la configuration initiale
-	printf("\nconfiguration initiale");
-	print_ligne_centrifugeuse(&ligne);
+		printf("\n\n");
 
-#endif
+		//diminution du nb de centrifugeuse active par 1
+		est_reussi=reduire_cnt(&ligne);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		//configuration initial en elevant une centrifugeuse 
+		printf("\nconfiguration initiale - 1 centrifugeuse active");
+		print_ligne_centrifugeuse(&ligne);
+
+		printf("\n\n");
+	
+		//ajout d'une centrifugeuse pour retourner à la configuration initiale
+		est_reussi = ajouter_cnt(&ligne);
+		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		//retour à la configuration initiale
+		printf("\nconfiguration initiale");
+		print_ligne_centrifugeuse(&ligne);
+
+	#endif
 
 	/*********************************************************
 	*********************TEST: remplacer**********************
 	*********************************************************/
 
-#if (0)
+	#if (0)
 
-	t_ligne_centrifugeuse ligne;
-	//Mise en place à la configuration initial avec un nb de bit 10
-	est_reussi = init_ligne_centrifugeuse(&ligne, 10);
-	print_ligne_centrifugeuse(&ligne);
+		t_ligne_centrifugeuse ligne;
+		//Mise en place à la configuration initial avec un nb de bit 10
+		est_reussi = init_ligne_centrifugeuse(&ligne, 10);
+		print_ligne_centrifugeuse(&ligne);
 
-	printf("\n\n");
+		printf("\n\n");
 
-	t_etat position = ligne[10].etat
+		t_etat position = ligne[10].etat
 	
-#endif
+	#endif
 	
 		/*********************************************************
 		*********************TEST: get en état********************
 		*********************************************************/
 
-
+		/*********************************************************
+		*********************TEST: PERMUTER********************
+		*********************************************************/
+	#if (1)
+		t_ligne_centrifugeuse ligne;
+		//14
+		est_reussi = init_ligne_centrifugeuse(&ligne, 0);
+		print_ligne_centrifugeuse(&ligne);
+		permuter_centrifugeuse(&ligne, 16, 24);
+		print_ligne_centrifugeuse(&ligne);
+	#endif
 
 
 
