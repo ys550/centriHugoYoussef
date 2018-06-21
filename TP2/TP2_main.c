@@ -277,7 +277,7 @@ int main(void) {
 		/*********************************************************
 		*******************TEST: Toc Ligne************************
 		*********************************************************/
-	#if (1)
+	#if (0)
 		t_ligne_centrifugeuse ligne;
 
 		//avec NB_CENT_DEPART = 10 par exemple
@@ -349,8 +349,13 @@ int main(void) {
 	*********************************************************/
 
 	#if (1)
-		//Force la centrifugeuse en bris		cent.etat = EN_BRIS;
-		print_centrifugeuse(&cent); //Caracteristique avant le remplacage
+		t_ligne_centrifugeuse ligne;
+		est_reussi = init_ligne_centrifugeuse(&ligne, 15);
+		//Force la centrifugeuse en bris
+		cent.etat = EN_BRIS;
+
+		print_centrifugeuse(&cent); //Caracteristique avant le remplacage
+
 		if (cent.etat == EN_BRIS) { //tester avec les conditions ideales
 			cent.tab_tocs[EN_BRIS]++;
 			SET_BIT(ligne.config_bris, 20);
@@ -358,10 +363,12 @@ int main(void) {
 			cent = remplacer_cnt(&ligne, 20);
 			print_centrifugeuse(&cent); //Caracteristique apres le remplacement
 			print_ligne_centrifugeuse(&ligne);
-		}
+		}
+
 		// Fonction a tester dans la position qui en fonction 
 		cent = remplacer_cnt(&ligne, 0);
-		print_centrifugeuse(&cent); //donc retourne centrifugeuse_membres_0()
+		print_centrifugeuse(&cent); //donc retourne centrifugeuse_membres_0()
+
 	
 	#endif
 	
