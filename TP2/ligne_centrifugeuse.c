@@ -215,11 +215,11 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 			}
 			else {
 				etat_precedant = EN_BRIS;
+				ptr_lig->config_bris = SET_BIT(ptr_lig->config_bris, i);
+				remplacer_cnt(ptr_lig, i);
+				ptr_lig->nb_bris_ligne++;
+				ptr_lig->tab_nb_cnt[EN_BRIS]++;
 			}
-			ptr_lig->config_bris = SET_BIT(ptr_lig->config_bris, i);
-			remplacer_cnt(ptr_lig, i);
-			ptr_lig->nb_bris_ligne++;
-			ptr_lig->tab_nb_cnt[EN_BRIS]++;
 		}
 
 		if (etat != EN_BRIS && etat_precedant == EN_BRIS) {

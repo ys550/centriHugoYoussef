@@ -221,35 +221,44 @@ int main(void) {
 		t_ligne_centrifugeuse ligne;
 		init_ligne_centrifugeuse(&ligne, 33);
 		printf("\nNb=33\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 32);
 		printf("\nNb=32\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 31);
 		printf("\nNb=31\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 10);
 		printf("\nNb=10\n");
 		print_ligne_centrifugeuse(&ligne);
 
 		init_ligne_centrifugeuse(&ligne, 30);
 		printf("\nNb=30\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 0);
 		printf("\nNb=0\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 1);
 		printf("\nNb=1\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 2);
 		printf("\nNb=2\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 3);
 		printf("\nNb=3\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 		init_ligne_centrifugeuse(&ligne, 4);
 		printf("\nNb=4\n");
-		print_ligne_centrifugeuse(&ligne);
+		print_ligne_centrifugeuse(&ligne);
+
 
 	#endif
 
@@ -268,7 +277,7 @@ int main(void) {
 		/*********************************************************
 		*******************TEST: Toc Ligne************************
 		*********************************************************/
-	#if (0)
+	#if (1)
 		t_ligne_centrifugeuse ligne;
 
 		//avec NB_CENT_DEPART = 10 par exemple
