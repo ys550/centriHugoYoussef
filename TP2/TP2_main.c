@@ -60,6 +60,7 @@ int main(void) {
 	int temps;
 	int est_reussi;
 	int position;
+	uint result;
 	t_centrifugeuse cent;
 
 	/*********************************************************
@@ -340,11 +341,62 @@ int main(void) {
 		/*********************************************************
 		*********************TEST: get en état********************
 		*********************************************************/
+   #if(0)  
+		const t_ligne_centrifugeuse  ligne;
+		est_reussi = init_ligne_centrifugeuse(&ligne, 15);
+
+		//test avec l'état en fonction
+		result=get_en_etat(&ligne, EN_FONCTION);
+		//Lecture en chaine de bits du unsigned int du retour de la fonction
+		printf("\n\n EN_FONCTION   ==%12u == %s ", result, bits2string(result));
+
+		//test avec l'état en attente
+		result=get_en_etat(&ligne, EN_ATTENTE);
+		//Lecture en chaine de bits du unsigned int du retour de la fonction
+		printf("\n\n EN_ATTENTE    ==%12u == %s ", result, bits2string(result));
+
+		//test avec l'état en arret
+		result=get_en_etat(&ligne, EN_ARRET);
+		//Lecture en chaine de bits du unsigned int du retour de la fonction
+		printf("\n\n EN_ARRET      ==%12u == %s ", result, bits2string(result));
+
+		//test avec l'état en bris
+		get_en_etat(&ligne, EN_BRIS);
+		//Lecture en chaine de bits du unsigned int du retour de la fonction
+		result=printf("\n\n EN_BRIS       ==%12u == %s ", result, bits2string(result));
+	
+	#endif
+		
+		/*********************************************************
+		*********************TEST: GET CENTRIFUGEUSE**************
+		*********************************************************/
+#if (0)
+		const t_ligne_centrifugeuse  ligne; //initialisation 
+		est_reussi = init_ligne_centrifugeuse(&ligne, 15);
+
+		result = get_en_etat(&ligne, EN_FONCTION); 
+		//Lecture en chaine de bits du unsigned int du retour de la fonction
+		printf("\n\n EN_FONCTION   ==%12u == %s ", result, bits2string(result));
+		//D'après la lecture de la chaine en fonction, ce test va nous donner une 
+		// centrifugeuse à l'arret 
+		cent=get_centrifugeuse(&ligne, 2);
+		print_centrifugeuse(&cent);
+
+		//Avec la lecture de la chaine, ce test va nous donner une centrifugeuse 
+		// en fonction 
+		cent = get_centrifugeuse(&ligne, 1);
+		print_centrifugeuse(&cent);
+#endif
+
+
+
+
+
 
 		/*********************************************************
 		*********************TEST: PERMUTER********************
 		*********************************************************/
-	#if (1)
+	#if (0)
 		t_ligne_centrifugeuse ligne;
 		//14
 		est_reussi = init_ligne_centrifugeuse(&ligne, 0);
