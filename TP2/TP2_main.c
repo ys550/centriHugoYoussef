@@ -138,11 +138,6 @@ int main(void) {
 		print_centrifugeuse(&cent);
 	#endif
 		
-		
-
-
-
-
 
 	/*********************************************************
 	*****************TEST: Toc_centrifugeuse******************
@@ -224,18 +219,37 @@ int main(void) {
 	#if (0)
 		
 		t_ligne_centrifugeuse ligne;
-		init_ligne_centrifugeuse(&ligne, 32);
-		print_ligne_centrifugeuse(&ligne);
-
-		printf("\n\n");
-
-		init_ligne_centrifugeuse(&ligne, 10);
-		print_ligne_centrifugeuse(&ligne);
-
-		printf("\n\n");
-
 		init_ligne_centrifugeuse(&ligne, 33);
+		printf("\nNb=33\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 32);
+		printf("\nNb=32\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 31);
+		printf("\nNb=31\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 10);
+		printf("\nNb=10\n");
 		print_ligne_centrifugeuse(&ligne);
+
+		init_ligne_centrifugeuse(&ligne, 30);
+		printf("\nNb=30\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 0);
+		printf("\nNb=0\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 1);
+		printf("\nNb=1\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 2);
+		printf("\nNb=2\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 3);
+		printf("\nNb=3\n");
+		print_ligne_centrifugeuse(&ligne);
+		init_ligne_centrifugeuse(&ligne, 4);
+		printf("\nNb=4\n");
+		print_ligne_centrifugeuse(&ligne);
 
 	#endif
 
@@ -388,27 +402,16 @@ int main(void) {
 		print_centrifugeuse(&cent);
 #endif
 
-
-
-
-
-
 		/*********************************************************
 		*********************TEST: PERMUTER********************
 		*********************************************************/
 	#if (0)
 		t_ligne_centrifugeuse ligne;
-		//14
-		est_reussi = init_ligne_centrifugeuse(&ligne, 0);
+		est_reussi = init_ligne_centrifugeuse(&ligne, 14);
 		print_ligne_centrifugeuse(&ligne);
 		permuter_centrifugeuse(&ligne, 16, 24);
 		print_ligne_centrifugeuse(&ligne);
 	#endif
-
-
-
-
-
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");
