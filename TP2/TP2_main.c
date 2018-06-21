@@ -348,16 +348,20 @@ int main(void) {
 	*********************TEST: remplacer**********************
 	*********************************************************/
 
-	#if (0)
-
-		t_ligne_centrifugeuse ligne;
-		//Mise en place à la configuration initial avec un nb de bit 10
-		est_reussi = init_ligne_centrifugeuse(&ligne, 10);
-		print_ligne_centrifugeuse(&ligne);
-
-		printf("\n\n");
-
-		t_etat position = ligne[10].etat
+	#if (1)
+		//Force la centrifugeuse en bris		cent.etat = EN_BRIS;
+		print_centrifugeuse(&cent); //Caracteristique avant le remplacage
+		if (cent.etat == EN_BRIS) { //tester avec les conditions ideales
+			cent.tab_tocs[EN_BRIS]++;
+			SET_BIT(ligne.config_bris, 20);
+			// Fonction a tester dans la position qui en bris
+			cent = remplacer_cnt(&ligne, 20);
+			print_centrifugeuse(&cent); //Caracteristique apres le remplacement
+			print_ligne_centrifugeuse(&ligne);
+		}
+		// Fonction a tester dans la position qui en fonction 
+		cent = remplacer_cnt(&ligne, 0);
+		print_centrifugeuse(&cent); //donc retourne centrifugeuse_membres_0()
 	
 	#endif
 	
