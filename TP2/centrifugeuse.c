@@ -27,8 +27,13 @@ au ficher centrifugeuse.h
 #include<stdlib.h>
 #include<time.h>
 
-/*retourne une centrifugeuse neuve à l’état EN_ARRET.  Sa probabilité initiale 
-de bris est donnée par une constante du module.*/
+
+
+/*********************************************************
+*********************FONCTIONS****************************
+*********************************************************/
+
+
 t_centrifugeuse init_centrifugeuse(void) {
 	t_centrifugeuse nouvel_centri;
 	
@@ -43,8 +48,8 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.tab_tocs[EN_ARRET]++;
 	return nouvel_centri;
 }
-/*permet de mettre une centrifugeuse EN_ATTENTE  dans l’état   EN_FONCTION.
-Retour de 1 si réussi, 0 sinon (si elle n’est pas en état EN_ATTENTE).*/
+
+
 int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE) {
 		ptr_cnt->etat = EN_FONCTION;
@@ -52,8 +57,8 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	}	
 	return 0;
 }
-/*permet de mettre une centrifugeuse EN_ARRET ou EN_FONCTION dans l’état  
-EN_ATTENTE.  Retour de 1 si réussi, 0 sinon.*/
+
+
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ARRET || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ATTENTE;
@@ -61,8 +66,8 @@ int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	}
 	return 0;
 }
-/*permet de mettre une centrifugeuse EN_ATTENTE  ou EN_FONCTION dans l’état 
-EN_ARRET.  Retour de 1 si réussi, 0 sinon.*/
+
+
 int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt->etat = EN_ARRET;
@@ -70,16 +75,8 @@ int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	}
 	return 0;
 }
-/*déclenche les changements de compteurs selon son état.  Si la centrifugeuse 
-est EN_BRIS et son compte à rebours ≠ INFINI alors décrémenter le compte à 
-rebours et s’il tombe à 0, la centrifugeuse passe à l’état EN_ARRET et les deux
-compteurs tout comme la probabilité de bris sont réinitialisés à leurs valeurs
-de départ.  Si la centrifugeuse est EN_ATTENTE ou EN_FONCTION,  la probabilité
-de bris s’applique et déclenche un test de bris, si la centrifugeuse passe 
-EN_BRIS suite à ce test, son compte à rebours est fixé à une constante très 
-grande du module (INFINI) et son nombre de bris est incrémenté. Sinon, seule 
-la probabilité de bris va croitre (avec une fonction static du module).  
-La fonction retourne l’état de la centrifugeuse.*/
+
+
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 
@@ -133,9 +130,8 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	return ptr_cnt->etat;
 }
 
-/*qui ne s’applique qu’à une centrifugeuse EN_BRIS dont le compte à rebours est
-égal à INFINI, elle fixe alors le compte à rebours de la centrifugeuse au temps
-reçu en paramètre et retourne 1, sinon elle retourne 0.*/
+
+
 int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {
 	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours == INFINI) {
 		ptr_cnt->compte_rebours = temps;
@@ -144,10 +140,8 @@ int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {
 	return 0;
 }
 
-/*va placer à partir de l’adresse reçue et dans l’ordre prescrit les huit 
-compteurs présents dans la variable :  les quatre compteurs d’état suivi du 
-nombre de bris, des deux compteurs de tocs depuis la dernière réparation et
-du compte à rebours.*/
+
+
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
 	compteurs[0] = ptr_cnt->tab_tocs[EN_BRIS];
 	compteurs[1] = ptr_cnt->tab_tocs[EN_ARRET];
@@ -164,20 +158,8 @@ double get_prob_bris(const t_centrifugeuse * ptr_cnt) {
 	return ptr_cnt->prob_bris;
 }
 
-/*
-fait croitre la probabilité de bris d’une centrifugeuse EN_ATTENTE ou 
-EN_FONCTION après un toc sans bris.  ATTENTION, dans sa définition 
-l’accroissement calculé va dépendre de trois des compteurs de la 
-centrifugeuse : principalement du nombre de bris déjà subis et des deux 
-compteurs depuis la réparation. Ce procédé reste personnel à votre équipe.
-L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une fraction
-moindre de celle donnée à une EN_FONCTION (cette fraction doit être définie 
-par une constante du module).
 
-HYPOTHESES: 
-	-On suppose que l'etat est seulement soit EN_ATTENTE ou EN_FONCTION
-	-On suppose que la fonction se fait appele apres un
-		toc sans bris*/
+
 static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	/*
 		L’accroissement de prob_bris calculé va dépendre de 3 des compteurs de 

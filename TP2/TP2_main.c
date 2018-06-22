@@ -348,7 +348,7 @@ int main(void) {
 	*********************TEST: remplacer**********************
 	*********************************************************/
 
-	#if (1)
+	#if (0)
 		t_ligne_centrifugeuse ligne;
 		est_reussi = init_ligne_centrifugeuse(&ligne, 15);
 		//Force la centrifugeuse en bris
@@ -425,13 +425,17 @@ int main(void) {
 		/*********************************************************
 		*********************TEST: PERMUTER********************
 		*********************************************************/
-	#if (0)
+	#if (1)
 		t_ligne_centrifugeuse ligne;
 		est_reussi = init_ligne_centrifugeuse(&ligne, 14);
 		print_ligne_centrifugeuse(&ligne);
 		permuter_centrifugeuse(&ligne, 16, 24);
 		print_ligne_centrifugeuse(&ligne);
 	#endif
+
+
+
+		
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");

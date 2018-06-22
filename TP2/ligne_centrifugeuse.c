@@ -192,11 +192,14 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 	int etat_precedant;
 	int etat;
-	
+
 	for (int i = 0; i < NB_BITS; i++) {
+
+
 		etat_precedant = ptr_lig->tab_cnt[i].etat;
 		etat = toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
-		
+
+
 		if (etat == EN_BRIS) {
 			if (GET_BIT(ptr_lig->config_fonction, i)) {
 				etat_precedant = EN_FONCTION;
@@ -232,6 +235,7 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 		}
 
 	}
+	
 }
 
 
@@ -366,8 +370,9 @@ static t_centrifugeuse centrifugeuse_membres_0() {
 
 	return cnt_membres_0;
 }
-/*Permet d'atribuer la valeur unsigned int en parametre a la configuration choisi
-avec l'etat en deuxieme parametre de la ligne en premier parametre*/
+
+
+
 static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
 	switch (etat) {
 	case EN_BRIS:
