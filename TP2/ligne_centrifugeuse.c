@@ -200,7 +200,7 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	return 0;
 }
 
-
+//NON
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	//iterateur
 	int i;
@@ -329,7 +329,7 @@ t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  p
 	return centrifugeuse_membres_0();
 }
 
-
+//OPTION
 void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 	uint pos2) {
 

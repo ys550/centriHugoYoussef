@@ -36,17 +36,22 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 #include <stdlib.h>
 #include <stdio.h>
 #include "op_bits.h"
-#include "centrifugeuse.h"
-#include "ligne_centrifugeuse.h"
+
 
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
 /*=========================================================*/
 
-#define USINE_EN_MARCHE 100
 
+#define NB_FONC_LIG_MAX 22
+#define NB_FONC_LIG 22
+#define MAX_BRIS 4
+//remplacer apres 500 tocs
+#define TOCS_REMP 500
+#define USINE_EN_MARCHE 100
 #define NB_LIGNE_MAX 50
+#define TAILLE_POUBELLE_INIT 10
 
 
 
@@ -56,26 +61,29 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 /*=========================================================*/
 
 typedef struct {
+
+	//Tableau dynamique de t_ligne_centrifugeuse
+	t_ligne_centrifugeuse* tab_ligne_centrifugeuse;
 	
 	/* Tableau dynamique de conservation des centrifugeuse mises 
 	au rebus lors de l'entretien sur une ligne*/
-	t_centrifugeuse* poubelle_ligne;
+	t_centrifugeuse* tab_poubelle_ligne; //realloc
 
-	//Nombre de centrifugeuse en entretien sur une ligne
-	int  nb_poubelle_ligne;
 
 	/*Ce nombre représente le nombre de centrifugeuse qui ont été
 	remplacées par une neuve.*/
-	int taille_poubelle;
+	int taille_poubelle; //cette taille vas changer
 
-	//Le nombre initial de centrifugeuses EN_FONCTION 
-	int nb_ini_fonction;
+	//Nombre de centrifugeuse en entretien sur une ligne
+	int  nb_poubelle_ligne; //TO-DO: initialiser a 0
 
-	//Tableau dynamique de t_ligne_centrifugeuse
-	t_ligne_centrifugeuse* ligne_centrifugeuse;
+	//Le nombre de ligne
+	//strategie: nb_fonc=ceil(USINE_EN_MARCHE/NB_FONC_LIG)
+	int taille_tab_ligne; 
 
-	//Le nombre de ligne de 32 centrifugeuses en série
-	int nb_ligne_centrifugeuse;
+	//Le nombre initial de centrifugeuses EN_FONCTION
+	//obtenue par le PARAMETRE nb_fonction de init_usine()
+	int nb_ini_fonction; 
 
 	//Nombre de centrifugueuse en fonction et en bris au toc donné
 	int nb_actuel_en_fonction;
@@ -85,7 +93,7 @@ typedef struct {
 	int nb_toc;
 
 	//Nombre de bris observs à date dans l'usine
-	int nb_toc_total;
+	int nb_bris_usine;
 
 }t_usine;
 

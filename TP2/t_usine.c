@@ -27,6 +27,7 @@ au ficher t_usine.h
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<math.h>
 
 
 
@@ -34,9 +35,40 @@ au ficher t_usine.h
 *********************FONCTIONS****************************
 *********************************************************/
 
-int init_usine(t_usine * ptr_usine, uint nb_fonction){}
+int init_usine(t_usine * ptr_usine, uint nb_fonction) {
+	if (NB_FONC_LIG <= NB_FONC_LIG_MAX) {
+		int i;
+		int nb_fonction_derniere_ligne = 0;
+		int restant;
+		ptr_usine->nb_ini_fonction = nb_fonction;
+		ptr_usine->taille_tab_ligne = nb_fonction / NB_FONC_LIG;
+		ptr_usine->taille_tab_ligne += 1;
+		restant = nb_fonction - NB_FONC_LIG * (ptr_usine->taille_tab_ligne - 1);
 
-int  toc_usine(t_usine * ptr_usine){}
+		ptr_usine->tab_ligne_centrifugeuse = (t_ligne_centrifugeuse *)
+			malloc(ptr_usine->taille_tab_ligne, sizeof(t_ligne_centrifugeuse));
+
+		ptr_usine->tab_poubelle_ligne = (t_ligne_centrifugeuse *)
+			malloc(TAILLE_POUBELLE_INIT, sizeof(t_ligne_centrifugeuse));
+
+		nb_fonction_derniere_ligne = ptr_usine->nb_ini_fonction % ptr_usine->taille_tab_ligne;
+		ptr_usine->nb_actuel_en_fonction = ptr_usine->nb_ini_fonction;
+		ptr_usine->nb_actuel_en_bris = 0;
+		ptr_usine->nb_toc = 0;
+		ptr_usine->nb_bris_usine = 0;
+
+		for (i = 0; i < ptr_usine->taille_tab_ligne - 1; i++) {
+			init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], NB_FONC_LIG);
+		}
+		init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i + 1], restant);
+		return 1;
+	}
+	return 0;
+}
+
+int  toc_usine(t_usine * ptr_usine) {
+
+}
 
 int entretien_usine(t_usine * ptr_usine){}
 
@@ -47,6 +79,8 @@ int get_nb_actuel_en_bris(t_usine * ptr_usine){}
 int get_nb_toc(t_usine * ptr_usine){}
 
 int get_nb_bris_total(t_usine * ptr_usine){}
+
+//TO-DO: ajouter print_usine
 
 
 
