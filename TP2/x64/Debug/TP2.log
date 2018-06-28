@@ -1,7 +1,0 @@
-<<<<<<< Updated upstream
-﻿  TP2_main.c
-c:\users\hugob\desktop\inf145\dm2\centrihugoyoussef\tp2\tp2_main.c(50): warning C4101: 'cent' : variable locale non référencée
-  TP2.vcxproj -> C:\Users\hugob\Desktop\INF145\DM2\centriHugoYoussef\x64\Debug\TP2.exe
-=======
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets(57,5): error MSB8020: The build tools for v141 (Platform Toolset = 'v141') cannot be found. To build using the v141 build tools, please install v141 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
->>>>>>> Stashed changes

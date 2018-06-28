@@ -5,7 +5,7 @@
 /*
 
 Module : centrifugeuse.c
-Par    :
+Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
 
 Ce ficher permet de voir précisement comment les fonctions définie dans
@@ -18,7 +18,7 @@ au ficher centrifugeuse.h
 
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS 
-//#define DEBUG
+
 
 #include "centrifugeuse.h"
 
@@ -26,29 +26,27 @@ au ficher centrifugeuse.h
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-
+#include<math.h>
 
 
 /*********************************************************
 *********************FONCTIONS****************************
 *********************************************************/
 
-
 t_centrifugeuse init_centrifugeuse(void) {
+	int i;
 	t_centrifugeuse nouvel_centri;
 	
 	nouvel_centri.etat = EN_ARRET;
 	nouvel_centri.prob_bris = PROB_BRIS_INIT;
-	nouvel_centri.compte_rebours = 20;
+	nouvel_centri.compte_rebours = 0;
 	nouvel_centri.nb_tocs_en_attente = 0;
 	nouvel_centri.nb_tocs_en_fonction = 0;
 	nouvel_centri.nb_bris = 0;
-	for (int i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 		nouvel_centri.tab_tocs[i] = 0;
-	nouvel_centri.tab_tocs[EN_ARRET]++;
 	return nouvel_centri;
 }
-
 
 int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE) {
@@ -58,7 +56,6 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 	return 0;
 }
 
-
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ARRET || ptr_cnt->etat == EN_FONCTION) {
 		ptr_cnt -> etat = EN_ATTENTE;
@@ -66,7 +63,6 @@ int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	}
 	return 0;
 }
-
 
 int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ATTENTE || ptr_cnt->etat == EN_FONCTION) {
@@ -76,7 +72,6 @@ int set_en_arret(t_centrifugeuse * ptr_cnt) {
 	return 0;
 }
 
-
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 
@@ -84,7 +79,7 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	execution*/
 	//srand(time(NULL));
 	test_bris = 1.0 * rand() / RAND_MAX;
-	#ifdef DEBUG
+	#ifdef DEBUG_MANDAT1
 		printf("\ntest bris: %lf\n", test_bris);
 	#endif
 
@@ -130,8 +125,6 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	return ptr_cnt->etat;
 }
 
-
-
 int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {
 	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours == INFINI) {
 		ptr_cnt->compte_rebours = temps;
@@ -139,8 +132,6 @@ int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps) {
 	}
 	return 0;
 }
-
-
 
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
 	compteurs[0] = ptr_cnt->tab_tocs[EN_BRIS];
@@ -153,48 +144,43 @@ void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs) {
 	compteurs[7] = ptr_cnt->compte_rebours;
 }
 
-//retourne la probabilité de bris actuelle de la centrifugeuse
 double get_prob_bris(const t_centrifugeuse * ptr_cnt) {
 	return ptr_cnt->prob_bris;
 }
 
-
-
 static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
-	/*
-		L’accroissement de prob_bris calculé va dépendre de 3 des compteurs de 
-		la centrifugeuse :
-			-nombre de bris déjà subis:
-				1-ptr_cnt->nb_bris
-			-des deux compteurs depuis la réparation:
-				2-ptr_cnt->nb_tocs_en_attente
-				3-ptr_cnt->nb_tocs_en_fonction
-	*/
+	
+	double prob_bris = ptr_cnt->prob_bris;
+	double prob_bris_fnc = PROB_BRIS_INIT;
+
+	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une
+	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
+	être définie par une constante du module).*/
+	//fraction = FRACTION_PROB_BRIS
+	double prob_bris_att = prob_bris_fnc * FRACTION_PROB_BRIS;
+	double prob_bis_nb_bris = 0.001;
+
 	if (ptr_cnt->prob_bris == 0) {
 		ptr_cnt->prob_bris = PROB_BRIS_INIT;
 	}
 
-	double prob_bris_en_fonction = ptr_cnt->prob_bris;
-	double prob_bris_en_attente;
-
-	prob_bris_en_fonction += (double)ptr_cnt->nb_tocs_en_fonction *
-		ptr_cnt->prob_bris + (double)ptr_cnt->nb_tocs_en_attente * 
-		ptr_cnt->prob_bris + (double)ptr_cnt->nb_bris * ptr_cnt->prob_bris;
-
-	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une 
-	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
-	être définie par une constante du module).*/
-	//fraction = FRACTION_PROB_BRIS
-	prob_bris_en_attente = FRACTION_PROB_BRIS * prob_bris_en_fonction;
+	/*
+	L’accroissement de prob_bris calculé va dépendre de 3 des compteurs de
+	la centrifugeuse :
+	-nombre de bris déjà subis:
+	1-ptr_cnt->nb_bris
+	-des deux compteurs depuis la réparation:
+	2-ptr_cnt->nb_tocs_en_attente
+	3-ptr_cnt->nb_tocs_en_fonction
+	*/
+	prob_bris +=
+		log(1 + (double)ptr_cnt->nb_tocs_en_fonction *	prob_bris_fnc)
+		+ log(1 + (double)ptr_cnt->nb_tocs_en_attente * prob_bris_att)
+		+ log(1 + (double)ptr_cnt->nb_bris * prob_bis_nb_bris);
 	
-	if (ptr_cnt->etat == EN_FONCTION) {
-		ptr_cnt->prob_bris = prob_bris_en_fonction;
-	}
-	else if (ptr_cnt->etat == EN_ATTENTE) {
-		ptr_cnt->prob_bris = prob_bris_en_attente;
-	}
-	
+	ptr_cnt->prob_bris = prob_bris;
 }
+
 void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
 	char * etat;
 

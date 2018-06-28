@@ -5,7 +5,7 @@
 /*
 
 Module :ligne_centrifugeuse
-Par    :
+Par    : Youssef Soliman, Hugo Belin
 Date   :21/05/18
 
 -Ce module offre Le second module va implémenter le type structuré 
@@ -42,6 +42,12 @@ au ficher centrifugeuse.h
 
 
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
+	int nbr_k_possible;
+	int nb_k_attente_max;
+	//iterateurs
+	int i, k, l, m, n, o;
+	int j = 2;
+
 
 	ptr_lig->config_fonction = 0;
 	ptr_lig->config_bris = 0;
@@ -51,80 +57,102 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 	ptr_lig->tab_nb_cnt[EN_ATTENTE] = 0;
 	ptr_lig->tab_nb_cnt[EN_FONCTION] = 0;
 	ptr_lig->tab_nb_cnt[EN_ARRET] = 0;
-
+	ptr_lig->nb_bris_ligne = 0;
 
 	if (nb <= NB_BITS) {
 		//initialiser tout
-		for (int i = 0; i < NB_BITS; i++) {
+		for (i = 0; i < NB_BITS; i++) {
 			ptr_lig->tab_cnt[i] = init_centrifugeuse();
 			//init_centrifugeuse() mets les cnt en etat ARRET
 			ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
 			ptr_lig->tab_nb_cnt[EN_ARRET]++;
 
 		}
+		if (nb > 0) {
+			//regle des 2/3
+			uint cnt_fonct_restant = ceil(2.0 / 3.0 * nb);
 
-		int i = 2;
-		//regle des 2/3
-		uint cnt_fonct_restant = ceil(2.0 / 3.0 * nb);;
-
-		for (int j = 0; cnt_fonct_restant > 0; j++) {
-			if (j == i) {  //pour les positions
-				j++;	//position pour les 1
-				i += 3;	//position pour les 0
-			}
-
-			//set en fonction en respectant la regle <= 2 en contigus
-			set_en_attente(&ptr_lig->tab_cnt[j]);
-			set_en_fonction(&ptr_lig->tab_cnt[j]);
-			ptr_lig->tab_nb_cnt[EN_ARRET]--;
-			ptr_lig->tab_nb_cnt[EN_FONCTION]++;
-			ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, j);
-			ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, j);
-			--cnt_fonct_restant;
-
-			/*On mets ceux qui restent en attente. Le nombre de centri en
-			attente depend de la constante NBR_K_EN_ATTENTE*/
-			if (cnt_fonct_restant == 0) {
-				/*calcule combien de bits libre dans la ligne il reste pour
-				mettre en attente*/
-				int nbr_k_possible = ((NB_BITS - 1) - j);
-
-				//Valeur max de nbr_k_possible = NBR_K_EN_ATTENTE
-				if (nbr_k_possible > NBR_K_EN_ATTENTE) {
-					nbr_k_possible = NBR_K_EN_ATTENTE;
+			for (k = 0; cnt_fonct_restant > 0; k++) {
+				if (k == j) {  //pour les positions
+					k++;	//position pour les 1
+					j += 3;	//position pour les 0
 				}
 
-				if (nbr_k_possible != 0) {
-					for (int i = j + 1; i <= (j + nbr_k_possible); i++) {
-						/*on met les derniers libres les plus a droite en attente*/
+				//set en fonction en respectant la regle <= 2 en contigus
+				set_en_attente(&ptr_lig->tab_cnt[k]);
+				set_en_fonction(&ptr_lig->tab_cnt[k]);
+				ptr_lig->tab_nb_cnt[EN_ARRET]--;
+				ptr_lig->tab_nb_cnt[EN_FONCTION]++;
+				ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, k);
+				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, k);
+				--cnt_fonct_restant;
 
-						if (nb > NB_BITS - 2) {
-							set_en_attente(&ptr_lig->tab_cnt[i]);
-							ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
-							ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
-						}
-						else {
-							set_en_attente(&ptr_lig->tab_cnt[i + 1]);
-							ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i + 1);
-							ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i + 1);
-						}
+				/*On mets ceux qui restent en attente. Le nombre de centri en
+				attente depend de la constante NBR_K_EN_ATTENTE*/
+				if (cnt_fonct_restant == 0) {
+					/*calcule combien de bits libre dans la ligne il reste pour
+					mettre en attente*/
+					nbr_k_possible = ((NB_BITS - 1) - k);
 
-						ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
-						ptr_lig->tab_nb_cnt[EN_ARRET]--;
+					//Valeur max de nbr_k_possible = NBR_K_EN_ATTENTE
+					if (nbr_k_possible > NBR_K_EN_ATTENTE) {
+						nbr_k_possible = NBR_K_EN_ATTENTE;
+					}
+
+					if (nbr_k_possible != 0) {
+						o = k + 1;
+						for (l = k + 1; l <= (k + nbr_k_possible); l++) {
+							if (o == NB_BITS) {
+								break;
+							}
+
+							if (GET_BIT(ptr_lig->config_fonction, o - 1) &&
+								GET_BIT(ptr_lig->config_fonction, o - 2) ||
+								GET_BIT(ptr_lig->config_attente, o - 1) &&
+								GET_BIT(ptr_lig->config_fonction, o - 2) ||
+								GET_BIT(ptr_lig->config_attente, o - 1) &&
+								GET_BIT(ptr_lig->config_attente, o - 2)) {
+								o++;
+							}
+
+							/*on met les derniers libres les plus a droite en attente*/
+							set_en_attente(&ptr_lig->tab_cnt[o]);
+							ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, o);
+							ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, o);
+							o++;
+							ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
+							ptr_lig->tab_nb_cnt[EN_ARRET]--;
+						}
 					}
 				}
+
+			}
+			return 1;
+		}
+		else if (nb <= 0) {
+			n = 0;
+			nb_k_attente_max = NBR_K_EN_ATTENTE;
+
+			if (nb_k_attente_max > NB_BITS - 1) {
+				nb_k_attente_max = NB_BITS - 1;
 			}
 
-		}
-		if (nb <= 0) {
-			for (int i = 0; i < NBR_K_EN_ATTENTE; i++) {
-				set_en_attente(&ptr_lig->tab_cnt[i]);
-				ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
-				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
+			for (m = 0; m < nb_k_attente_max; m++) {
+				if ((GET_BIT(ptr_lig->config_attente, n - 1)) &&
+					(GET_BIT(ptr_lig->config_attente, n - 2))) {
+					n++;
+				}
+				else {
+					set_en_attente(&ptr_lig->tab_cnt[n]);
+					ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, n);
+					ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, n);
+					ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
+					ptr_lig->tab_nb_cnt[EN_ARRET]--;
+					n++;
+				}	
 			}
-
+			return 1;
 		}
-		return 1;
 	}
 	return 0;
 }
@@ -137,8 +165,10 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 
 	//pour verifier si configuration valide(pas plus de 2 EN_FONCTION contigus)
 	uint copie_config_fonction = ptr_lig->config_fonction;
+	//iterateur
+	int i;
 
-	for (int i = 0; i < NB_BITS; i++) {
+	for (i = 0; i < NB_BITS; i++) {
 
 		if (GET_BIT(ptr_lig->config_attente, i) == 1 || 
 			GET_BIT(ptr_lig->config_arret, i) == 1) {
@@ -172,8 +202,10 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 
 
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
+	//iterateur
+	int i;
 	//Reduit celle la plus a gauche (a la fin)
-	for (int i = NB_BITS - 1; i >= 0; i--) {
+	for (i = NB_BITS - 1; i >= 0; i--) {
 		if (GET_BIT(ptr_lig->config_fonction, i) == 1) {
 			/*reduit de 1 une cnt EN_FONCTION en changeant sont etat a 
 			EN_ATTENTE*/
@@ -191,62 +223,60 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 	int etat_precedant;
-	int etat;
-
-	for (int i = 0; i < NB_BITS; i++) {
-
-
+	int etat_suivant;
+	//iterateur
+	int i;
+	
+	for (i = 0; i < NB_BITS; i++) {
 		etat_precedant = ptr_lig->tab_cnt[i].etat;
-		etat = toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
-
-
-		if (etat == EN_BRIS) {
+		etat_suivant = toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
+		
+		if (etat_suivant == EN_BRIS && etat_precedant != etat_suivant) {
 			if (GET_BIT(ptr_lig->config_fonction, i)) {
-				etat_precedant = EN_FONCTION;
 				ptr_lig->tab_nb_cnt[EN_FONCTION]--;
 				ptr_lig->config_fonction = CLEAR_BIT(ptr_lig->config_fonction, i);
 			}
 			else if (GET_BIT(ptr_lig->config_attente, i)) {
-				etat_precedant = EN_ATTENTE;
 				ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
 				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
 			}
-			else if (GET_BIT(ptr_lig->config_arret, i)) {
-				etat_precedant = EN_ARRET;
-				ptr_lig->tab_nb_cnt[EN_ARRET]--;
-				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
-			}
-			else {
-				etat_precedant = EN_BRIS;
-				ptr_lig->config_bris = SET_BIT(ptr_lig->config_bris, i);
-				remplacer_cnt(ptr_lig, i);
-				ptr_lig->nb_bris_ligne++;
-				ptr_lig->tab_nb_cnt[EN_BRIS]++;
-			}
+			ptr_lig->nb_bris_ligne++;
+			ptr_lig->tab_nb_cnt[EN_BRIS]++;
+			ptr_lig->config_bris = SET_BIT(ptr_lig->config_bris, i);
+		}
+		else if (etat_suivant != EN_BRIS && etat_precedant == EN_BRIS) {
+			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, i);
+			ptr_lig->tab_nb_cnt[EN_BRIS]--;
+			ptr_lig->nb_bris_ligne--;
+			ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
+			ptr_lig->tab_nb_cnt[EN_ARRET]++;
 		}
 
-		if (etat != EN_BRIS && etat_precedant == EN_BRIS) {
-			printf("Machine [%d] REPAREE a temps = %d\n", i, temps);
-			print_ligne_centrifugeuse(ptr_lig);
-		}
-		else if (etat == EN_BRIS && etat_precedant != EN_BRIS) {
-			printf("Machine [%d] EN_BRIS a temps = %d\n", i, temps);
-			print_ligne_centrifugeuse(ptr_lig);
-		}
-
+		#ifdef DEBUG_MANDAT2
+			if (etat_suivant != EN_BRIS && etat_precedant == EN_BRIS) {
+				printf("Machine [%d] REPAREE a temps = %d\n", i, temps);
+				print_ligne_centrifugeuse(ptr_lig);
+			}
+			else if (etat_suivant == EN_BRIS && etat_precedant != EN_BRIS) {
+				printf("Machine [%d] EN_BRIS a temps = %d\n", i, temps);
+				print_ligne_centrifugeuse(ptr_lig);
+			}
+		#endif
 	}
-	
 }
 
 
 t_centrifugeuse remplacer_cnt(t_ligne_centrifugeuse * ptr_lig, uint pos) {
+	t_centrifugeuse copie_cnt_elimine;
+
 	if (pos < NB_BITS && ptr_lig->tab_cnt[pos].etat != EN_FONCTION && 
 		ptr_lig->tab_cnt[pos].etat != EN_ATTENTE) {
 		
-		t_centrifugeuse copie_cnt_elimine = ptr_lig->tab_cnt[pos];
+		copie_cnt_elimine = ptr_lig->tab_cnt[pos];
 
 		if (copie_cnt_elimine.etat == EN_BRIS) {
 			ptr_lig->tab_nb_cnt[EN_BRIS]--;
+			ptr_lig->nb_bris_ligne--;
 			//changer config bris au cas que celle remplacer ete brise
 			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, pos);
 		}
@@ -291,8 +321,9 @@ uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {
 
 
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos) {
+	t_centrifugeuse copie_cnt;
 	if (pos < NB_BITS) {
-		t_centrifugeuse copie_cnt = ptr_lig->tab_cnt[pos];
+		copie_cnt = ptr_lig->tab_cnt[pos];
 		return copie_cnt;
 	}
 	return centrifugeuse_membres_0();
@@ -302,17 +333,20 @@ t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  p
 void permuter_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint pos1,
 	uint pos2) {
 
+	//iterateur
+	int etat;
+
+	//Pour la permutation des configs (positions)
+	int etat_pos1;
+	int etat_pos2;
+	uint config_1_temp;
+	uint config_2_temp;
+
 	if (pos1 < NB_BITS && pos2 < NB_BITS && ptr_lig->tab_cnt[pos1].etat !=
 		ptr_lig->tab_cnt[pos2].etat) {
 
-		//Pour la permutation des configs (positions)
-		int etat_pos1;
-		int etat_pos2;
-		uint config_1_temp;
-		uint config_2_temp;
-
 		//permutation des configs
-		for (int etat = EN_BRIS; etat <= EN_FONCTION; etat++) {
+		for (etat = EN_BRIS; etat <= EN_FONCTION; etat++) {
 			if (GET_BIT(get_en_etat(ptr_lig, etat), pos1) == 1) {
 				config_1_temp = get_en_etat(ptr_lig, etat);
 				etat_pos1 = etat;
@@ -371,8 +405,6 @@ static t_centrifugeuse centrifugeuse_membres_0() {
 	return cnt_membres_0;
 }
 
-
-
 static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
 	switch (etat) {
 	case EN_BRIS:
@@ -400,8 +432,9 @@ static void set_config(t_ligne_centrifugeuse * ptr_lig, int etat, uint config) {
 ****************************************************/
 static unsigned short configuration_valide(uint valeur) {
 	int nb_actif_contigus = 0;
+	int i;
 
-	for (int i = 0; i <= NB_BITS - 1; i++) {
+	for (i = 0; i <= NB_BITS - 1; i++) {
 		if (GET_BIT(valeur, i)) {
 			nb_actif_contigus++;
 		}

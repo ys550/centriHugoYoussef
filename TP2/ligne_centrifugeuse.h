@@ -5,7 +5,7 @@
 /*
 
 Module : ligne_centrifugeuse.h
-Par    :
+Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
 
 -Ce module à pour but de représenter sur 32 bits les états possibles des 
@@ -17,9 +17,6 @@ Date   :20/06/18
  - Ce ficher à pour but de créer les constantes, les structures, les énumérations 
 et les définitions des fonctions nécéssaire pour la representation et leurs actions
 en chaine de bits des centrifugeuses.
-
-
-
 
 */
 

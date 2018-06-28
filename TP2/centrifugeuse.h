@@ -5,7 +5,7 @@
 /*
 
 Module : centrifugeuse.h
-Par    :
+Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
 
 Ce ficher à pour but de créer les constantes, les structures, les énumérations 
@@ -16,6 +16,9 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
 /*=========================================================*/
+//pour l'affichage de printf pour debug
+//#define DEBUG_MANDAT1
+#define DEBUG_MANDAT2
 /*valeur initiale de prob de bris. Incremente legerement si centri ne se brise
  pas*/
 #define PROB_BRIS_INIT 0.0001
@@ -193,6 +196,11 @@ ou EN_FONCTION après un toc sans bris.
 
 PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
 est de type t_centrifugeuse.
+
+HYPOTHESES:
+-On suppose que l'etat est seulement soit EN_ATTENTE ou EN_FONCTION
+-On suppose que la fonction se fait appele apres un
+toc sans bris
 */
 static void accroitre_prob(t_centrifugeuse * ptr_cnt);
 
