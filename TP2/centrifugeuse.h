@@ -23,7 +23,7 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
  pas*/
 #define PROB_BRIS_INIT 0.0001
 //une constante très grande pour represente INFINI (valeur max d'un uint)
-#define INFINI 0xFFFFFFFF
+#define INFINI 4294967295
 //fraction utilise pour le calcul de accroitre prob bris
 #define FRACTION_PROB_BRIS 1 / 8
 

@@ -34,8 +34,8 @@ au ficher centrifugeuse.h
 *********************************************************/
 
 t_centrifugeuse init_centrifugeuse(void) {
-	int i;
 	t_centrifugeuse nouvel_centri;
+	int i;
 	
 	nouvel_centri.etat = EN_ARRET;
 	nouvel_centri.prob_bris = PROB_BRIS_INIT;
@@ -43,8 +43,10 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.nb_tocs_en_attente = 0;
 	nouvel_centri.nb_tocs_en_fonction = 0;
 	nouvel_centri.nb_bris = 0;
+
 	for (i = 0; i < 4; i++)
 		nouvel_centri.tab_tocs[i] = 0;
+
 	return nouvel_centri;
 }
 
@@ -197,6 +199,7 @@ void print_centrifugeuse(const t_centrifugeuse * ptr_cnt) {
 		default:
 			etat = "EN_BRIS";
 	}
+
 	printf("\nEtat: %s \nNb Bris: %u", etat, ptr_cnt->nb_bris);
 	printf("\nProbabilite de Bris: %lf", ptr_cnt->prob_bris);
 	printf("\nCompte a rebours: %u", ptr_cnt->compte_rebours);
