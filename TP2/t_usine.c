@@ -66,10 +66,21 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 	return 0;
 }
 
+/************************************************************************************************/
+
 int  toc_usine(t_usine * ptr_usine) {
 
+	int i;
+
+	for (i; i < ptr_usine->taille_tab_ligne; i++)
+	{
+		toc_ligne(ptr_usine->tab_ligne_centrifugeuse[i], int temps); //??????
 }
 
+
+
+
+/**************************************************************************************************/
 int entretien_usine(t_usine * ptr_usine){}
 
 int get_nb_total_en_fonction(t_usine * ptr_usine){}
@@ -87,3 +98,28 @@ int get_nb_bris_total(t_usine * ptr_usine){}
 /*********************************************************
 *********************FONCTIONS STATIQUE*******************
 *********************************************************/
+
+static int max_place(t_usine * ptr_usine) {
+
+	int i = 1;
+	int max_place_ligne = (ptr_usine[0].tab_ligne_centrifugeuse->tab_nb_cnt[1] +
+							ptr_usine[0].tab_ligne_centrifugeuse->tab_nb_cnt[2]);
+
+	for (i; i < ptr_usine->taille_tab_ligne; i++) {
+
+		if (max_place_ligne < (ptr_usine[i].tab_ligne_centrifugeuse->tab_nb_cnt[1] +
+			ptr_usine[i].tab_ligne_centrifugeuse->tab_nb_cnt[2]))
+		{
+			max_place_ligne = (ptr_usine[i].tab_ligne_centrifugeuse->tab_nb_cnt[1] +
+				ptr_usine[i].tab_ligne_centrifugeuse->tab_nb_cnt[2]);
+		}
+
+		return max_place_ligne;
+
+	}
+
+
+
+
+
+
