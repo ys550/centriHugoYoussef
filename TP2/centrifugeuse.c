@@ -78,7 +78,7 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 
 	if (ptr_cnt->etat != EN_ARRET) {
-		test_bris = 1.0 * rand() / RAND_MAX;
+		test_bris = BASE_TEST_BRIS * rand() / RAND_MAX;
 
 		if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
 			ptr_cnt->compte_rebours--;

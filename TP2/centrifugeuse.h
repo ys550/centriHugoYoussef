@@ -30,6 +30,9 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
 //pour le calcul de accroitre prob bris
 #define BASE_LOG 1
 
+//pour la prob de test_bris
+#define BASE_TEST_BRIS 1.0
+
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
 

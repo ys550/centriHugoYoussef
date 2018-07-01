@@ -248,12 +248,9 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 			ptr_lig->tab_nb_cnt[EN_ARRET]++;
 		}
 
+		//Afficher seulement pour le test du Mandat 2
 		#if (DEBUG_MANDAT2)
-			if (etat_suivant != EN_BRIS && etat_precedant == EN_BRIS) {
-				printf("Machine [%d] REPAREE a temps = %d\n", i, temps);
-				print_ligne_centrifugeuse(ptr_lig);
-			}
-			else if (etat_suivant == EN_BRIS && etat_precedant != EN_BRIS) {
+			if (etat_suivant == EN_BRIS && etat_precedant != EN_BRIS) {
 				printf("Machine [%d] EN_BRIS a temps = %d\n", i, temps);
 				print_ligne_centrifugeuse(ptr_lig);
 			}

@@ -87,27 +87,27 @@ int main(void) {
 			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
 				"EN_FONCTION = 3");
 			printf("\nETAT Retourne par toc_centri: %d\n", etat);
-
 			//Test: get_prob_bris
 			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
 			
 			if (etat == EN_BRIS) {
 				if (set_temps_reparation(&cent, temps_reparation)) {
+					printf("\n*****TOC: %d Temps Reparation = %u\n", nb_tocs, 
+						temps_reparation);
 					print_centrifugeuse(&cent);
-					printf("\n*****TOC: %d Temps Reparation = %u\n", nb_tocs, temps_reparation);
-					_getch();
 				}
 			}
 			else if (etat != etat_prec && etat == EN_ARRET) {
+				printf("\n***REPARER*** TOC: %d\n", nb_tocs);
 				set_en_attente(&cent);
 				set_en_fonction(&cent);
-				_getch();
+				print_centrifugeuse(&cent);
 			}
-			printf("nb_tocs: %d\n", nb_tocs);
-
 		} while (nb_tocs < NB_TOCS_TEST);
 
-		printf("FIN\n");
+		printf("\n\n********FIN DES %d TOCS********\n\n", NB_TOCS_TEST);
+		print_centrifugeuse(&cent);
+
 
 	#endif
 
@@ -119,7 +119,7 @@ int main(void) {
 
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
 		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
-		/* ici faites imprimer l'état initial de la ligne (trains de bits et compteurs) */
+		/*imprimer l'état initial de la ligne (trains de bits et compteurs) */
 		print_ligne_centrifugeuse(&ligne);
 
 		do {
