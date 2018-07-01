@@ -60,6 +60,7 @@ int main(void) {
 	int temps;
 	int est_reussi;
 	int position;
+	int nb_bris_lig;
 	uint result;
 	t_centrifugeuse cent;
 	t_ligne_centrifugeuse ligne;
@@ -68,7 +69,9 @@ int main(void) {
 	*************TEST: MANDAT 1 toc_centrifugeuse*************
 	*********************************************************/
 
-	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise et la repare*/
+	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise et la repare
+	et la remet en fonction et repete pour un nb de tocs definis par la constante 
+	NB_TOCS_TEST*/
 	#if (1)
 		uint temps_reparation = 10;
 		uint compteur[8];
@@ -116,20 +119,21 @@ int main(void) {
 	*********************************************************/
 	#if (0)
 		temps = 0;
-
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
 		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
 		/*imprimer l'état initial de la ligne (trains de bits et compteurs) */
 		print_ligne_centrifugeuse(&ligne);
 
+		//subis 20 bris car NB_CENT_DEPART=26-> 18 EN_FONCTION et +2 EN_ATTENTE
 		do {
 			temps++;
-			//*** avec ajout du paramètre "temps" pour les affichages d’événements
+			//ajout du paramètre "temps" pour les affichages d’événements
 			toc_ligne(&ligne, temps);
+			nb_bris_lig = get_nb_bris_lig(&ligne);
+			printf("nb bris: %d\n", nb_bris_lig);
+		} while (nb_bris_lig < (NB_CENT_DEPART + NBR_K_EN_ATTENTE));
 
-			//tant que les 10 + 2 ne sont pas toutes brisées
-		} while ((get_nb_bris_lig(&ligne) <  (NB_CENT_DEPART + NBR_K_EN_ATTENTE)));
-
+		printf("\n***Fin test Mandat 2***\n");
 	#endif
 
 	/*********************************************************

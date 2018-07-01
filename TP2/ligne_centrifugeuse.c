@@ -240,13 +240,13 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
 			}
 		}
-		else if (etat_suivant != etat_precedant && etat_precedant == EN_BRIS) {
+		/*else if (etat_suivant != etat_precedant && etat_precedant == EN_BRIS) {
 			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, i);
 			ptr_lig->tab_nb_cnt[EN_BRIS]--;
 			ptr_lig->nb_bris_ligne--;
 			ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
 			ptr_lig->tab_nb_cnt[EN_ARRET]++;
-		}
+		}*/
 
 		//Afficher seulement pour le test du Mandat 2
 		#if (DEBUG_MANDAT2)
@@ -254,6 +254,10 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 				printf("Machine [%d] EN_BRIS a temps = %d\n", i, temps);
 				print_ligne_centrifugeuse(ptr_lig);
 			}
+			else if (etat_suivant != EN_BRIS && etat_precedant == EN_BRIS) {
+				printf("Machine [%d] REPAREE a temps = %d\n", i, temps);
+				print_ligne_centrifugeuse(ptr_lig);
+			}
 		#endif
 	}
 }
