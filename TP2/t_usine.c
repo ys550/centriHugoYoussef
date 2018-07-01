@@ -1,7 +1,3 @@
-/*===========================================================*/
-/* 	INF145 - t_usine                                         */
-/*===========================================================*/
-
 /*
 
 Module :t_usine.c
@@ -16,8 +12,7 @@ au ficher t_usine.h
 */
 
 //Permet de désactiver certains warnings du compilateur 
-#define _CRT_SECURE_NO_WARNINGS 
-//#define DEBUG
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "centrifugeuse.h"
 #include "ligne_centrifugeuse.h"
@@ -31,15 +26,15 @@ au ficher t_usine.h
 
 
 
-/*********************************************************
-*********************FONCTIONS****************************
-*********************************************************/
+/*********************************************************/
+/*                DEFINITIONS DES FONCTIONS              */
+/*********************************************************/
 
 int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 	if (NB_FONC_LIG <= NB_FONC_LIG_MAX) {
 		int i;
-		int nb_fonction_derniere_ligne = 0;
 		int restant;
+
 		ptr_usine->nb_ini_fonction = nb_fonction;
 		ptr_usine->taille_tab_ligne = nb_fonction / NB_FONC_LIG;
 		ptr_usine->taille_tab_ligne += 1;
@@ -51,16 +46,19 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 		ptr_usine->tab_poubelle_ligne = (t_ligne_centrifugeuse *)
 			malloc(TAILLE_POUBELLE_INIT, sizeof(t_ligne_centrifugeuse));
 
-		nb_fonction_derniere_ligne = ptr_usine->nb_ini_fonction % ptr_usine->taille_tab_ligne;
 		ptr_usine->nb_actuel_en_fonction = ptr_usine->nb_ini_fonction;
 		ptr_usine->nb_actuel_en_bris = 0;
 		ptr_usine->nb_toc = 0;
 		ptr_usine->nb_bris_usine = 0;
 
 		for (i = 0; i < ptr_usine->taille_tab_ligne - 1; i++) {
-			init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], NB_FONC_LIG);
+			init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], 
+				NB_FONC_LIG);
 		}
-		init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i + 1], restant);
+
+		init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i + 1],
+			restant);
+
 		return 1;
 	}
 	return 0;

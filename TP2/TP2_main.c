@@ -1,10 +1,6 @@
-/*===========================================================*/
-/* 	INF145 - MAIN                                            */
-/*===========================================================*/
-
 /*
 
-Module : main
+Module : main.c
 Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
 
@@ -38,7 +34,10 @@ Ce module est la fonction principale de notre programme:
 
 /*=========================================================*/
 //Permet de désactiver certains warnings du compilateur 
-#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS
+
+//le nombre de tocs pour le test du mandat 1
+#define NB_TOCS_TEST 300
 
 // Librairies usuelles à inclure 
 #include<stdio.h>
@@ -54,15 +53,84 @@ Ce module est la fonction principale de notre programme:
 /*=========================================================*/
 
 
-/*=========================================================*/
-/*=========================================================*/
-//Programme principal: fonction qui retourne un entier (int)
+/********************************************************************/
+/*						PROGRAMME PRINCIPAL                         */
+/********************************************************************/
 int main(void) {
 	int temps;
 	int est_reussi;
 	int position;
 	uint result;
 	t_centrifugeuse cent;
+	t_ligne_centrifugeuse ligne;
+
+	/*********************************************************
+	*************TEST: MANDAT 1 toc_centrifugeuse*************
+	*********************************************************/
+
+	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise et la repare*/
+	#if (1)
+		uint temps_reparation = 10;
+		uint compteur[8];
+		int nb_tocs = 0;
+		int etat = 0, etat_prec = 0;
+
+		cent = init_centrifugeuse();
+		print_centrifugeuse(&cent);
+		set_en_attente(&cent);
+		set_en_fonction(&cent);
+
+		do {
+			nb_tocs++;
+			etat_prec = etat;
+			etat = toc_centrifugeuse(&cent);
+			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, "
+				"EN_FONCTION = 3");
+			printf("\nETAT Retourne par toc_centri: %d\n", etat);
+
+			//Test: get_prob_bris
+			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
+			
+			if (etat == EN_BRIS) {
+				if (set_temps_reparation(&cent, temps_reparation)) {
+					print_centrifugeuse(&cent);
+					printf("\n*****TOC: %d Temps Reparation = %u\n", nb_tocs, temps_reparation);
+					_getch();
+				}
+			}
+			else if (etat != etat_prec && etat == EN_ARRET) {
+				set_en_attente(&cent);
+				set_en_fonction(&cent);
+				_getch();
+			}
+			printf("nb_tocs: %d\n", nb_tocs);
+
+		} while (nb_tocs < NB_TOCS_TEST);
+
+		printf("FIN\n");
+
+	#endif
+
+	/*********************************************************
+	***************TEST: MANDAT2 toc_ligne********************
+	*********************************************************/
+	#if (0)
+		temps = 0;
+
+		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
+		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
+		/* ici faites imprimer l'état initial de la ligne (trains de bits et compteurs) */
+		print_ligne_centrifugeuse(&ligne);
+
+		do {
+			temps++;
+			//*** avec ajout du paramètre "temps" pour les affichages d’événements
+			toc_ligne(&ligne, temps);
+
+			//tant que les 10 + 2 ne sont pas toutes brisées
+		} while ((get_nb_bris_lig(&ligne) <  (NB_CENT_DEPART + NBR_K_EN_ATTENTE)));
+
+	#endif
 
 	/*********************************************************
 	*******************TEST: Set et Init**********************
@@ -139,81 +207,12 @@ int main(void) {
 		print_centrifugeuse(&cent);
 	#endif
 		
-
-	/*********************************************************
-	*************TEST:MANDAT 1 Toc_centrifugeuse**************
-	*********************************************************/
-
-	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise la repare puis la
-	mets en fonctionnement une autre fois jusqu'elle se brise une deuxime fois*/
-	#if (0)
-		uint temps_reparation = 10;
-		uint compteur[8];
-		int nb_tocs = 0;
-		int etat = 0, etat_prec = 0;
-		
-		cent = init_centrifugeuse();
-		print_centrifugeuse(&cent);
-		set_en_attente(&cent);
-		set_en_fonction(&cent);
-
-		do {
-			nb_tocs++;
-			etat_prec = etat;
-			etat = toc_centrifugeuse(&cent);
-			printf("EN_BRIS = 0, EN_ARRET = 1, EN_ATTENTE = 2, " 
-				"EN_FONCTION = 3");
-			printf("\nETAT Retourne par toc_centri: %d\n", etat);
-			//Test: get_prob_bris
-			printf("\n get_prob_bris: %lf \n", get_prob_bris(&cent));
-			//print_centrifugeuse(&cent);
-
-			if (etat == EN_BRIS) {
-
-
-				if (set_temps_reparation(&cent, temps_reparation)) {
-					printf("\n*****TOC: %d Temps Reparation = %u\n", nb_tocs, temps_reparation);
-					print_centrifugeuse(&cent);
-					_getch();
-				}
-			}
-			else if (etat != etat_prec && etat == EN_ARRET) {
-				set_en_attente(&cent);
-				set_en_fonction(&cent);
-				_getch();
-			}
-
-		} while (nb_tocs < 300);
-		printf("\n*****FIN DE REPARATION*****\n");
-		
-		set_en_attente(&cent);
-		etat = toc_centrifugeuse(&cent);
-		print_centrifugeuse(&cent);
-		set_en_fonction(&cent);
-		etat = toc_centrifugeuse(&cent);
-		print_centrifugeuse(&cent);
-
-	
-		printf("\n*************Test get_compteur**************\n");
-		//Test: get_compteur
-		get_compteurs(&cent, compteur);
-		printf("\nCompte d'etat EN_BRIS: %u", compteur[EN_BRIS]);
-		printf("\nCompte d'etat EN_ARRET: %u", compteur[EN_ARRET]);
-		printf("\nCompte d'etat EN_ATTENTE: %u", compteur[EN_ATTENTE]);
-		printf("\nCompte d'etat EN_FONCTION: %u\n", compteur[EN_FONCTION]);
-		printf("\nNb Bris: %u", compteur[4]);
-		printf("\nNb tocs en attente: %u", compteur[5]);
-		printf("\nNb tocs en fonction: %u", compteur[6]);
-		printf("\nCompte a rebours: %u\nB", compteur[7]);
-	
-	#endif
 		
 	/*********************************************************
-	**********************TEST: ligne**************************
+	*******************TEST: init_ligne************************
 	**********************************************************/
-	#if (1)
+	#if (0)
 		
-		t_ligne_centrifugeuse ligne;
 		init_ligne_centrifugeuse(&ligne, 33);
 		printf("\nNb=33\n");
 		print_ligne_centrifugeuse(&ligne);
@@ -274,46 +273,18 @@ int main(void) {
 		printf("\nNb=4\n");
 		print_ligne_centrifugeuse(&ligne);
 
-
-	#endif
-
-	/*********************************************************
-	*********************TEST: Ligne**************************
-	*********************************************************/
-	#if (0)
-		t_ligne_centrifugeuse ligne;
-		/*mets k=+~2/3 * nb en fonction*/
-		init_ligne_centrifugeuse(&ligne, 20);
-		//La somme des centrifugueses de chaque etat affiche doit etre = 32
-		print_ligne_centrifugeuse(&ligne);
-		toc_ligne(&ligne);
 	#endif
 
 		/*********************************************************
-		**************TEST: MANDAT2 TOC LIGNE********************
+		*********************TEST: PERMUTER***********************
 		*********************************************************/
 	#if (0)
-		t_ligne_centrifugeuse ligne;
-
-		//avec NB_CENT_DEPART = 14 par exemple
-		init_ligne_centrifugeuse(&ligne, 14);
+		est_reussi = init_ligne_centrifugeuse(&ligne, 14);
 		print_ligne_centrifugeuse(&ligne);
-		printf("\nTEST DE PERUTER avec NB=24 de pos 16 et 24\n\n");
+
+		printf("Test de PERMUTER [16] et [24]:\n");
 		permuter_centrifugeuse(&ligne, 16, 24);
 		print_ligne_centrifugeuse(&ligne);
-
-		printf("\nInit avec NB_CENT_DEPART = 10\n\n");
-		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
-		print_ligne_centrifugeuse(&ligne);
-		/* ici faites imprimer l'état initial de la ligne (trains de bits et compteurs) */
-		temps = 0;
-		do {
-			temps++;
-			//*** avec ajout du paramètre "temps" pour les affichages d’événements
-			toc_ligne(&ligne, temps);
-
-			//tant que les 10 + 2 ne sont pas toutes brisées
-		} while ((get_nb_bris_lig(&ligne) <  (NB_CENT_DEPART + NBR_K_EN_ATTENTE)));
 	#endif
 
 		/*********************************************************
@@ -409,7 +380,7 @@ int main(void) {
 		/*********************************************************
 		*********************TEST: GET CENTRIFUGEUSE**************
 		*********************************************************/
-#if (0)
+	#if (0)
 		const t_ligne_centrifugeuse  ligne; //initialisation 
 		est_reussi = init_ligne_centrifugeuse(&ligne, 15);
 
@@ -425,18 +396,8 @@ int main(void) {
 		// en fonction 
 		cent = get_centrifugeuse(&ligne, 1);
 		print_centrifugeuse(&cent);
-#endif
-
-		/*********************************************************
-		*********************TEST: PERMUTER********************
-		*********************************************************/
-	#if (0)
-		t_ligne_centrifugeuse ligne;
-		est_reussi = init_ligne_centrifugeuse(&ligne, 14);
-		print_ligne_centrifugeuse(&ligne);
-		permuter_centrifugeuse(&ligne, 16, 24);
-		print_ligne_centrifugeuse(&ligne);
 	#endif
+
 
 	// on termine avec le standard... "APPUYEZ UNE TOUCHE.."	
 	system("pause");

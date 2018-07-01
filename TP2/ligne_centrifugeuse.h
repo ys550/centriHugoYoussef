@@ -1,9 +1,4 @@
-/*===========================================================*/
-/* 	INF145 - ligne_centrifugeuse.h                                          */
-/*===========================================================*/
-
 /*
-
 Module : ligne_centrifugeuse.h
 Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
@@ -25,10 +20,18 @@ en chaine de bits des centrifugeuses.
 #include <stdio.h>
 #include "op_bits.h"
 
+//pour l'affichage lors de tests du mandat 2(0 : sans affichage 1: avec)
+#define DEBUG_MANDAT2 1
+
 //le nb initiale de cnt en attente
 #define NBR_K_EN_ATTENTE 2
+
 //pour le test toc ligne
 #define NB_CENT_DEPART 10
+
+//pour la regle des 2 / 3
+#define REGLE_DEUX_TIERS 2.0 / 3.0
+
 
 typedef struct {
 	//Un tableau de centrifugeuse taille:32bits
@@ -36,10 +39,10 @@ typedef struct {
 
 	/*
 	Tableau de compteur pour chaque etat:
-	tab_nb_cnt[0] = tab_nb_cnt[EN_BRIS] = compteur pour EN_BRIS 
-	tab_nb_cnt[1] = tab_nb_cnt[EN_ARRET] = compteur pour EN_ARRET
-	tab_nb_cnt[2] = tab_nb_cnt[EN_ATTENTE] = compteur pour EN_ATTENTE 
-	tab_nb_cnt[3] = tab_nb_cnt[EN_FONCTION] =  compteur pour EN_FONCTION
+	tab_nb_cnt[0] OU tab_nb_cnt[EN_BRIS] : compteur pour EN_BRIS 
+	tab_nb_cnt[1] OU tab_nb_cnt[EN_ARRET] : compteur pour EN_ARRET
+	tab_nb_cnt[2] OU tab_nb_cnt[EN_ATTENTE] : compteur pour EN_ATTENTE 
+	tab_nb_cnt[3] OU tab_nb_cnt[EN_FONCTION] :  compteur pour EN_FONCTION
 	*/
 	uint tab_nb_cnt[4];
 
@@ -50,14 +53,14 @@ typedef struct {
 	uint config_attente;
 	uint config_arret;
 
-	//un entier qui compte le nombre de bris subis par toutes les centrifugeuses 
+	//un entier qui compte le nombre de bris subis par toutes les centrifugeuses
 	int  nb_bris_ligne;
 
 } t_ligne_centrifugeuse;
 
-/*********************************************************
-*********************Déclaration des fonctions*************
-*********************************************************/
+/********************************************************************/
+/*						DECLARATIONS DE FONCTIONS					*/
+/********************************************************************/
 
 
 /*******************************************************************************/

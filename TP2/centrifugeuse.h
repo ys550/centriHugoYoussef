@@ -16,16 +16,19 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
 /*=========================================================*/
-//pour l'affichage de printf pour debug
-//#define DEBUG_MANDAT1
-#define DEBUG_MANDAT2
+
 /*valeur initiale de prob de bris. Incremente legerement si centri ne se brise
  pas*/
 #define PROB_BRIS_INIT 0.0001
+
 //une constante très grande pour represente INFINI (valeur max d'un uint)
 #define INFINI 4294967295
+
 //fraction utilise pour le calcul de accroitre prob bris
 #define FRACTION_PROB_BRIS 1 / 8
+
+//pour le calcul de accroitre prob bris
+#define BASE_LOG 1
 
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
@@ -72,9 +75,9 @@ typedef struct {
 
 
 
-/*********************************************************
-*********************Déclaration des fonctions*************
-*********************************************************/
+/********************************************************************/
+/*						DECLARATIONS DE FONCTIONS					*/
+/********************************************************************/
 
 /*init_centrigugeuse
 

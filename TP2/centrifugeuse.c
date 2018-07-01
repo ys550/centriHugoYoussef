@@ -29,9 +29,9 @@ au ficher centrifugeuse.h
 #include<math.h>
 
 
-/*********************************************************
-*********************FONCTIONS****************************
-*********************************************************/
+/*********************************************************/
+/*                DEFINITIONS DES FONCTIONS              */
+/*********************************************************/
 
 t_centrifugeuse init_centrifugeuse(void) {
 	t_centrifugeuse nouvel_centri;
@@ -77,37 +77,30 @@ int set_en_arret(t_centrifugeuse * ptr_cnt) {
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 	double test_bris;
 
-	/*pour eviter la repitition des memes valeurs retourne par rand() a chaque 
-	execution*/
-	//srand(time(NULL));
-	test_bris = 1.0 * rand() / RAND_MAX;
-	#ifdef DEBUG_MANDAT1
-		printf("\ntest bris: %lf\n", test_bris);
-	#endif
+	if (ptr_cnt->etat != EN_ARRET) {
+		test_bris = 1.0 * rand() / RAND_MAX;
 
-	if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
-		ptr_cnt->compte_rebours--;
+		if (ptr_cnt->etat == EN_BRIS && ptr_cnt->compte_rebours != INFINI) {
+			ptr_cnt->compte_rebours--;
 
-		if (ptr_cnt->compte_rebours <= 0) {
-			ptr_cnt->etat = EN_ARRET;
-			ptr_cnt->nb_tocs_en_fonction = 0;
-			ptr_cnt->nb_tocs_en_attente = 0;
-			ptr_cnt->prob_bris = PROB_BRIS_INIT;
+			if (ptr_cnt->compte_rebours <= 0) {
+				ptr_cnt->etat = EN_ARRET;
+				ptr_cnt->nb_tocs_en_fonction = 0;
+				ptr_cnt->nb_tocs_en_attente = 0;
+				ptr_cnt->prob_bris = PROB_BRIS_INIT;
+			}
+		}
+
+		if (test_bris < ptr_cnt->prob_bris && ptr_cnt->etat != EN_BRIS) {
+			ptr_cnt->etat = EN_BRIS;
+			ptr_cnt->compte_rebours = INFINI;
+			ptr_cnt->nb_bris++;
+		}
+		else {
+			accroitre_prob(ptr_cnt);
 		}
 	}
-
-	if (test_bris < ptr_cnt->prob_bris && ptr_cnt->etat != EN_BRIS) {
-		ptr_cnt->etat = EN_BRIS;
-		ptr_cnt->compte_rebours = INFINI;
-		ptr_cnt->nb_bris++;
-	}
-	else {
-		accroitre_prob(ptr_cnt);
-	}
-
-	/*ce if doit rester avant le if (test_bris < ptr_cnt->prob_bris)
-	afin que tab_tocs EN_BRIS s'incremente au prochain toc suivant
-	un bris*/
+	//incrementation des compteurs selon l'etat
 	if (ptr_cnt->etat == EN_BRIS) {
 		ptr_cnt->tab_tocs[EN_BRIS]++;
 	}
@@ -123,7 +116,6 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt) {
 		ptr_cnt->tab_tocs[EN_ARRET]++;
 	}
 	
-	//La fonction retourne l’état de la centrifugeuse.
 	return ptr_cnt->etat;
 }
 
@@ -157,8 +149,7 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 
 	/*L’accroissement donné à une centrifugeuse  EN_ATTENTE doit être une
 	fraction moindre de celle donnée à une EN_FONCTION(cette fraction doit
-	être définie par une constante du module).*/
-	//fraction = FRACTION_PROB_BRIS
+	être définie par une constante du module (FRACTION_PROB_BRIS)).*/
 	double prob_bris_att = prob_bris_fnc * FRACTION_PROB_BRIS;
 	double prob_bis_nb_bris = 0.001;
 
@@ -176,9 +167,9 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt) {
 	3-ptr_cnt->nb_tocs_en_fonction
 	*/
 	prob_bris +=
-		log(1 + (double)ptr_cnt->nb_tocs_en_fonction *	prob_bris_fnc)
-		+ log(1 + (double)ptr_cnt->nb_tocs_en_attente * prob_bris_att)
-		+ log(1 + (double)ptr_cnt->nb_bris * prob_bis_nb_bris);
+		log(BASE_LOG + (double)ptr_cnt->nb_tocs_en_fonction *	prob_bris_fnc)
+		+ log(BASE_LOG + (double)ptr_cnt->nb_tocs_en_attente * prob_bris_att)
+		+ log(BASE_LOG + (double)ptr_cnt->nb_bris * prob_bis_nb_bris);
 	
 	ptr_cnt->prob_bris = prob_bris;
 }
