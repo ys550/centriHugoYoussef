@@ -71,10 +71,31 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 int  toc_usine(t_usine * ptr_usine) {
 
 	int i;
+	int j;
+	int chaine_de_remplacement;
 
-	for (i; i < ptr_usine->taille_tab_ligne; i++)
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++)
 	{
 		toc_ligne(ptr_usine->tab_ligne_centrifugeuse[i], int temps); //??????
+	}
+
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++)
+	{
+		for (j = 0; j < 31; j++)
+		{
+			if (GET_BIT(ptr_usine->tab_ligne_centrifugeuse[i]->config_bris, j))
+			{
+
+				chaine_de_remplacement = max_place(ptr_usine);
+
+				ajouter_cnt(ptr_usine->tab_ligne_centrifugeuse[chaine_de_remplacement]);
+
+			}
+
+		}
+
+	}
+
 }
 
 
