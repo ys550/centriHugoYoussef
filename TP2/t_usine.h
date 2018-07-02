@@ -43,8 +43,6 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 /*                  LES CONSTANTES                         */
 /*=========================================================*/
 
-
-#define NB_FONC_LIG_MAX 22
 #define NB_FONC_LIG 22
 #define MAX_BRIS 4
 //remplacer apres 500 tocs

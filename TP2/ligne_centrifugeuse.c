@@ -37,6 +37,7 @@ au ficher centrifugeuse.h
 /*********************************************************/
 
 int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
+	uint cnt_fonct_restant;
 	int nbr_k_possible;
 	int nb_k_attente_max;
 	//iterateurs
@@ -53,7 +54,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 	ptr_lig->tab_nb_cnt[EN_ARRET] = 0;
 	ptr_lig->nb_bris_ligne = 0;
 
-	if (nb <= NB_BITS) {
+	if (nb <= NB_FONC_MAX) {
 		//initialiser tout
 		for (i = 0; i < NB_BITS; i++) {
 			ptr_lig->tab_cnt[i] = init_centrifugeuse();
@@ -64,7 +65,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 		}
 		if (nb > 0) {
 			//le 2/3 en fonction le reste en arret ou attente
-			uint cnt_fonct_restant = ceil(REGLE_DEUX_TIERS * nb);
+			cnt_fonct_restant = nb;
 			j = 2;
 			for (i = 0; cnt_fonct_restant > 0; i++) {
 				if (i == j) {  //pour les positions

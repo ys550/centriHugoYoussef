@@ -72,7 +72,7 @@ int main(void) {
 	/*ce test mets la centrifugeuse en fonct jusqu'elle ce brise et la repare
 	et la remet en fonction et repete pour un nb de tocs definis par la constante 
 	NB_TOCS_TEST*/
-	#if (1)
+	#if (0)
 		uint temps_reparation = 10;
 		uint compteur[8];
 		int nb_tocs = 0;
@@ -215,66 +215,51 @@ int main(void) {
 	/*********************************************************
 	*******************TEST: init_ligne************************
 	**********************************************************/
-	#if (0)
+	#if (1)
 		
-		init_ligne_centrifugeuse(&ligne, 33);
-		printf("\nNb=33\n");
+		//depasse la valeur max donc affiche 0
+		init_ligne_centrifugeuse(&ligne, 23);
+		printf("\nNb=23\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 32);
-		printf("\nNb=32\n");
+		init_ligne_centrifugeuse(&ligne, 22);
+		printf("\nNb=22\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 31);
-		printf("\nNb=31\n");
+		init_ligne_centrifugeuse(&ligne, 21);
+		printf("\nNb=22\n");
 		print_ligne_centrifugeuse(&ligne);
 
 		init_ligne_centrifugeuse(&ligne, 10);
 		printf("\nNb=10\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 30);
-		printf("\nNb=30\n");
+		init_ligne_centrifugeuse(&ligne, 11);
+		printf("\nNb=11\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 14);
-		printf("\nNb=14\n");
+		init_ligne_centrifugeuse(&ligne, 12);
+		printf("\nNb=12\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 15);
-		printf("\nNb=15\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 16);
-		printf("\nNb=16\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 17);
-		printf("\nNb=17\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 18);
-		printf("\nNb=18\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 0);
-		printf("\nNb=0\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 1);
-		printf("\nNb=1\n");
-		print_ligne_centrifugeuse(&ligne);
-
-		init_ligne_centrifugeuse(&ligne, 2);
-		printf("\nNb=2\n");
+		init_ligne_centrifugeuse(&ligne, 4);
+		printf("\nNb=4\n");
 		print_ligne_centrifugeuse(&ligne);
 
 		init_ligne_centrifugeuse(&ligne, 3);
 		printf("\nNb=3\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		init_ligne_centrifugeuse(&ligne, 4);
-		printf("\nNb=4\n");
+		init_ligne_centrifugeuse(&ligne, 2);
+		printf("\nNb=2\n");
+		print_ligne_centrifugeuse(&ligne);
+
+		init_ligne_centrifugeuse(&ligne, 1);
+		printf("\nNb=1\n");
+		print_ligne_centrifugeuse(&ligne);
+
+		init_ligne_centrifugeuse(&ligne, 0);
+		printf("\nNb=0\n");
 		print_ligne_centrifugeuse(&ligne);
 
 	#endif

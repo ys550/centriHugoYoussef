@@ -31,7 +31,7 @@ au ficher t_usine.h
 /*********************************************************/
 
 int init_usine(t_usine * ptr_usine, uint nb_fonction) {
-	if (NB_FONC_LIG <= NB_FONC_LIG_MAX) {
+	if (NB_FONC_LIG <= NB_FONC_MAX) {
 		int i;
 		int restant;
 

@@ -32,6 +32,9 @@ en chaine de bits des centrifugeuses.
 //pour la regle des 2 / 3
 #define REGLE_DEUX_TIERS 2.0 / 3.0
 
+//le max des cent en fonction sur une ligne = 22
+#define NB_FONC_MAX (int)ceil(NB_BITS * REGLE_DEUX_TIERS)
+
 
 typedef struct {
 	//Un tableau de centrifugeuse taille:32bits
