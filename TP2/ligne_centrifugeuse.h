@@ -73,9 +73,9 @@ Cette fonction agit sur la ligne reçue en référence, remplit son tableau de
 centrifugeuses neuves (avec configuration de départ du TP1), va mettre nb 
 centrifugeuses EN_FONCTION et le nombre constant EN_ATTENTE,
 
-PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse, le paramètre
-              est de type t_ligne_centrifugeuse.
-			- nb : nombre de centrifugeuse totale 
+PARAMETRE : - ptr_lig: Prend les données issu de la structure t_ligne_centrifugeuse, le paramètre
+              est de type t_ligne_centrifugeuse. (t_ligne_centrifugeuse)
+			- nb : nombre de centrifugeuse en fonction (uint) 
 
 VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon (un nb trop grand).
 */
