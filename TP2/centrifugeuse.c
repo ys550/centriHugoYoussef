@@ -44,7 +44,7 @@ t_centrifugeuse init_centrifugeuse(void) {
 	nouvel_centri.nb_tocs_en_fonction = 0;
 	nouvel_centri.nb_bris = 0;
 
-	for (i = 0; i < 4; i++)
+	for (i = EN_BRIS; i <= EN_FONCTION; i++)
 		nouvel_centri.tab_tocs[i] = 0;
 
 	return nouvel_centri;
@@ -60,7 +60,7 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt) {
 
 int set_en_attente(t_centrifugeuse * ptr_cnt) {
 	if (ptr_cnt->etat == EN_ARRET || ptr_cnt->etat == EN_FONCTION) {
-		ptr_cnt -> etat = EN_ATTENTE;
+		ptr_cnt->etat = EN_ATTENTE;
 		return 1;
 	}
 	return 0;

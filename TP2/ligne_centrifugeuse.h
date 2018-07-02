@@ -27,7 +27,7 @@ en chaine de bits des centrifugeuses.
 #define NBR_K_EN_ATTENTE 2
 
 //pour le test toc ligne
-#define NB_CENT_DEPART 26
+#define NB_CENT_DEPART 18
 
 //pour la regle des 2 / 3
 #define REGLE_DEUX_TIERS 2.0 / 3.0

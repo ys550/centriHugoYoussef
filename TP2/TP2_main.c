@@ -117,23 +117,39 @@ int main(void) {
 	/*********************************************************
 	***************TEST: MANDAT2 toc_ligne********************
 	*********************************************************/
-	#if (0)
+	#if (1)
 		temps = 0;
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
 		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
 		/*imprimer l'état initial de la ligne (trains de bits et compteurs) */
 		print_ligne_centrifugeuse(&ligne);
 
-		//subis 20 bris car NB_CENT_DEPART=26-> 18 EN_FONCTION et +2 EN_ATTENTE
+		//subis 20 bris car NB_CENT_DEPART(18) + NBR_K_EN_ATTENTE(2)
 		do {
 			temps++;
 			//ajout du paramètre "temps" pour les affichages d’événements
 			toc_ligne(&ligne, temps);
 			nb_bris_lig = get_nb_bris_lig(&ligne);
-			printf("nb bris: %d\n", nb_bris_lig);
+			//printf("nb bris: %d\n", nb_bris_lig);
 		} while (nb_bris_lig < (NB_CENT_DEPART + NBR_K_EN_ATTENTE));
+		
+		printf("\n******FIN TOC LIGNE******\n");
+		print_ligne_centrifugeuse(&ligne);
 
-		printf("\n***Fin test Mandat 2***\n");
+		//remplacer une des centrifugeuses brisées par une neuve
+		cent = remplacer_cnt(&ligne, 10);
+		printf("\ncopie de la cent remplace: ");
+		print_centrifugeuse(&cent);
+
+		//afficher de nouveau la ligne
+		printf("\nPos 10 est remplace:\n");
+		print_ligne_centrifugeuse(&ligne);
+		
+		//afficher la centrifugeuse qui vient d’être remplacée dans la ligne
+		cent = get_centrifugeuse(&ligne, 10);
+		printf("La nouvelle cent : \n");
+		print_centrifugeuse(&cent);
+		
 	#endif
 
 	/*********************************************************
@@ -215,7 +231,7 @@ int main(void) {
 	/*********************************************************
 	*******************TEST: init_ligne************************
 	**********************************************************/
-	#if (1)
+	#if (0)
 		
 		//depasse la valeur max donc affiche 0
 		init_ligne_centrifugeuse(&ligne, 23);
