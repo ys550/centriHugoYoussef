@@ -47,6 +47,7 @@ Ce module est la fonction principale de notre programme:
 #include<time.h>
 #include "centrifugeuse.h"
 #include "ligne_centrifugeuse.h"
+#include "t_usine.h"
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
@@ -56,6 +57,7 @@ Ce module est la fonction principale de notre programme:
 /********************************************************************/
 /*						PROGRAMME PRINCIPAL                         */
 /********************************************************************/
+#if(0)
 int main(void) {
 	int temps;
 	int est_reussi;
@@ -407,6 +409,17 @@ int main(void) {
 	system("pause");
 
 	// et ÇA, c'est le retour d'un 0 au système d'exploitation.
+	return EXIT_SUCCESS;
+}
+#endif
+int main() {
+	t_usine usine;
+	int i;
+	init_usine(&usine, 45);
+	init_usine(&usine, 22);
+	init_usine(&usine, 100);
+	
+	system("pause");
 	return EXIT_SUCCESS;
 }
 

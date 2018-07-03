@@ -32,35 +32,54 @@ au ficher t_usine.h
 
 int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 	if (NB_FONC_LIG <= NB_FONC_MAX) {
+
 		//iterateur
 		int i;
-		//les centrifugeuses en fonction dans la derniere ligne de l'usine
+		/*les centrifugeuses en fonction dans la derniere avant la ligne 
+		supplementaire de l'usine*/
 		int cnt_fnc_restant;
+		int init_1_est_reussi;
+		int init_2_est_reussi = 1;
 
 		ptr_usine->nb_ini_fonction = nb_fonction;
-		ptr_usine->taille_tab_ligne = (nb_fonction / NB_FONC_LIG) + 1;
-		cnt_fnc_restant = nb_fonction - NB_FONC_LIG * (ptr_usine->taille_tab_ligne - 1);
-
-		ptr_usine->tab_ligne_centrifugeuse = (t_ligne_centrifugeuse *)
-			malloc(ptr_usine->taille_tab_ligne, sizeof(t_ligne_centrifugeuse));
-
-		ptr_usine->tab_poubelle_ligne = (t_ligne_centrifugeuse *)
-			malloc(TAILLE_POUBELLE_INIT, sizeof(t_ligne_centrifugeuse));
-
 		ptr_usine->nb_actuel_en_fonction = ptr_usine->nb_ini_fonction;
 		ptr_usine->nb_actuel_en_bris = 0;
 		ptr_usine->nb_toc = 0;
 		ptr_usine->nb_bris_usine = 0;
+		ptr_usine->nb_cent_remplace = 0;
 
-		for (i = 0; i < ptr_usine->taille_tab_ligne - 1; i++) {
-			init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], 
-				NB_FONC_LIG);
+		//cree une ligne supplementaire lorsque la derniere ligne est complete
+		ptr_usine->taille_tab_ligne = (nb_fonction / NB_FONC_LIG) + LIGNE_FIN;
+
+		cnt_fnc_restant = nb_fonction % NB_FONC_LIG;
+		if (cnt_fnc_restant == nb_fonction)
+			cnt_fnc_restant = 0;
+
+		ptr_usine->tab_ligne_centrifugeuse = (t_ligne_centrifugeuse *)
+			malloc(ptr_usine->taille_tab_ligne * sizeof(t_ligne_centrifugeuse));
+
+		ptr_usine->taille_tab_poubelle = TAILLE_POUBELLE_INIT;
+
+		ptr_usine->tab_poubelle_ligne = (t_centrifugeuse *)
+			malloc(ptr_usine->taille_tab_poubelle * sizeof(t_centrifugeuse));
+
+		for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+			init_1_est_reussi = 
+				init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], 
+					NB_FONC_LIG);
 		}
-
-		init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i + 1],
-			cnt_fnc_restant);
-
-		return 1;
+		
+		if (cnt_fnc_restant > 0) {
+			init_2_est_reussi =
+				init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i - 1],
+					cnt_fnc_restant);
+		}
+			
+		if (init_1_est_reussi && init_2_est_reussi) {
+			return 1;
+		}
+		else
+			return 0;	
 	}
 	return 0;
 }
