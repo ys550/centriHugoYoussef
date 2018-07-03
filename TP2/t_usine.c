@@ -66,50 +66,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 }
 
 int  toc_usine(t_usine * ptr_usine) {
-	/*int i;
-	int j;
-	int chaine_de_remplacement;
-	int reussi;
-	t_ligne_centrifugeuse temp;
-
-	//la j'applique le toc sur toute les lignes 
-	for (i = 0; i < ptr_usine->taille_tab_ligne; i++)
-	{
-		//toc_ligne(ptr_usine->tab_ligne_centrifugeuse[i], int temps); //??????
-	}
-
-	//la je regarde si il y a des bris dans toute les lignes 
-	for (i = 0; i < ptr_usine->taille_tab_ligne; i++)
-	{
-		for (j = 0; j < 31; j++)
-		{
-			// si il y a un bris sur cette ligne a cette ordre 
-			if (GET_BIT(ptr_usine->tab_ligne_centrifugeuse[i].config_bris, j))
-			{ 
-				// on determine avec la fonction max laquel des lignes a le plus de place 
-				chaine_de_remplacement = max_place(ptr_usine);
-				// et on ajoute une centri a cette ligne 
-				reussi =rajouter_cnt(ptr_usine->tab_ligne_centrifugeuse[chaine_de_remplacement]);
-				// si il n'a pas reussi a ajouter sur la meilleur ligne donc il faut permuter des centri pour mieux gerer l'espace 
-				if (!reussi)
-				{
-					// la je regarde si je peux permuter avec une en fonction avec celle en bris reperer lors de la boucle 
-					temp = SET_BIT(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[3]., j);
-								
-								if (configuration_valide(temp))
-								{   //j'ai choisi l'ordre 0 car c'est l'endroit qui est sur d'avoir une en fonction et qui sera valide 
-									permuter_centrifugeuse(ptr_usine->tab_ligne_centrifugeuse[i], j, 0);
-
-									reussi = rajouter_cnt(ptr_usine->tab_ligne_centrifugeuse[ptr_usine->tab_ligne_centrifugeuse[i]);
-
-								}
-
-				}
-			}
-
-		}
-
-	}*/
+	
 }
 
 int entretien_usine(t_usine * ptr_usine){}
