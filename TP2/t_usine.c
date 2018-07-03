@@ -32,13 +32,14 @@ au ficher t_usine.h
 
 int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 	if (NB_FONC_LIG <= NB_FONC_MAX) {
+		//iterateur
 		int i;
-		int restant;
+		//les centrifugeuses en fonction dans la derniere ligne de l'usine
+		int cnt_fnc_restant;
 
 		ptr_usine->nb_ini_fonction = nb_fonction;
-		ptr_usine->taille_tab_ligne = nb_fonction / NB_FONC_LIG;
-		ptr_usine->taille_tab_ligne += 1;
-		restant = nb_fonction - NB_FONC_LIG * (ptr_usine->taille_tab_ligne - 1);
+		ptr_usine->taille_tab_ligne = (nb_fonction / NB_FONC_LIG) + 1;
+		cnt_fnc_restant = nb_fonction - NB_FONC_LIG * (ptr_usine->taille_tab_ligne - 1);
 
 		ptr_usine->tab_ligne_centrifugeuse = (t_ligne_centrifugeuse *)
 			malloc(ptr_usine->taille_tab_ligne, sizeof(t_ligne_centrifugeuse));
@@ -57,7 +58,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 		}
 
 		init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i + 1],
-			restant);
+			cnt_fnc_restant);
 
 		return 1;
 	}
@@ -65,10 +66,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 }
 
 int  toc_usine(t_usine * ptr_usine) {
-
-<<<<<<< Updated upstream
-=======
-	int i;
+	/*int i;
 	int j;
 	int chaine_de_remplacement;
 	int reussi;
@@ -77,7 +75,7 @@ int  toc_usine(t_usine * ptr_usine) {
 	//la j'applique le toc sur toute les lignes 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++)
 	{
-		toc_ligne(ptr_usine->tab_ligne_centrifugeuse[i], int temps); //??????
+		//toc_ligne(ptr_usine->tab_ligne_centrifugeuse[i], int temps); //??????
 	}
 
 	//la je regarde si il y a des bris dans toute les lignes 
@@ -86,7 +84,7 @@ int  toc_usine(t_usine * ptr_usine) {
 		for (j = 0; j < 31; j++)
 		{
 			// si il y a un bris sur cette ligne a cette ordre 
-			if (GET_BIT(ptr_usine->tab_ligne_centrifugeuse[i]->config_bris, j))
+			if (GET_BIT(ptr_usine->tab_ligne_centrifugeuse[i].config_bris, j))
 			{ 
 				// on determine avec la fonction max laquel des lignes a le plus de place 
 				chaine_de_remplacement = max_place(ptr_usine);
@@ -96,7 +94,7 @@ int  toc_usine(t_usine * ptr_usine) {
 				if (!reussi)
 				{
 					// la je regarde si je peux permuter avec une en fonction avec celle en bris reperer lors de la boucle 
-					temp = SET_BIT(ptr_usine->tab_ligne_centrifugeuse[i]->tab_cnt[3], j);
+					temp = SET_BIT(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[3]., j);
 								
 								if (configuration_valide(temp))
 								{   //j'ai choisi l'ordre 0 car c'est l'endroit qui est sur d'avoir une en fonction et qui sera valide 
@@ -111,9 +109,7 @@ int  toc_usine(t_usine * ptr_usine) {
 
 		}
 
-	}
-
->>>>>>> Stashed changes
+	}*/
 }
 
 int entretien_usine(t_usine * ptr_usine){}
@@ -127,9 +123,3 @@ int get_nb_toc(t_usine * ptr_usine){}
 int get_nb_bris_total(t_usine * ptr_usine){}
 
 //TO-DO: ajouter print_usine
-
-
-
-/*********************************************************
-*********************FONCTIONS STATIQUE*******************
-*********************************************************/

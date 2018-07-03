@@ -130,7 +130,6 @@ int main(void) {
 			//ajout du paramètre "temps" pour les affichages d’événements
 			toc_ligne(&ligne, temps);
 			nb_bris_lig = get_nb_bris_lig(&ligne);
-			//printf("nb bris: %d\n", nb_bris_lig);
 		} while (nb_bris_lig < (NB_CENT_DEPART + NBR_K_EN_ATTENTE));
 		
 		printf("\n******FIN TOC LIGNE******\n");

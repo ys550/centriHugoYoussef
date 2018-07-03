@@ -258,7 +258,8 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 			else if (etat_suivant != EN_BRIS && etat_precedant == EN_BRIS) {
 				printf("Machine [%d] REPAREE a temps = %d\n", i, temps);
 				print_ligne_centrifugeuse(ptr_lig);
-			}
+			}
+
 		#endif
 	}
 }
