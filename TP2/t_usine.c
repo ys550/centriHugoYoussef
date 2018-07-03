@@ -66,7 +66,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 }
 
 int  toc_usine(t_usine * ptr_usine) {
-	/*int i;
+	int i;
 	int j;
 	int chaine_de_remplacement;
 	int reussi;
@@ -109,7 +109,7 @@ int  toc_usine(t_usine * ptr_usine) {
 
 		}
 
-	}*/
+	}
 }
 
 int entretien_usine(t_usine * ptr_usine){}
