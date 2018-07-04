@@ -157,7 +157,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	/*il est seulement possible d'ajouter une centrifugueuse EN_FONCTION si le
 	resultat ne donne pas plus que 2 EN_FONCTION en contigus et si la 
-	centrifuguese dans la position trouve est en attente ou en arret*/
+	centrifuguese dans la position trouve est en attente*/
 
 	//pour verifier si configuration valide(pas plus de 2 EN_FONCTION contigus)
 	uint copie_config_fonction = ptr_lig->config_fonction;
@@ -166,8 +166,7 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 
 	for (i = 0; i < NB_BITS; i++) {
 
-		if (GET_BIT(ptr_lig->config_attente, i) || 
-			GET_BIT(ptr_lig->config_arret, i)) {
+		if (GET_BIT(ptr_lig->config_attente, i)) {
 
 			copie_config_fonction = SET_BIT(ptr_lig->config_fonction, i);
 			
@@ -176,17 +175,51 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 			l'iteration de la boucle avant de l'ajouter*/
 			if (configuration_valide(copie_config_fonction)) {
 
-				if (GET_BIT(ptr_lig->config_attente, i)) {
-					ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
-					ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
+				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
+				ptr_lig->tab_nb_cnt[EN_ATTENTE]--;
 
-					//set_en_attente(&ptr_lig->tab_cnt[i]);
-					set_en_fonction(&ptr_lig->tab_cnt[i]);
-					ptr_lig->tab_nb_cnt[EN_FONCTION]++;
-					ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, i);
-				}
+				set_en_attente(&ptr_lig->tab_cnt[i]);
+				set_en_fonction(&ptr_lig->tab_cnt[i]);
+				ptr_lig->tab_nb_cnt[EN_FONCTION]++;
+				ptr_lig->config_fonction = SET_BIT(ptr_lig->config_fonction, i);
+				
 				return 1;
 			}	
+		}
+	}
+	return 0;
+}
+
+int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
+	/*il est seulement possible d'ajouter une centrifugueuse EN_ATTENTE si le
+	resultat ne donne pas plus que 2 EN_ATTENTE en contigus et si la
+	centrifuguese dans la position trouve est en arret*/
+
+	//pour verifier si configuration valide(pas plus de 2 EN_ATTENTE contigus)
+	uint copie_config_attente = ptr_lig->config_attente;
+	//iterateur
+	int i;
+
+	for (i = 0; i < NB_BITS; i++) {
+
+		if (GET_BIT(ptr_lig->config_arret, i)) {
+
+			copie_config_attente = SET_BIT(ptr_lig->config_attente, i);
+
+			/*verifie si la config serait valide si on ajoute une
+			centrifuguese en attente dans la position (i) courante de
+			l'iteration de la boucle avant de l'ajouter*/
+			if (configuration_valide(copie_config_attente)) {
+
+				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
+				ptr_lig->tab_nb_cnt[EN_ARRET]--;
+
+				set_en_attente(&ptr_lig->tab_cnt[i]);
+				ptr_lig->tab_nb_cnt[EN_ATTENTE]++;
+				ptr_lig->config_attente = SET_BIT(ptr_lig->config_attente, i);
+
+				return 1;
+			}
 		}
 	}
 	return 0;
@@ -237,30 +270,11 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 				ptr_lig->config_attente = CLEAR_BIT(ptr_lig->config_attente, i);
 			}
 
-			//if (etat_precedant == EN_FONCTION) {
-				/*- Si l'état précédent de la machine était "EN_FONCTION",
-				- ajouter une nouvelle machine "EN_FONCTION" à partir d'une machine "EN_ATTENTE" (avec "ajouter_cnt()")
-				- ajouter une nouvelle machine "EN_ATTENTE" à partir d'une machine "EN_ARRET" */
-				//1.1-chercher EN_ATTENTE
-				//1.2-la change a EN_FONCTION avec ajouter_cnt()
-				//2.1-chercher EN_ARRET
-				//2.2-la change a EN_ATTENTE avec ajouter_cnt_attente()
-			//}
-			//else if (etat_precedant == EN_ATTENTE) {
-				/* - Si  l'état précédent de la machine était "EN_ATTENTE",
-				- ajouter une nouvelle machine "EN_ATTENTE" à partir d'une machine "EN_ARRET"
-				(il est important de ne PAS ajouter une nouvelle machine "EN_FONCTION" ici !!)*/
-				//chercher EN_ARRET
-				//la changer a EN_ATTENTE avec ajouter_cnt_attente()
-			//}
-
 		}
 		else if (etat_suivant != etat_precedant && etat_precedant == EN_BRIS) {
 			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, i);
 			ptr_lig->tab_nb_cnt[EN_BRIS]--;
 			ptr_lig->nb_bris_ligne--;
-			/*ptr_lig->config_arret = SET_BIT(ptr_lig->config_arret, i);
-			ptr_lig->tab_nb_cnt[EN_ARRET]++;*/
 		}
 
 		//Afficher seulement pour le test du Mandat 2

@@ -88,12 +88,25 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb);
 
 Cette fonction ajoute si possible une centrifugeuse  EN_FONCTION dans la ligne.
 
-PARAMETRE : - Prend les données issu de la structure t_ligne_centrifugeuse, le paramètre
-est de type t_ligne_centrifugeuse.
+PARAMETRE : -ptr_lig: Prend les données issu de la structure t_ligne_centrifugeuse
+(type: t_ligne_centrifugeuse)
 
 VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon.
 */
 int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig);
+
+
+/*******************************************************************************/
+/*ajouter_cnt_attente
+
+Cette fonction ajoute si possible une centrifugeuse  EN_ATTENTE dans la ligne.
+
+PARAMETRE : -ptr_lig: Prend les données issu de la structure t_ligne_centrifugeuse 
+(type: t_ligne_centrifugeuse)
+
+VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon.
+*/
+int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig)
 
 
 

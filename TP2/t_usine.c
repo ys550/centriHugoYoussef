@@ -85,22 +85,55 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 }
 
 int  toc_usine(t_usine * ptr_usine, int temps) {
+
+	//Iterateurs
 	int i, j;
+	//l'etat courant d'une centri sur une ligne
+	int etat_suivant;
+	//un tableau contenant les etats precedant de chaque cent de chaque ligne
+	int ** tab_etat_precedant;
+
+	//Assignation de memoire au tableau dynamique 2D des etats precedant
+	tab_etat_precedant = (int *)malloc(ptr_usine->taille_tab_ligne * sizeof(int));
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		tab_etat_precedant[i] = (int *)malloc(NB_BITS * sizeof(int));
+	}
+
+	/*Initialisation du tableau d'etat precedant avec les etats precedant de 
+	chaque ligne de l'usine*/
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		for (j = 0; j < NB_BITS; j++) {
+			tab_etat_precedant[i][j] = 
+				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
+		}
+	}
 	
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 
 		toc_ligne(&ptr_usine->tab_ligne_centrifugeuse[i], temps);
 
 		for (j = 0; j < NB_BITS; j++) {
-
-			if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) {
+			etat_suivant = ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
+			if (etat_suivant == EN_BRIS) {
 				ptr_usine->nb_actuel_en_fonction--;
 				ptr_usine->nb_actuel_en_bris++;
 				ptr_usine->nb_bris_usine++;
+
+				if (tab_etat_precedant[i][j] == EN_FONCTION &&
+					ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i])) {
+					ptr_usine->nb_actuel_en_fonction++;
+					break;
+				}
+				else if (tab_etat_precedant[i][j] == EN_ATTENTE && 
+					ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i])) {
+					break;
+				}
 			}
 		}	
 	}
 	ptr_usine->nb_toc++;
+
+	return ptr_usine->nb_actuel_en_fonction;
 }
 
 /*
@@ -113,17 +146,17 @@ de centrifugeuses qui viennent d’être remplacées.
 */
 int entretien_usine(t_usine * ptr_usine) {
 	int i, j;
-	static int k = 0;
+	static int index_poubelle = 0;
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		for (j = 0; j < NB_BITS; j++) {
 			if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS &&
 				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris <= MAX_BRIS) {
 
-				ptr_usine->tab_poubelle_ligne[k++] =
+				ptr_usine->tab_poubelle_ligne[index_poubelle++] =
 					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
 
-				if (k >= ptr_usine->taille_tab_poubelle - 1) {
+				if (index_poubelle >= ptr_usine->taille_tab_poubelle - 1) {
 
 					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
 
