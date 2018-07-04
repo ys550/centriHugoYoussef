@@ -106,7 +106,7 @@ PARAMETRE : -ptr_lig: Prend les données issu de la structure t_ligne_centrifugeu
 
 VALEUR DE RETOUR : Elle retourne 1 pour succès ou 0 sinon.
 */
-int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig)
+int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig);
 
 
 
