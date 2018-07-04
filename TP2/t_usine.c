@@ -121,13 +121,13 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 
 				//Si l'etat precedant de la cent en bris etait en fonction
 				if (tab_etat_precedant[i][j] == EN_FONCTION) {
-					//ajoute une cnt en fonction a partir de une EN_ATTENTE
+					//ajoute une cnt en fonction a partir d'une EN_ATTENTE
 					ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i]);
 					ptr_usine->nb_actuel_en_fonction++;
 				}
 				//Si l'etat precedant de la cent en bris etait en attente
 				else if (tab_etat_precedant[i][j] == EN_ATTENTE) {
-					//ajoute une cnt en attente a partir de une EN_ARRET
+					//ajoute une cnt en attente a partir d'une EN_ARRET
 					ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 				}
 			}
@@ -176,12 +176,20 @@ int entretien_usine(t_usine * ptr_usine) {
 	return ptr_usine->nb_cent_remplace;
 }
 
-int get_nb_total_en_fonction(t_usine * ptr_usine){}
+int get_nb_actuel_en_fonction(t_usine * ptr_usine) {
+	return ptr_usine->nb_actuel_en_fonction;
+}
 
-int get_nb_actuel_en_bris(t_usine * ptr_usine){}
+int get_nb_actuel_en_bris(t_usine * ptr_usine) {
+	return ptr_usine->nb_actuel_en_bris;
+}
 
-int get_nb_toc(t_usine * ptr_usine){}
+int get_nb_toc(t_usine * ptr_usine) {
+	return ptr_usine->nb_toc;
+}
 
-int get_nb_bris_total(t_usine * ptr_usine){}
+int get_nb_bris_total(t_usine * ptr_usine) {
+	return ptr_usine->nb_bris_usine;
+}
 
 //TO-DO: ajouter print_usine

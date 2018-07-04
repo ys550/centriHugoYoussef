@@ -70,7 +70,7 @@ typedef struct {
 	
 	/* Tableau dynamique de conservation des centrifugeuse mises 
 	au rebus lors de l'entretien sur une ligne*/
-	t_centrifugeuse * tab_poubelle_ligne; //realloc
+	t_centrifugeuse * tab_poubelle_ligne;
 
 
 	/*Taille dynamique du tableau pour les cent mises au rebus*/
@@ -152,7 +152,7 @@ int entretien_usine(t_usine * ptr_usine);
 
 /******************************************************************************/
 
-/*get_nb_total_en_fonction
+/*get_nb_actuel_en_fonction
 
 Cette fonction donne le nombre de centrifigeuse en fonction dans l'usine
 
@@ -160,7 +160,7 @@ PARAMETRE : -la structure t_usine définie
 
 VALEUR DE RETOUR : Nombre de centrifeuse en fonction dans l'usine
 */
-int get_nb_total_en_fonction(t_usine * ptr_usine);
+int get_nb_actuel_en_fonction(t_usine * ptr_usine);
 
 
 /******************************************************************************/
