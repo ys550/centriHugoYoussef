@@ -119,14 +119,16 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 				ptr_usine->nb_actuel_en_bris++;
 				ptr_usine->nb_bris_usine++;
 
-				if (tab_etat_precedant[i][j] == EN_FONCTION &&
-					ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i])) {
+				//Si l'etat precedant de la cent en bris etait en fonction
+				if (tab_etat_precedant[i][j] == EN_FONCTION) {
+					//ajoute une cnt en fonction a partir de une EN_ATTENTE
+					ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i]);
 					ptr_usine->nb_actuel_en_fonction++;
-					break;
 				}
-				else if (tab_etat_precedant[i][j] == EN_ATTENTE && 
-					ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i])) {
-					break;
+				//Si l'etat precedant de la cent en bris etait en attente
+				else if (tab_etat_precedant[i][j] == EN_ATTENTE) {
+					//ajoute une cnt en attente a partir de une EN_ARRET
+					ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 				}
 			}
 		}	
