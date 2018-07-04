@@ -1,12 +1,8 @@
-/*===========================================================*/
-/* 	INF145 - t_usine.h                                          */
-/*===========================================================*/
-
 /*
 
 Module : t_usine.h
-Par    :
-Date   :22/06/18
+Par    : Youssef Soliman, Hugo Belin
+Date   :07/04/18
 
 -Ce module permet la simulation d'une usine de centrifigeuse qui doit être
 responsable de ce maintenir en marche avec toujours 100 centrifugeuse en
@@ -45,7 +41,7 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 
 /*le nb de cent en fonction par ligne ne doit pas depasser le 
 max(NB_FONC_MAX (22))*/
-#define NB_FONC_LIG 22
+#define NB_FONC_LIG 12
 
 //le nombre max de bris d'une cent avant son remplacement
 #define MAX_BRIS 4
@@ -135,7 +131,7 @@ PARAMETRE : -la structure t_usine définie
 
 VALEUR DE RETOUR : Nombre de centrifeuse en fonction après le toc
 */
-int  toc_usine(t_usine * ptr_usine);
+int  toc_usine(t_usine * ptr_usine, int temps);
 
 
 /******************************************************************************/

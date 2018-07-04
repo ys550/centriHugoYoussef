@@ -1,8 +1,8 @@
 /*
 
 Module :t_usine.c
-Par    :
-Date   :21/05/18
+Par    : Youssef Soliman, Hugo Belin
+Date   :07/04/18
 
 Ce ficher permet de voir précisement comment les fonctions définie dans
 t_usine.h ont été programmé.
@@ -48,7 +48,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 		ptr_usine->nb_bris_usine = 0;
 		ptr_usine->nb_cent_remplace = 0;
 
-		//cree une ligne supplementaire lorsque la derniere ligne est complete
+		//cree une ligne supplementaire lorsque la derniere ligne est pleine
 		ptr_usine->taille_tab_ligne = (nb_fonction / NB_FONC_LIG) + LIGNE_FIN;
 
 		cnt_fnc_restant = nb_fonction % NB_FONC_LIG;
@@ -84,11 +84,62 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 	return 0;
 }
 
-int  toc_usine(t_usine * ptr_usine) {
+int  toc_usine(t_usine * ptr_usine, int temps) {
+	int i, j;
 	
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+
+		toc_ligne(&ptr_usine->tab_ligne_centrifugeuse[i], temps);
+
+		for (j = 0; j < NB_BITS; j++) {
+
+			if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) {
+				ptr_usine->nb_actuel_en_fonction--;
+				ptr_usine->nb_actuel_en_bris++;
+				ptr_usine->nb_bris_usine++;
+			}
+		}	
+	}
+	ptr_usine->nb_toc++;
 }
 
-int entretien_usine(t_usine * ptr_usine){}
+/*
+va observer chaque  centrifugeuse de l’usine et selon les critères de 
+remplacement de la stratégie utilisée (avec fonction privée static)  va choisir
+de la remplacer ou non par une centrifugeuse neuve.  S’il y a remplacement, la
+vieille centrifugeuse (retournée par la fonction de remplacement) est conservée
+dans un tableau de centrifugeuses mises au rebus. La fonction retourne le nombre
+de centrifugeuses qui viennent d’être remplacées.
+*/
+int entretien_usine(t_usine * ptr_usine) {
+	int i, j;
+	static int k = 0;
+
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		for (j = 0; j < NB_BITS; j++) {
+			if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS &&
+				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris <= MAX_BRIS) {
+
+				ptr_usine->tab_poubelle_ligne[k++] =
+					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
+
+				if (k >= ptr_usine->taille_tab_poubelle - 1) {
+
+					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
+
+					/*creer un autre tab poubelle au cas que realloc() ne peut 
+					pas etirer le tab courant?*/
+					ptr_usine->tab_poubelle_ligne = (t_centrifugeuse *)
+						realloc(ptr_usine->tab_poubelle_ligne, 
+							ptr_usine->taille_tab_poubelle);
+				}
+				ptr_usine->nb_cent_remplace++;
+			}
+		}
+		
+	}
+	return ptr_usine->nb_cent_remplace;
+}
 
 int get_nb_total_en_fonction(t_usine * ptr_usine){}
 
