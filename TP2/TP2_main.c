@@ -57,7 +57,7 @@ Ce module est la fonction principale de notre programme:
 /********************************************************************/
 /*						PROGRAMME PRINCIPAL                         */
 /********************************************************************/
-#if(0)
+#if(1)
 int main(void) {
 	int temps;
 	int est_reussi;
@@ -412,6 +412,7 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 #endif
+#if(0)
 int main() {
 	t_usine usine;
 	int i;
@@ -422,7 +423,7 @@ int main() {
 	system("pause");
 	return EXIT_SUCCESS;
 }
-
+#endif
 /*=========================================================*/
 
 

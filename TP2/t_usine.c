@@ -149,6 +149,8 @@ de centrifugeuses qui viennent d’être remplacées.
 int entretien_usine(t_usine * ptr_usine) {
 	int i, j;
 	static int index_poubelle = 0;
+	//pour le realloc()
+	t_centrifugeuse * tab_poubelle_etire;
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		for (j = 0; j < NB_BITS; j++) {
