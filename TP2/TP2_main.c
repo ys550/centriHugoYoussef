@@ -298,30 +298,35 @@ int main(void) {
 		*********************************************************/
 	#if (0)
 
-		t_ligne_centrifugeuse ligne;
 		//Mise en place à la configuration initial avec un nb de bit 10
 		est_reussi = init_ligne_centrifugeuse(&ligne, 10);
-		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		printf("Reussi (Oui = 1, Non = 0) : %d\n", est_reussi);
 		//affiche la configuration initiale
-		printf("\nconfiguration initiale");
+		printf("configuration initiale\n");
 		print_ligne_centrifugeuse(&ligne);
 	
-		printf("\n\n");
 
 		//diminution du nb de centrifugeuse active par 1
 		est_reussi=reduire_cnt(&ligne);
-		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
+		printf("\nReussi (Oui = 1, Non = 0) : %d\n", est_reussi);
 		//configuration initial en elevant une centrifugeuse 
-		printf("\nconfiguration initiale - 1 centrifugeuse active");
+		printf("configuration initiale - 1 centrifugeuse active\n");
+		print_ligne_centrifugeuse(&ligne);
+	
+
+		/*ajout d'une centrifugeuse EN_FONCTION pour retourner à la 
+		configuration initiale*/
+		est_reussi = ajouter_cnt(&ligne);
+		printf("\nReussi (Oui = 1, Non = 0) : %d\n", est_reussi);
+		//retour à la configuration initiale
+		printf("configuration initiale\n");
 		print_ligne_centrifugeuse(&ligne);
 
-		printf("\n\n");
-	
-		//ajout d'une centrifugeuse pour retourner à la configuration initiale
-		est_reussi = ajouter_cnt(&ligne);
-		printf("\nReussi (Oui = 1, Non = 0) : %d", est_reussi);
-		//retour à la configuration initiale
-		printf("\nconfiguration initiale");
+
+		/*ajout d'une centrifugeuse EN_ATTENTE a partir d'une EN_ARRET*/
+		est_reussi = ajouter_cnt_attente(&ligne);
+		printf("\nReussi (Oui = 1, Non = 0) : %d\n", est_reussi);
+		//la premiere EN_ARRET a partir de la droite remplacer par EN_ATTENTE
 		print_ligne_centrifugeuse(&ligne);
 
 	#endif

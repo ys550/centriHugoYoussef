@@ -160,7 +160,7 @@ int ajouter_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	centrifuguese dans la position trouve est en attente*/
 
 	//pour verifier si configuration valide(pas plus de 2 EN_FONCTION contigus)
-	uint copie_config_fonction = ptr_lig->config_fonction;
+	uint copie_config_fonction;
 	//iterateur
 	int i;
 
@@ -196,7 +196,10 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 	centrifuguese dans la position trouve est en arret*/
 
 	//pour verifier si configuration valide(pas plus de 2 EN_ATTENTE contigus)
-	uint copie_config_attente = ptr_lig->config_attente;
+	uint copie_config_attente;
+	/*pour verifier si configuration valide(pas plus de 1 EN_ATTENTE en 
+	contigus avec 1 EN_FONCTION)*/
+	uint copie_config_fonction;
 	//iterateur
 	int i;
 
@@ -205,11 +208,13 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 		if (GET_BIT(ptr_lig->config_arret, i)) {
 
 			copie_config_attente = SET_BIT(ptr_lig->config_attente, i);
+			copie_config_fonction = SET_BIT(ptr_lig->config_fonction, i);
 
 			/*verifie si la config serait valide si on ajoute une
 			centrifuguese en attente dans la position (i) courante de
 			l'iteration de la boucle avant de l'ajouter*/
-			if (configuration_valide(copie_config_attente)) {
+			if (configuration_valide(copie_config_attente) && 
+				configuration_valide(copie_config_fonction)) {
 
 				ptr_lig->config_arret = CLEAR_BIT(ptr_lig->config_arret, i);
 				ptr_lig->tab_nb_cnt[EN_ARRET]--;

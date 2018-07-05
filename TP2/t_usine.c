@@ -164,11 +164,13 @@ int entretien_usine(t_usine * ptr_usine) {
 
 					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
 
-					/*creer un autre tab poubelle au cas que realloc() ne peut 
-					pas etirer le tab courant?*/
-					ptr_usine->tab_poubelle_ligne = (t_centrifugeuse *)
+					tab_poubelle_etire = (t_centrifugeuse *)
 						realloc(ptr_usine->tab_poubelle_ligne, 
 							ptr_usine->taille_tab_poubelle);
+
+					if (tab_poubelle_etire != NULL) {
+						ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
+					}
 				}
 				ptr_usine->nb_cent_remplace++;
 			}
