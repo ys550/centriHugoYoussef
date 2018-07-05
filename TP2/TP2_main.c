@@ -57,7 +57,6 @@ Ce module est la fonction principale de notre programme:
 /********************************************************************/
 /*						PROGRAMME PRINCIPAL                         */
 /********************************************************************/
-#if(1)
 int main(void) {
 	int temps;
 	int est_reussi;
@@ -66,6 +65,7 @@ int main(void) {
 	uint result;
 	t_centrifugeuse cent;
 	t_ligne_centrifugeuse ligne;
+	t_usine usine;
 
 	/*********************************************************
 	*************TEST: MANDAT 1 toc_centrifugeuse*************
@@ -119,7 +119,7 @@ int main(void) {
 	/*********************************************************
 	***************TEST: MANDAT2 toc_ligne********************
 	*********************************************************/
-	#if (1)
+	#if (0)
 		temps = 0;
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
 		init_ligne_centrifugeuse(&ligne, NB_CENT_DEPART);
@@ -151,6 +151,14 @@ int main(void) {
 		printf("La nouvelle cent : \n");
 		print_centrifugeuse(&cent);
 		
+	#endif
+		/*********************************************************
+		*****************TEST: MANDAT3 USINE**********************
+		*********************************************************/
+	#if (1)
+		init_usine(&usine, 100);
+		print_usine(&usine);
+
 	#endif
 
 	/*********************************************************
@@ -416,19 +424,7 @@ int main(void) {
 	// et ÇA, c'est le retour d'un 0 au système d'exploitation.
 	return EXIT_SUCCESS;
 }
-#endif
-#if(0)
-int main() {
-	t_usine usine;
-	int i;
-	init_usine(&usine, 45);
-	init_usine(&usine, 22);
-	init_usine(&usine, 100);
-	
-	system("pause");
-	return EXIT_SUCCESS;
-}
-#endif
+
 /*=========================================================*/
 
 

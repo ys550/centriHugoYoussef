@@ -154,8 +154,11 @@ int entretien_usine(t_usine * ptr_usine) {
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		for (j = 0; j < NB_BITS; j++) {
-			if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS &&
-				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris <= MAX_BRIS) {
+			/*remplacer une cent lorsque la cent est EN_BRIS, qu'elle n'a pas
+			deja brise plus que MAX_BRIS nb de tocs defini par TOCS_REMP*/
+			if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) &&
+				(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris <= MAX_BRIS) &&
+				(ptr_usine->nb_toc % TOCS_REMP == 0)) {
 
 				ptr_usine->tab_poubelle_ligne[index_poubelle++] =
 					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
@@ -180,6 +183,28 @@ int entretien_usine(t_usine * ptr_usine) {
 		
 	}
 	return ptr_usine->nb_cent_remplace;
+}
+
+void print_usine(const t_usine * ptr_usine) {
+	int i, j;
+	int etat;
+
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		printf("Ligne: %d\nEN_BRIS=0, EN_ARRET=1, EN_ATTENTE=2, " 
+			"EN_FONCTION=3\n", i);
+		for (j = 0; j < NB_BITS; j++) {
+			etat = ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
+			printf(" %d ", etat);
+		}
+		printf("\n\n");
+	}
+	
+	printf("\n\nnb_cent_remplace: %d\n", ptr_usine->nb_cent_remplace);
+	printf("nb_ini_fonction: %d\n", ptr_usine->nb_ini_fonction);
+	printf("nb_actuel_en_fonction: %d\n", ptr_usine->nb_actuel_en_fonction);
+	printf("nb_actuel_en_bris: %d\n", ptr_usine->nb_actuel_en_bris);
+	printf("nb_toc: %d\n", ptr_usine->nb_toc);
+	printf("nb_bris_usine: %d\n", ptr_usine->nb_bris_usine);
 }
 
 int get_nb_actuel_en_fonction(t_usine * ptr_usine) {

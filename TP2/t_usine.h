@@ -41,12 +41,12 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 
 /*le nb de cent en fonction par ligne ne doit pas depasser le 
 max(NB_FONC_MAX (22))*/
-#define NB_FONC_LIG 12
+#define NB_FONC_LIG 22
 
 //le nombre max de bris d'une cent avant son remplacement
 #define MAX_BRIS 4
 
-//remplacer apres 500 tocs
+//remplacer cent en bris apres un nb de tocs definis par cette constante
 #define TOCS_REMP 500
 
 #define TAILLE_POUBELLE_INIT 32
@@ -149,6 +149,17 @@ VALEUR DE RETOUR : Nombre de centrifeuse qui sont remplacées
 */
 int entretien_usine(t_usine * ptr_usine);
 
+/******************************************************************************/
+
+/*print_usine
+
+Cette fonction affiche les statistique et lignes de l'usine
+
+PARAMETRE : -ptr_usine:la structure t_usine définie (type:t_usine)
+
+VALEUR DE RETOUR : Aucune
+*/
+void print_usine(const t_usine * ptr_usine);
 
 /******************************************************************************/
 
@@ -200,8 +211,6 @@ PARAMETRE : -la structure t_usine définie
 VALEUR DE RETOUR : Nombre de bris depuis l'initialisation de l'usine
 */
 int get_nb_bris_total(t_usine * ptr_usine);
-
-//TO-DO: ajouter print_usine
 
 /********************************************************************/
 /*				DECLARATIONS DE FONCTIONS STATIQUE					*/
