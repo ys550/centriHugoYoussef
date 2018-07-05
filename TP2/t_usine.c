@@ -160,7 +160,9 @@ int entretien_usine(t_usine * ptr_usine) {
 				ptr_usine->tab_poubelle_ligne[index_poubelle++] =
 					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
 
-				if (index_poubelle >= ptr_usine->taille_tab_poubelle - 1) {
+				ptr_usine->nb_cent_remplace++;
+
+				if (index_poubelle == ptr_usine->taille_tab_poubelle) {
 
 					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
 
@@ -173,7 +175,6 @@ int entretien_usine(t_usine * ptr_usine) {
 						ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
 					}
 				}
-				ptr_usine->nb_cent_remplace++;
 			}
 		}
 		

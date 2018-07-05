@@ -207,6 +207,8 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 
 		if (GET_BIT(ptr_lig->config_arret, i)) {
 
+			/*l'intersection OU (|) entre les deux(attente et fonction) ne doit
+			pas donner plus que 2 en contigus*/
 			copie_config_attente = SET_BIT(ptr_lig->config_attente, i);
 			copie_config_fonction = SET_BIT(ptr_lig->config_fonction, i);
 
