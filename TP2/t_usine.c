@@ -166,7 +166,8 @@ int entretien_usine(t_usine * ptr_usine) {
 
 					tab_poubelle_etire = (t_centrifugeuse *)
 						realloc(ptr_usine->tab_poubelle_ligne, 
-							ptr_usine->taille_tab_poubelle);
+							ptr_usine->taille_tab_poubelle * 
+							sizeof(t_centrifugeuse));
 
 					if (tab_poubelle_etire != NULL) {
 						ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
