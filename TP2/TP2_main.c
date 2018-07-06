@@ -36,8 +36,12 @@ Ce module est la fonction principale de notre programme:
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS
 
-//le nombre de tocs pour le test des mandats
-#define NB_TOCS_TEST 1300
+//le nombre de tocs pour le test du mandat 1
+#define NB_TOCS_TEST1 300
+
+//le nombre de tocs pour le test du mandat 3
+#define NB_TOCS_TEST3 1300
+
 #define NB_FONC_INIT 80
 
 // Librairies usuelles à inclure 
@@ -109,9 +113,9 @@ int main(void) {
 				set_en_fonction(&cent);
 				print_centrifugeuse(&cent);
 			}
-		} while (nb_tocs < NB_TOCS_TEST);
+		} while (nb_tocs < NB_TOCS_TEST1);
 
-		printf("\n\n********FIN DES %d TOCS********\n\n", NB_TOCS_TEST);
+		printf("\n\n********FIN DES %d TOCS********\n\n", NB_TOCS_TEST1);
 		print_centrifugeuse(&cent);
 
 
@@ -165,7 +169,7 @@ int main(void) {
 		do {
 			toc_usine(&usine, temps);
 			entretien_usine(&usine);
-		} while (usine.nb_toc < NB_TOCS_TEST);
+		} while (usine.nb_toc < NB_TOCS_TEST3);
 
 		print_usine(&usine);
 
