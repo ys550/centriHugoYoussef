@@ -6,32 +6,32 @@ Date   :20/06/18
 
 Ce module est la fonction principale de notre programme:
 - Le programme simule un controle d'un dispositif linéaire de centrifugeuse,
-  le dispositif est soumis à des contraintes de maintenance et de sécurité qui
-  oblige à ne pas avoir plus de 2 centrifugeuse fonctionelle voisine.
-- L'état d'une centrifugeuse est définie par la valeur 1 d'un bit et nous 
-  assumons qu'une ligne de centrifugeuse ne pourra jamais dépasser 32 en taille.
-- L'agorithme va nous présenter toutes les configuration possibles en fonction 
-  des conditions données par l'utilisateur : le nombre total de centrifugeuse 
-  et le nombre d'active.
+le dispositif est soumis à des contraintes de maintenance et de sécurité qui
+oblige à ne pas avoir plus de 2 centrifugeuse fonctionelle voisine.
+- L'état d'une centrifugeuse est définie par la valeur 1 d'un bit et nous
+assumons qu'une ligne de centrifugeuse ne pourra jamais dépasser 32 en taille.
+- L'agorithme va nous présenter toutes les configuration possibles en fonction
+des conditions données par l'utilisateur : le nombre total de centrifugeuse
+et le nombre d'active.
 - Chaque centrifugeuse auront un état défini:
-		EN_FONCTION : la centrifugeuse est active (chaque rotation augmente la 
-		              probabilitée de cassage (en bris).
-		EN_BRIS: La centrifugeuse est cassée, elle est donc inactive jusqu'a la 
-				 réparation de celle-ci.
-		EN_ATTENTE : pour que la centrifugeuse soit en fonction a vitesse de rotation
-					 maximal, il faut la mettre dans un état secondaire où sa vitesse
-					 de rotation est moindre.
-					 Elle subit toujours le risque de cassage, mais il est plus 
-					 faible que lorsqu'elle est en fonction.
-		EN_ARRET : la centrifugeuse n'est pas active
-  -Pour l'instant, le module main de du programme comporte seulement les tests
-   des fonctions crées pour réaliser notre objectif. Pour exécuter chaque test,
-   vous devez mettre la condition de compilation #if à 1 et vérifier que les autres 
-   test on des #if(0).
+	EN_FONCTION : la centrifugeuse est active (chaque rotation augmente la
+		probabilitée de cassage (en bris).
+	EN_BRIS: La centrifugeuse est cassée, elle est donc inactive jusqu'a la
+		réparation de celle-ci.
+	EN_ATTENTE : pour que la centrifugeuse soit en fonction a vitesse de rotation
+		maximal, il faut la mettre dans un état secondaire où sa vitesse
+		de rotation est moindre.
+		Elle subit toujours le risque de cassage, mais il est plus
+		faible que lorsqu'elle est en fonction.
+	EN_ARRET : la centrifugeuse n'est pas active
+-Pour l'instant, le module main de du programme comporte seulement les tests
+des fonctions crées pour réaliser notre objectif. Pour exécuter chaque test,
+vous devez mettre la condition de compilation #if à 1 et vérifier que les autres
+test on des #if(0).
 */
 
-
-
+/*=========================================================*/
+/*                  LES CONSTANTES                         */
 /*=========================================================*/
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS
@@ -40,7 +40,7 @@ Ce module est la fonction principale de notre programme:
 #define NB_TOCS_TEST1 300
 
 //le nombre de tocs pour le test du mandat 3
-#define NB_TOCS_TEST3 2000
+#define NB_TOCS_TEST3 10000
 
 #define NB_FONC_INIT 80
 
@@ -54,9 +54,7 @@ Ce module est la fonction principale de notre programme:
 #include "ligne_centrifugeuse.h"
 #include "t_usine.h"
 
-/*=========================================================*/
-/*                  LES CONSTANTES                         */
-/*=========================================================*/
+
 
 
 /********************************************************************/
@@ -124,6 +122,9 @@ int main(void) {
 	/*********************************************************
 	***************TEST: MANDAT2 toc_ligne********************
 	*********************************************************/
+
+	/*Mettre la valeur de la constante DEBUG_MANDAT2 a 1 pour ce test 
+	(ligne_centrifugeuse.h)*/
 	#if (0)
 		temps = 0;
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);

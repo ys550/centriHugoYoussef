@@ -4,10 +4,31 @@ Module : centrifugeuse.h
 Par    : Youssef Soliman, Hugo Belin
 Date   :20/06/18
 
-Ce ficher à pour but de créer les constantes, les structures, les énumérations 
-et les définitions des fonctions nécéssaire pour la création de l'interface de 
+Ce ficher à pour but de créer les constantes, les structures, les énumérations
+et les définitions des fonctions nécéssaire pour la création de l'interface de
 chaque état d'une centrifugeuse. (module centrifugeuse)
-
+On y retrouve les sous programmes suivants :
+- init_centrifugeuse : Initialise une centrifugeuse (centrifugeuse neuve
+à l'arret)
+- set_en_fonction : Met une centrifugeuse en attente en fonction
+- set_en_attente : Met une centrifugeuse en attente
+- set_en_arret : Met une centrifugeuse en arret
+- toc_centrifugeuse : Cette fonction déclenche la dimination ou son
+changement en fonction de l'état de la centrifugeuse.
+- set_temps_reparation : Met en place le temps de réparation d'une
+centrifugeuse en bris.
+- get_compteurs : Cette fonction va donner les compteurs d'une centrifugeuse :
+- les quatre compteurs d’état suivi du nombre de bris
+- Les deux compteurs de tocs depuis la dernière réparation
+- Le compte à rebours.
+- get_prob_bris : Cette fonction va donner la probabilité de bris de la
+centrifugeuse voulu.
+- accroitre_prob : Cette fonction fait croitre la probabilité de bris
+d’une centrifugeuse EN_ATTENTE ou EN_FONCTION après un toc
+sans bris.
+- print_centrifugeuse : Cette fonction va nous donner la totalité des données
+d'une centrifugeuse
+*/
 
 /*=========================================================*/
 /*                  LES CONSTANTES                         */
@@ -29,6 +50,9 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
 //pour la prob de test_bris
 #define BASE_TEST_BRIS 1.0
 
+//le temps de reparation en nb de tocs
+#define TEMPS_REPARATION 3
+
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
 
@@ -37,6 +61,11 @@ typedef unsigned int uint;
  simulation
 */
 typedef enum { EN_BRIS, EN_ARRET, EN_ATTENTE, EN_FONCTION } t_etat;
+
+
+/*=========================================================*/
+/*                       STRUCTURE                         */
+/*=========================================================*/
 
 typedef struct {
 	//Une variable d’état toujours égale à une des constantes du type énuméré
@@ -92,8 +121,9 @@ t_centrifugeuse init_centrifugeuse(void);
 Cette fonction permet de mettre une centrifugeuse EN_ATTENTE  dans l’état
 EN_FONCTION.
 
-PARAMETRE : Prend les données issu de la structure t_centrifugeuse, le paramètre 
-			est de type t_centrifugeuse.
+PARAMETRE :
+-  ptr_cnt : Prend les données issu de la structure t_centrifugeuse. 
+(type t_centrifugeuse *)
 
 VALEUR DE RETOUR : 1 si réussi, 0 sinon.
 */
@@ -103,11 +133,12 @@ int set_en_fonction(t_centrifugeuse * ptr_cnt);
 /*******************************************************************************/
 /*set_en_attente
 
-Cette fonction permet de mettre une centrifugeuse EN_ARRET ou EN_FONCTION 
-dans l’état  EN_ATTENTE.  
+Cette fonction permet de mettre une centrifugeuse EN_ARRET ou EN_FONCTION
+dans l’état  EN_ATTENTE.
 
-PARAMETRE : Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+- ptr_cnt : Prend les données issu de la structure t_centrifugeuse.
+(type: t_centrifugeuse *)
 
 VALEUR DE RETOUR : 1 si réussi, 0 sinon.
 */
@@ -117,11 +148,12 @@ int set_en_attente(t_centrifugeuse * ptr_cnt);
 /*******************************************************************************/
 /*set_en_arret
 
-Cette fonction permet de mettre une centrifugeuse EN_ATTENTE  ou EN_FONCTION 
-dans l’état  EN_ARRET. 
+Cette fonction permet de mettre une centrifugeuse EN_ATTENTE  ou EN_FONCTION
+dans l’état  EN_ARRET.
 
-PARAMETRE : Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+- ptr_cnt :Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
 
 VALEUR DE RETOUR : 1 si réussi, 0 sinon .
 */
@@ -131,14 +163,14 @@ int set_en_arret(t_centrifugeuse * ptr_cnt);
 /*******************************************************************************/
 /*toc_centrifugeuse
 
-Cette fonction déclenche la dimination ou son changement en fonction de 
+Cette fonction déclenche la dimination ou son changement en fonction de
 l'état de la centrifugeuse.
 
-PARAMETRE : Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+-ptr_cnt :Prend les données issu de la structure t_centrifugeuse.
+(type: t_centrifugeuse *)
 
-VALEUR DE RETOUR : retourne l’état de la centrifugeuse.
-*/
+VALEUR DE RETOUR : retourne l’état de la centrifugeuse.*/
 int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt);
 
 
@@ -147,12 +179,13 @@ int  toc_centrifugeuse(t_centrifugeuse * ptr_cnt);
 
 Cette fonction qui ne s’applique qu’à une centrifugeuse EN_BRIS dont le
 compte à rebours est égal à INFINI, elle fixe alors le compte à rebours
-de la centrifugeuse au temps reçu en paramètre. 
+de la centrifugeuse au temps reçu en paramètre.
 
-PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
-              est de type t_centrifugeuse.
-			- temps, valeur qui va définir le nombre de toc nécessaire à la 
-			  la réparation de la centrifugeuse.
+PARAMETRE :
+- * ptr_cnt :Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
+- temps : valeur qui va définir le nombre de toc nécessaire à la la réparation
+de la centrifugeuse. (type: uint)
 
 VALEUR DE RETOUR : 1 si réussi, 0 sinon .
 */
@@ -164,15 +197,15 @@ int set_temps_reparation(t_centrifugeuse * ptr_cnt, uint temps);
 
 Cette fonction va donner les compteurs d'une centrifugeuse :
 - les quatre compteurs d’état suivi du nombre de bris
-- Les deux compteurs de tocs depuis la dernière réparation 
+- Les deux compteurs de tocs depuis la dernière réparation
 - Le compte à rebours.
 
-PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
-			  est de type t_centrifugeuse.
-			- Le tableau de compteur ce cette centrifugeuse.
+PARAMETRE :
+-ptr_cnt : Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
+-compteurs : Le tableau de compteur ce cette centrifugeuse. (type: uint *)
 
-
-VALEUR DE RETOUR : Les huits compteurs de la centrifugeuse
+VALEUR DE RETOUR : Aucune
 */
 void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs);
 
@@ -182,8 +215,9 @@ void get_compteurs(const t_centrifugeuse * ptr_cnt, uint * compteurs);
 
 Cette fonction va donner la probabilité de bris de la centrifugeuse voulu.
 
-PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+-ptr_cnt : Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
 
 VALEUR DE RETOUR : La probabilité de bris de la centrifugeuse (double)
 */
@@ -194,10 +228,11 @@ double get_prob_bris(const t_centrifugeuse * ptr_cnt);
 /*accroitre_prob
 
 Cette fonction fait croitre la probabilité de bris d’une centrifugeuse EN_ATTENTE
-ou EN_FONCTION après un toc sans bris.  
+ou EN_FONCTION après un toc sans bris.
 
-PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+-ptr_cnt :Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
 
 HYPOTHESES:
 -On suppose que l'etat est seulement soit EN_ATTENTE ou EN_FONCTION
@@ -210,12 +245,13 @@ static void accroitre_prob(t_centrifugeuse * ptr_cnt);
 /*******************************************************************************/
 /*print_centrifugeuse
 
-Cette fonction va nous donner la totalité des données d'une centrifugeuse 
+Cette fonction va nous afficher la totalité des données d'une centrifugeuse
 
-PARAMETRE : - Prend les données issu de la structure t_centrifugeuse, le paramètre
-est de type t_centrifugeuse.
+PARAMETRE :
+-ptr_cnt :Prend les données issu de la structure t_centrifugeuse
+(type: t_centrifugeuse *)
 
-VALEUR DE RETOUR : Toutes les données possible sur une centrifugeuse 
+VALEUR DE RETOUR : Aucune
 */
 void print_centrifugeuse(const t_centrifugeuse * ptr_cnt);
 

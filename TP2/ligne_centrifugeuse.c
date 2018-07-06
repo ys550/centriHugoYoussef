@@ -4,16 +4,15 @@ Module :ligne_centrifugeuse
 Par    : Youssef Soliman, Hugo Belin
 Date   :22/06/18
 
--Ce module offre Le second module va implémenter le type structuré 
-t_ligne_centrifugeuse dans son interface (*.H) et va offrir des 
+-Ce module offre Le second module va implémenter le type structuré
+t_ligne_centrifugeuse dans son interface (*.H) et va offrir des
 fonctions visant à maintenir un nombre variable dans le temps de
-centrifugeuses EN_FONCTION dans une ligne de centrifugeuses 
-(comme pour le TP1).
+centrifugeuses EN_FONCTION dans une ligne de centrifugeuses.
 
 - Ce ficher permet de voir précisement comment les fonctions définie dans
 ligne_centrifugeuse.h ont été programmé.
-Pour comprendre l'utilité de ces fonctions, veuillez vous référer 
-au ficher centrifugeuse.h 
+Pour comprendre l'utilité de ces fonctions, veuillez vous référer
+au ficher centrifugeuse.h
 */
 
 
@@ -124,6 +123,7 @@ int init_ligne_centrifugeuse(t_ligne_centrifugeuse * ptr_lig, uint nb) {
 			}
 			return 1;
 		}
+		//si nb = 0 on mets les premier NBR_K_EN_ATTENTE EN_ATTENTE
 		else if (nb <= 0) {
 
 			nb_k_attente_max = NBR_K_EN_ATTENTE;
@@ -232,7 +232,7 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 	return 0;
 }
 
-//NON
+
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	//iterateur
 	int i;
@@ -259,11 +259,15 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 	//iterateur
 	int i;
 	
+	// Pour toutes les centrifugeuses de la ligne 
 	for (i = 0; i < NB_BITS; i++) {
 		etat_precedant = ptr_lig->tab_cnt[i].etat;
 		etat_suivant = toc_centrifugeuse(&ptr_lig->tab_cnt[i]);
 		
+		/* Nous étudions si l'etat suivant differe de du precedant*/
 		if (etat_suivant == EN_BRIS && etat_precedant != etat_suivant) {
+			/* Si l'etat suivant est en bris, nous actualisons la structure 
+			prt_ligne*/
 			ptr_lig->nb_bris_ligne++;
 			ptr_lig->tab_nb_cnt[EN_BRIS]++;
 			ptr_lig->config_bris = SET_BIT(ptr_lig->config_bris, i);
@@ -279,6 +283,8 @@ void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 
 		}
 		else if (etat_suivant != etat_precedant && etat_precedant == EN_BRIS) {
+			/*Si la centrifugeuse n'est plus en bris, nous actualiserons la
+			structure ptr_ligne*/
 			ptr_lig->config_bris = CLEAR_BIT(ptr_lig->config_bris, i);
 			ptr_lig->tab_nb_cnt[EN_BRIS]--;
 			ptr_lig->nb_bris_ligne--;
@@ -356,6 +362,9 @@ uint get_en_etat(const t_ligne_centrifugeuse * ptr_lig, int etat) {
 
 t_centrifugeuse get_centrifugeuse(const t_ligne_centrifugeuse * ptr_lig, uint  pos) {
 	t_centrifugeuse copie_cnt;
+
+	/*Si la position de la centrifugeuse demandé est possible, nous retournons
+	les données de la centrifugeuse demandée*/
 	if (pos < NB_BITS) {
 		copie_cnt = ptr_lig->tab_cnt[pos];
 		return copie_cnt;

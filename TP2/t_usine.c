@@ -35,8 +35,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 
 		//iterateur
 		int i;
-		/*les centrifugeuses en fonction dans la derniere avant la ligne 
-		supplementaire de l'usine*/
+		/*les centrifugeuses en fonction dans la derniere ligne de l'usine*/
 		int cnt_fnc_restant;
 		int init_1_est_reussi;
 		int init_2_est_reussi = 1;
@@ -88,8 +87,10 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 
 	//Iterateurs
 	int i, j;
+
 	int ajouter_fonction_est_reussi;
 	int ajouter_attente_est_reussi;
+
 	//un tableau contenant les etats precedant de chaque cent de chaque ligne
 	int ** tab_etat_precedant;
 	//un tableau des etats courants des centri sur chaque lignes
@@ -117,15 +118,18 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 	}
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		//c’est ici qu’une centrifugeuse EN_FONCTION peut briser
 		toc_ligne(&ptr_usine->tab_ligne_centrifugeuse[i], temps);
 		for (j = 0; j < NB_BITS; j++) {
+			
 			tab_etat_suivant[i][j] =
 				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
 
-			//Une machine se brise sur une des lignes
+			/*Si la fonction "toc_centrifugeuse()" a retourné l'état "EN_BRIS" sur une 
+			des lignes*/
 			if (tab_etat_suivant[i][j] == EN_BRIS &&
 				tab_etat_precedant[i][j] != tab_etat_suivant[i][j]) {
-
+	 
 				ptr_usine->nb_actuel_en_bris++;
 				ptr_usine->nb_bris_usine++;
 
@@ -144,7 +148,6 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 					if (ajouter_fonction_est_reussi) {
 						ptr_usine->nb_actuel_en_fonction++;
 					}
-
 				}
 				//Si  l'état précédent de la machine était "EN_ATTENTE"
 				else if (tab_etat_precedant[i][j] == EN_ATTENTE) {
@@ -152,6 +155,14 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 					ajouter_attente_est_reussi =
 						ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 				}
+				
+			}
+			if (tab_etat_suivant[i][j] == EN_ARRET &&
+				tab_etat_precedant[i][j] == EN_BRIS) {
+				set_en_attente(&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j]);
+				set_en_fonction(&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j]);
+				ptr_usine->nb_actuel_en_fonction++;
+				ptr_usine->nb_actuel_en_bris--;
 			}
 		}
 	}
@@ -161,66 +172,100 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 	return ptr_usine->nb_actuel_en_fonction;
 }
 
-/*
-va observer chaque  centrifugeuse de l’usine et selon les critères de 
-remplacement de la stratégie utilisée (avec fonction privée static)  va choisir
-de la remplacer ou non par une centrifugeuse neuve.  S’il y a remplacement, la
-vieille centrifugeuse (retournée par la fonction de remplacement) est conservée
-dans un tableau de centrifugeuses mises au rebus. La fonction retourne le nombre
-de centrifugeuses qui viennent d’être remplacées.
-*/
+
 int entretien_usine(t_usine * ptr_usine) {
 	int i, j;
 	static int index_poubelle = 0;
-	//pour le realloc()
+	//pour le realloc
 	t_centrifugeuse * tab_poubelle_etire;
 
-	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
-		for (j = 0; j < NB_BITS; j++) {
-			/*remplacer une cent lorsque la cent est EN_BRIS, qu'elle n'a pas
-			deja brise plus que MAX_BRIS nb de tocs defini par TOCS_REMP*/
-			if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) &&
-				(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris <= MAX_BRIS) &&
-				(ptr_usine->nb_toc % TOCS_REMP == 0)) {
+	/*remplacer ou reparer a chaque nb de tocs defini par TOCS_REMP*/
+	if (ptr_usine->nb_toc % TOCS_REMP == 0) {
 
-				ptr_usine->tab_poubelle_ligne[index_poubelle++] =
-					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
+		for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+			for (j = 0; j < NB_BITS; j++) {
 
-				ptr_usine->nb_cent_remplace++;
-				ptr_usine->nb_actuel_en_bris--;
+				/*REPARER si elle n'a pas brise plus que MAX_BRIS lorsque la 
+				machine est EN_BRIS*/
+				if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) && 
+					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris < MAX_BRIS)) {
 
-				if (index_poubelle == ptr_usine->taille_tab_poubelle) {
+					set_temps_reparation(
+						&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j],
+						TEMPS_REPARATION);
 
-					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
+					if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].compte_rebours == 
+						COMPTE_REBOURS_REPARE) {
 
-					tab_poubelle_etire = (t_centrifugeuse *)
-						realloc(ptr_usine->tab_poubelle_ligne, 
-							ptr_usine->taille_tab_poubelle * 
-							sizeof(t_centrifugeuse));
+						ptr_usine->nb_actuel_en_bris--;
 
-					if (tab_poubelle_etire != NULL) {
-						ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
+					}
+
+				}
+				/*REMPLACER si elle a tombe en bris plus que MAX_BRIS lorsque la 
+				machine est EN_BRIS*/
+				else if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) &&
+					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris >= MAX_BRIS)) {
+
+					ptr_usine->tab_poubelle_ligne[index_poubelle++] =
+						remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
+
+					ptr_usine->nb_cent_remplace++;
+					ptr_usine->nb_actuel_en_bris--;
+
+					/*Si on est rendu a la fin du tableau de poubelle, on 
+					accroit sa taille. L'accroissement est defini par la 
+					constante ACCROISSEMENT_TAB_POUBELLE*/
+					if (index_poubelle == ptr_usine->taille_tab_poubelle) {
+
+						ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
+
+						tab_poubelle_etire = (t_centrifugeuse *)
+							realloc(ptr_usine->tab_poubelle_ligne,
+								ptr_usine->taille_tab_poubelle *
+								sizeof(t_centrifugeuse));
+
+						if (tab_poubelle_etire != NULL) {
+							ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
+						}
 					}
 				}
 			}
 		}
-		
 	}
+	
 	return ptr_usine->nb_cent_remplace;
 }
 
 void print_usine(const t_usine * ptr_usine) {
 	int i, j;
 	int etat;
+	int nb_fonction_ligne;
+	int nb_attente_ligne;
+	int nb_arret_ligne;
+	int nb_bris_ligne;
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		printf("\nLigne: %d\nEN_BRIS=0, EN_ARRET=1, EN_ATTENTE=2, " 
 			"EN_FONCTION=3\n", i);
-		for (j = 0; j < NB_BITS; j++) {
+		for (j = NB_BITS - 1; j >= 0; j--) {
 			etat = ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
 			printf(" %d ", etat);
 		}
-		printf("\n\n");
+		nb_fonction_ligne = 
+			ptr_usine->tab_ligne_centrifugeuse[i].tab_nb_cnt[EN_FONCTION];
+		nb_attente_ligne = 
+			ptr_usine->tab_ligne_centrifugeuse[i].tab_nb_cnt[EN_ATTENTE];
+		nb_arret_ligne = 
+			ptr_usine->tab_ligne_centrifugeuse[i].tab_nb_cnt[EN_ARRET];
+		nb_bris_ligne = 
+			ptr_usine->tab_ligne_centrifugeuse[i].tab_nb_cnt[EN_BRIS];
+
+		printf("\nEN_BRIS: %d EN_ARRET: %d EN_ATTENTE: %d EN_FONCTION: %d\n",
+			nb_bris_ligne, nb_arret_ligne, nb_attente_ligne,
+			nb_fonction_ligne);
+
+		printf("\n************************************************\n");
 	}
 	
 	printf("nb_cent_remplace: %d\n", ptr_usine->nb_cent_remplace);
@@ -229,6 +274,8 @@ void print_usine(const t_usine * ptr_usine) {
 	printf("nb_actuel_en_bris: %d\n", ptr_usine->nb_actuel_en_bris);
 	printf("nb_toc: %d\n", ptr_usine->nb_toc);
 	printf("nb_bris_usine: %d\n\n", ptr_usine->nb_bris_usine);
+	printf("************************************************\n");
+	printf("************************************************\n");
 }
 
 int get_nb_actuel_en_fonction(t_usine * ptr_usine) {
