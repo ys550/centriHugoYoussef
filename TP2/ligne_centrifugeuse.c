@@ -236,6 +236,7 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	//iterateur
 	int i;
+
 	//Reduit celle la plus a gauche (a la fin)
 	for (i = NB_BITS - 1; i >= 0; i--) {
 		if (GET_BIT(ptr_lig->config_fonction, i) == 1) {
@@ -256,6 +257,7 @@ int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 void toc_ligne(t_ligne_centrifugeuse * ptr_lig, int temps) {
 	int etat_precedant;
 	int etat_suivant;
+
 	//iterateur
 	int i;
 	

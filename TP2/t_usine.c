@@ -37,6 +37,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 		int i;
 		/*les centrifugeuses en fonction dans la derniere ligne de l'usine*/
 		int cnt_fnc_restant;
+
 		int init_1_est_reussi;
 		int init_2_est_reussi = 1;
 
@@ -67,7 +68,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 				init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i], 
 					NB_FONC_LIG);
 		}
-		
+		//S'il y a des restant. Les mettre dans la derniere ligne
 		if (cnt_fnc_restant > 0) {
 			init_2_est_reussi =
 				init_ligne_centrifugeuse(&ptr_usine->tab_ligne_centrifugeuse[i - 1],
