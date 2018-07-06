@@ -21,7 +21,7 @@ en chaine de bits des centrifugeuses.
 #include "op_bits.h"
 
 //pour l'affichage lors de tests du mandat 2(0 : sans affichage 1: avec)
-#define DEBUG_MANDAT2 1
+#define DEBUG_MANDAT2 0
 
 //le nb initiale de cnt en attente
 #define NBR_K_EN_ATTENTE 2

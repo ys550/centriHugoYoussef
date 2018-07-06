@@ -87,52 +87,65 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 int  toc_usine(t_usine * ptr_usine, int temps) {
 
 	//Iterateurs
-	int i, j;
-	//l'etat courant d'une centri sur une ligne
-	int etat_suivant;
+	int i, j, k;
+	int ajouter_fonction_est_reussi;
+	int ajouter_attente_est_reussi;
 	//un tableau contenant les etats precedant de chaque cent de chaque ligne
 	int ** tab_etat_precedant;
+	//un tableau des etats courants des centri sur chaque lignes
+	int ** tab_etat_suivant;
 
+	
 	//Assignation de memoire au tableau dynamique 2D des etats precedant
 	tab_etat_precedant = (int *)malloc(ptr_usine->taille_tab_ligne * sizeof(int));
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		tab_etat_precedant[i] = (int *)malloc(NB_BITS * sizeof(int));
 	}
 
-	/*Initialisation du tableau d'etat precedant avec les etats precedant de 
-	chaque ligne de l'usine*/
+	//Assignation de memoire au tableau dynamique 2D des etats suivants
+	tab_etat_suivant = (int *)malloc(ptr_usine->taille_tab_ligne * sizeof(int));
+	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+		tab_etat_suivant[i] = (int *)malloc(NB_BITS * sizeof(int));
+	}
+	
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		for (j = 0; j < NB_BITS; j++) {
 			tab_etat_precedant[i][j] = 
 				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
 		}
 	}
-	
+
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
-
 		toc_ligne(&ptr_usine->tab_ligne_centrifugeuse[i], temps);
-
 		for (j = 0; j < NB_BITS; j++) {
-			etat_suivant = ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
-			if (etat_suivant == EN_BRIS) {
-				ptr_usine->nb_actuel_en_fonction--;
+			tab_etat_suivant[i][j] =
+				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
+
+			if (tab_etat_suivant[i][j] == EN_BRIS &&
+				tab_etat_precedant[i][j] != tab_etat_suivant[i][j]) {
+
 				ptr_usine->nb_actuel_en_bris++;
 				ptr_usine->nb_bris_usine++;
 
-				//Si l'etat precedant de la cent en bris etait en fonction
-				if (tab_etat_precedant[i][j] == EN_FONCTION) {
-					//ajoute une cnt en fonction a partir d'une EN_ATTENTE
-					ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i]);
-					ptr_usine->nb_actuel_en_fonction++;
+				if (tab_etat_precedant[i][j] == EN_FONCTION && tab_etat_suivant == EN_BRIS) {
+					ptr_usine->nb_actuel_en_fonction--;
+
+					ajouter_fonction_est_reussi =
+						ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i]);
+
+					if (ajouter_fonction_est_reussi) {
+						ptr_usine->nb_actuel_en_fonction++;
+					}
+
 				}
-				//Si l'etat precedant de la cent en bris etait en attente
-				else if (tab_etat_precedant[i][j] == EN_ATTENTE) {
-					//ajoute une cnt en attente a partir d'une EN_ARRET
-					ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
+				else if (tab_etat_precedant[i][j] == EN_ATTENTE && tab_etat_suivant == EN_BRIS) {
+					ajouter_attente_est_reussi =
+						ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 				}
 			}
-		}	
+		}
 	}
+
 	ptr_usine->nb_toc++;
 
 	return ptr_usine->nb_actuel_en_fonction;
@@ -190,7 +203,7 @@ void print_usine(const t_usine * ptr_usine) {
 	int etat;
 
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
-		printf("Ligne: %d\nEN_BRIS=0, EN_ARRET=1, EN_ATTENTE=2, " 
+		printf("\nLigne: %d\nEN_BRIS=0, EN_ARRET=1, EN_ATTENTE=2, " 
 			"EN_FONCTION=3\n", i);
 		for (j = 0; j < NB_BITS; j++) {
 			etat = ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
@@ -199,12 +212,12 @@ void print_usine(const t_usine * ptr_usine) {
 		printf("\n\n");
 	}
 	
-	printf("\n\nnb_cent_remplace: %d\n", ptr_usine->nb_cent_remplace);
+	printf("nb_cent_remplace: %d\n", ptr_usine->nb_cent_remplace);
 	printf("nb_ini_fonction: %d\n", ptr_usine->nb_ini_fonction);
 	printf("nb_actuel_en_fonction: %d\n", ptr_usine->nb_actuel_en_fonction);
 	printf("nb_actuel_en_bris: %d\n", ptr_usine->nb_actuel_en_bris);
 	printf("nb_toc: %d\n", ptr_usine->nb_toc);
-	printf("nb_bris_usine: %d\n", ptr_usine->nb_bris_usine);
+	printf("nb_bris_usine: %d\n\n", ptr_usine->nb_bris_usine);
 }
 
 int get_nb_actuel_en_fonction(t_usine * ptr_usine) {
@@ -222,5 +235,3 @@ int get_nb_toc(t_usine * ptr_usine) {
 int get_nb_bris_total(t_usine * ptr_usine) {
 	return ptr_usine->nb_bris_usine;
 }
-
-//TO-DO: ajouter print_usine
