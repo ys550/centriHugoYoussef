@@ -43,7 +43,9 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 max(NB_FONC_MAX (22))*/
 #define NB_FONC_LIG 12
 
-//le nombre max de bris d'une cent avant son remplacement
+/*le nombre max de bris qu'une cent peut avoir pour son remplacement
+si une machine a brise plus que le nb de fois determine par cette constante
+elle est envoye a la poubelle et ne sera donc pas reparer*/
 #define MAX_BRIS 4
 
 //remplacer cent en bris apres un nb de tocs definis par cette constante

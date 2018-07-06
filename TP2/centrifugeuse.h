@@ -29,6 +29,8 @@ chaque état d'une centrifugeuse. (module centrifugeuse)
 //pour la prob de test_bris
 #define BASE_TEST_BRIS 1.0
 
+#define TEMPS_REPARATION 5
+
 //tous les  unsigned int  sont identifiées par  uint
 typedef unsigned int uint;
 
