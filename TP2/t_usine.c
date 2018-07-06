@@ -157,6 +157,7 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 				}
 				
 			}
+			//On reactive la machine apres qu'elle est rapare
 			if (tab_etat_suivant[i][j] == EN_ARRET &&
 				tab_etat_precedant[i][j] == EN_BRIS) {
 				set_en_attente(&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j]);
