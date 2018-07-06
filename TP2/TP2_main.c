@@ -36,8 +36,9 @@ Ce module est la fonction principale de notre programme:
 //Permet de désactiver certains warnings du compilateur 
 #define _CRT_SECURE_NO_WARNINGS
 
-//le nombre de tocs pour le test du mandat 1
-#define NB_TOCS_TEST 300
+//le nombre de tocs pour le test des mandats
+#define NB_TOCS_TEST 1300
+#define NB_FONC_INIT 80
 
 // Librairies usuelles à inclure 
 #include<stdio.h>
@@ -157,14 +158,14 @@ int main(void) {
 		*********************************************************/
 	#if (1)
 		temps = 0;
-		init_usine(&usine, 100);
+		init_usine(&usine, NB_FONC_INIT);
 		printf("*******LIGNES USINE INITIALES:*******\n");
 		print_usine(&usine);
 
 		do {
 			toc_usine(&usine, temps);
 			entretien_usine(&usine);
-		} while (usine.nb_toc < 1300);
+		} while (usine.nb_toc < NB_TOCS_TEST);
 
 		print_usine(&usine);
 
