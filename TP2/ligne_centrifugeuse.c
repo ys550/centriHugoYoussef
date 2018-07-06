@@ -232,7 +232,7 @@ int ajouter_cnt_attente(t_ligne_centrifugeuse * ptr_lig) {
 	return 0;
 }
 
-//NON
+
 int reduire_cnt(t_ligne_centrifugeuse * ptr_lig) {
 	//iterateur
 	int i;

@@ -41,11 +41,11 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 
 /*le nb de cent en fonction par ligne ne doit pas depasser le 
 max(NB_FONC_MAX (22))*/
-#define NB_FONC_LIG 12
+#define NB_FONC_LIG 22
 
-/*le nombre max de bris qu'une cent peut avoir pour son remplacement
-si une machine a brise plus que le nb de fois determine par cette constante
-elle est envoye a la poubelle et ne sera donc pas reparer*/
+/*Si le nbre de bris d'une machine depasse la valeur de cette constante on la
+remplace par une neuve et on envoie l'ancienne a la poubelle. Si non, on la 
+repare*/
 #define MAX_BRIS 4
 
 //remplacer cent en bris apres un nb de tocs definis par cette constante
@@ -57,6 +57,9 @@ elle est envoye a la poubelle et ne sera donc pas reparer*/
 #define LIGNE_FIN 1
 //ligne supplementaire prete a prendre la releve en cas de bris (realloc)
 #define ACCROISSEMENT_TAB_LIGNE 1
+
+//valeur du compte a rebours lorsque la machine est repare
+#define COMPTE_REBOURS_REPARE 0
 
 
 
@@ -142,7 +145,7 @@ int  toc_usine(t_usine * ptr_usine, int temps);
 
 Cette fonction observe les centrifugeuses de l'usine et va les remplacer
 si les conditions de remplacement définie dans le programme (nb de bris de la 
-centrifugeuse et sa probabilité de bris > seuil de tolérance définie).
+centrifugeuse > seuil de tolérance définie).
 Les centrifugeuse remplacées sont mises dans le tableau dynamique poubelle_ligne.
 
 PARAMETRE : -la structure t_usine définie

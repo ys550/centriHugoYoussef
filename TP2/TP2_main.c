@@ -40,7 +40,7 @@ Ce module est la fonction principale de notre programme:
 #define NB_TOCS_TEST1 300
 
 //le nombre de tocs pour le test du mandat 3
-#define NB_TOCS_TEST3 2000
+#define NB_TOCS_TEST3 6000
 
 #define NB_FONC_INIT 80
 
@@ -124,6 +124,9 @@ int main(void) {
 	/*********************************************************
 	***************TEST: MANDAT2 toc_ligne********************
 	*********************************************************/
+
+	/*Mettre la valeur de la constante DEBUG_MANDAT2 a 1 pour ce test 
+	(ligne_centrifugeuse.h)*/
 	#if (0)
 		temps = 0;
 		printf("\nInit avec NB_CENT_DEPART = %d\n\n", NB_CENT_DEPART);
