@@ -40,7 +40,7 @@ Ce module est la fonction principale de notre programme:
 #define NB_TOCS_TEST1 300
 
 //le nombre de tocs pour le test du mandat 3
-#define NB_TOCS_TEST3 1300
+#define NB_TOCS_TEST3 2000
 
 #define NB_FONC_INIT 80
 

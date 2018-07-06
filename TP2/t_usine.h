@@ -47,7 +47,7 @@ max(NB_FONC_MAX (22))*/
 #define MAX_BRIS 4
 
 //remplacer cent en bris apres un nb de tocs definis par cette constante
-#define TOCS_REMP 500
+#define TOCS_REMP 100
 
 #define TAILLE_POUBELLE_INIT 32
 #define ACCROISSEMENT_TAB_POUBELLE 22
