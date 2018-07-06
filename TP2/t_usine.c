@@ -188,7 +188,7 @@ int entretien_usine(t_usine * ptr_usine) {
 				/*REPARER si elle n'a pas brise plus que MAX_BRIS lorsque la 
 				machine est EN_BRIS*/
 				if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) && 
-					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris > MAX_BRIS)) {
+					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris < MAX_BRIS)) {
 
 					set_temps_reparation(
 						&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j],
