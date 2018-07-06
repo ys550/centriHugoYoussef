@@ -108,6 +108,7 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 		tab_etat_suivant[i] = (int *)malloc(NB_BITS * sizeof(int));
 	}
 	
+	//Enregistre les etats de tout les machines de chaque ligne
 	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
 		for (j = 0; j < NB_BITS; j++) {
 			tab_etat_precedant[i][j] = 
@@ -121,24 +122,33 @@ int  toc_usine(t_usine * ptr_usine, int temps) {
 			tab_etat_suivant[i][j] =
 				ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat;
 
+			//Une machine se brise sur une des lignes
 			if (tab_etat_suivant[i][j] == EN_BRIS &&
 				tab_etat_precedant[i][j] != tab_etat_suivant[i][j]) {
 
 				ptr_usine->nb_actuel_en_bris++;
 				ptr_usine->nb_bris_usine++;
 
-				if (tab_etat_precedant[i][j] == EN_FONCTION && tab_etat_suivant == EN_BRIS) {
+				//Si l'état précédent de la machine était "EN_FONCTION"
+				if (tab_etat_precedant[i][j] == EN_FONCTION) {
 					ptr_usine->nb_actuel_en_fonction--;
 
+					//ajouter une nouvelle machine "EN_FONCTION" à partir d'une machine "EN_ATTENTE"
 					ajouter_fonction_est_reussi =
 						ajouter_cnt(&ptr_usine->tab_ligne_centrifugeuse[i]);
+
+					//ajouter une nouvelle machine "EN_ATTENTE" à partir d'une machine "EN_ARRET" 
+					ajouter_attente_est_reussi =
+						ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 
 					if (ajouter_fonction_est_reussi) {
 						ptr_usine->nb_actuel_en_fonction++;
 					}
 
 				}
-				else if (tab_etat_precedant[i][j] == EN_ATTENTE && tab_etat_suivant == EN_BRIS) {
+				//Si  l'état précédent de la machine était "EN_ATTENTE"
+				else if (tab_etat_precedant[i][j] == EN_ATTENTE) {
+					//ajouter une nouvelle machine "EN_ATTENTE" à partir d'une machine "EN_ARRET"
 					ajouter_attente_est_reussi =
 						ajouter_cnt_attente(&ptr_usine->tab_ligne_centrifugeuse[i]);
 				}

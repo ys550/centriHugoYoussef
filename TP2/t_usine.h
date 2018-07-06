@@ -41,7 +41,7 @@ Le module offre aussi des fonctions capables de renseigner l’état de l’usine.
 
 /*le nb de cent en fonction par ligne ne doit pas depasser le 
 max(NB_FONC_MAX (22))*/
-#define NB_FONC_LIG 21
+#define NB_FONC_LIG 12
 
 //le nombre max de bris d'une cent avant son remplacement
 #define MAX_BRIS 4
