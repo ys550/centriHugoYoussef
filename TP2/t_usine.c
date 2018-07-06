@@ -87,7 +87,7 @@ int init_usine(t_usine * ptr_usine, uint nb_fonction) {
 int  toc_usine(t_usine * ptr_usine, int temps) {
 
 	//Iterateurs
-	int i, j, k;
+	int i, j;
 	int ajouter_fonction_est_reussi;
 	int ajouter_attente_est_reussi;
 	//un tableau contenant les etats precedant de chaque cent de chaque ligne
