@@ -179,56 +179,61 @@ int entretien_usine(t_usine * ptr_usine) {
 	//pour le realloc
 	t_centrifugeuse * tab_poubelle_etire;
 
-	for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
-		for (j = 0; j < NB_BITS; j++) {
+	/*remplacer ou reparer a chaque nb de tocs defini par TOCS_REMP*/
+	if (ptr_usine->nb_toc % TOCS_REMP == 0) {
 
-			/*REPARER une cent lorsque la cent est EN_BRIS, si elle n'a pas 
-			brise plus que MAX_BRIS et reparer a chaque nb de tocs 
-			defini par TOCS_REMP*/
-			if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) &&
-				(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris < MAX_BRIS) &&
-				(ptr_usine->nb_toc % TOCS_REMP == 0)) {
+		for (i = 0; i < ptr_usine->taille_tab_ligne; i++) {
+			for (j = 0; j < NB_BITS; j++) {
 
-				set_temps_reparation(
-					&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j], 
-					TEMPS_REPARATION);
-				if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].compte_rebours == COMPTE_REBOURS_REPARE) {
-					ptr_usine->nb_actuel_en_bris--;
+				/*REPARER si elle n'a pas brise plus que MAX_BRIS lorsque la 
+				machine est EN_BRIS*/
+				if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) && 
+					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris < MAX_BRIS)) {
+
+					set_temps_reparation(
+						&ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j],
+						TEMPS_REPARATION);
+
+					if (ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].compte_rebours == 
+						COMPTE_REBOURS_REPARE) {
+
+						ptr_usine->nb_actuel_en_bris--;
+
+					}
+
 				}
-				
+				/*REMPLACER si elle a tombe en bris plus que MAX_BRIS lorsque la 
+				machine est EN_BRIS*/
+				else if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) &&
+					(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris >= MAX_BRIS)) {
 
-			}
-			/*REMPLACER une cent lorsque la cent est EN_BRIS, elle a tombe
-			en bris plus que MAX_BRIS et remplacer a chaque nb de tocs
-			defini par TOCS_REMP*/
-			else if ((ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].etat == EN_BRIS) && 
-				(ptr_usine->tab_ligne_centrifugeuse[i].tab_cnt[j].nb_bris >= MAX_BRIS) &&
-				(ptr_usine->nb_toc % TOCS_REMP == 0)) {
+					ptr_usine->tab_poubelle_ligne[index_poubelle++] =
+						remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
 
+					ptr_usine->nb_cent_remplace++;
+					ptr_usine->nb_actuel_en_bris--;
 
-				ptr_usine->tab_poubelle_ligne[index_poubelle++] =
-					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
+					/*Si on est rendu a la fin du tableau de poubelle, on 
+					accroit sa taille. L'accroissement est defini par la 
+					constante ACCROISSEMENT_TAB_POUBELLE*/
+					if (index_poubelle == ptr_usine->taille_tab_poubelle) {
 
-				ptr_usine->nb_cent_remplace++;
-				ptr_usine->nb_actuel_en_bris--;
+						ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
 
-				if (index_poubelle == ptr_usine->taille_tab_poubelle) {
+						tab_poubelle_etire = (t_centrifugeuse *)
+							realloc(ptr_usine->tab_poubelle_ligne,
+								ptr_usine->taille_tab_poubelle *
+								sizeof(t_centrifugeuse));
 
-					ptr_usine->taille_tab_poubelle += ACCROISSEMENT_TAB_POUBELLE;
-
-					tab_poubelle_etire = (t_centrifugeuse *)
-						realloc(ptr_usine->tab_poubelle_ligne,
-							ptr_usine->taille_tab_poubelle *
-							sizeof(t_centrifugeuse));
-
-					if (tab_poubelle_etire != NULL) {
-						ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
+						if (tab_poubelle_etire != NULL) {
+							ptr_usine->tab_poubelle_ligne = tab_poubelle_etire;
+						}
 					}
 				}
 			}
 		}
-		
 	}
+	
 	return ptr_usine->nb_cent_remplace;
 }
 
