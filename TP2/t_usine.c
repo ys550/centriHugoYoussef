@@ -187,6 +187,7 @@ int entretien_usine(t_usine * ptr_usine) {
 					remplacer_cnt(&ptr_usine->tab_ligne_centrifugeuse[i], j);
 
 				ptr_usine->nb_cent_remplace++;
+				ptr_usine->nb_actuel_en_bris--;
 
 				if (index_poubelle == ptr_usine->taille_tab_poubelle) {
 

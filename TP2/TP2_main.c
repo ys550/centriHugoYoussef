@@ -158,19 +158,20 @@ int main(void) {
 	#if (1)
 		temps = 0;
 		init_usine(&usine, 100);
+		printf("*******LIGNES USINE INITIALES:*******\n");
 		print_usine(&usine);
 
 		do {
 			toc_usine(&usine, temps);
-			//entretien_usine(&usine);
+			entretien_usine(&usine);
 		} while (usine.nb_toc < 1300);
 
 		print_usine(&usine);
 
-		/*free(usine.tab_ligne_centrifugeuse);
+		free(usine.tab_ligne_centrifugeuse);
 		usine.tab_ligne_centrifugeuse = NULL;
 		free(usine.tab_poubelle_ligne);
-		usine.tab_poubelle_ligne = NULL;*/
+		usine.tab_poubelle_ligne = NULL;
 
 	#endif
 
