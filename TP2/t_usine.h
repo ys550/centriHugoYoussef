@@ -61,15 +61,15 @@ démarage de l'usine.
 
 /*le nb de cent en fonction par ligne ne doit pas depasser le 
 max(NB_FONC_MAX (22))*/
-#define NB_FONC_LIG 22
+#define NB_FONC_LIG 6
 
 /*Si le nbre de bris d'une machine depasse la valeur de cette constante on la
 remplace par une neuve et on envoie l'ancienne a la poubelle. Si non, on la 
 repare*/
-#define MAX_BRIS 4
+#define MAX_BRIS 3
 
 //remplacer cent en bris apres un nb de tocs definis par cette constante
-#define TOCS_REMP 100
+#define TOCS_REMP 40
 
 #define TAILLE_POUBELLE_INIT 32
 #define ACCROISSEMENT_TAB_POUBELLE 22

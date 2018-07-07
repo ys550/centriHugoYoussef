@@ -40,7 +40,7 @@ test on des #if(0).
 #define NB_TOCS_TEST1 300
 
 //le nombre de tocs pour le test du mandat 3
-#define NB_TOCS_TEST3 10000
+#define NB_TOCS_TEST3 1000
 
 #define NB_FONC_INIT 80
 
